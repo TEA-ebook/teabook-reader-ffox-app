@@ -1,0 +1,31 @@
+{
+  "version": "0.1",
+  "name": "TeaBook Reader",
+  "description": "",
+  "icons": {
+    "60": "/images/app-icon-60.png",
+    "128": "/images/app-icon-128.png"
+  },
+  "developer": {
+    "name": "johanpoirier",
+    "url": ""
+  },
+  "origin": "app://teabook-reader.tea-ebook.com",
+  "type": "privileged",
+  "launch_path": "/index.html",
+  "installs_allowed_from": ["https://marketplace.firefox.com", "*"],
+  "permissions": {
+    "device-storage:sdcard":{ "access": "readonly" },
+    "browser": {}
+  },
+  "precompile": [
+     "lib/Readium.embedded.js",
+     "lib/curl.js",
+     "lib/jquery.js",
+     "lib/underscore.js",
+     "lib/handlebars.amd.js",
+     "lib/backbone.js",
+     "js/templates.js",
+     "js/app.js"
+  ]
+}

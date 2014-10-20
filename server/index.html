@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Readium App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <link rel="stylesheet" href="readium_js.css"/>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            window.parent.postMessage("sendResources", "*");
+        };
+
+        function getText(blob, callback) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                callback(e.target.result);
+            };
+            reader.readAsText(blob);
+        }
+
+        function writeScript(event) {
+            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
+            var script = document.createElement("script");
+            script.type = event.data.type;
+            script.src = URL.createObjectURL(scriptSrc);
+            document.head.appendChild(script);
+        }
+
+        function writeInline(event, tag) {
+            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
+            var script = document.createElement(tag);
+            script.type = event.data.type;
+            getText(scriptSrc, function (text) {
+                script.innerHTML = text;
+                document.head.appendChild(script);
+            });
+        }
+
+        function writeInlineScript(event) {
+            writeInline(event, "script");
+        }
+
+        function writeInlineStyle(event) {
+            writeInline(event, "style");
+        }
+
+        function writeScript(event) {
+            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
+            var script = document.createElement('script');
+            script.type = event.data.type;
+            script.src = window.URL.createObjectURL(scriptSrc);
+            document.head.appendChild(script);
+        }
+
+        function receiveMessage(event) {
+            if (event.data.action === "transfer") {
+                if (event.data.type === "text/javascript") {
+                    writeInlineScript(event);
+                }
+                if (event.data.type === "text/css") {
+                    writeInlineStyle(event);
+                }
+            }
+            else if (event.data.action === "message") {
+                if(event.data.content === "nextPage") {
+                    readium.reader.openPageNext();
+                }
+                else if(event.data.content === "prevPage") {
+                    readium.reader.openPagePrev();
+                }
+            }
+            else if (event.data.action === "epub") {
+                var epubFile = new Blob([event.data.content], { "type": event.data.type });
+                window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
+                    console.debug(options.metadata.title);
+                    window.parent.postMessage("readyToRead", "*");
+                });
+            }
+        }
+        window.addEventListener("message", receiveMessage, false);
+    </script>
+</head>
+<body>
+<div id="epub-reader-frame"></div>
+<script type="text/javascript">
+    var isReadiumReady = function () {
+        if (typeof require !== "undefined" && typeof readiumReady !== "undefined") {
+            clearInterval(reeadiumReadyTest);
+            require(['Readium'], function (Readium) {
+                window.readium = new Readium({ jsLibRoot: "" }, { el: '#epub-reader-frame' }, function (error) {
+                    console.error(error);
+                });
+                window.parent.postMessage("sendEpub", "*");
+            });
+        }
+    };
+
+    var reeadiumReadyTest = setInterval(isReadiumReady, 100);
+</script>
+</body>
+</html>

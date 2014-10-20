@@ -1,0 +1,13 @@
+## Directory-based project format
+.idea/
+.iml
+
+## nodejs modules
+node_modules/
+app/vendor/
+
+## Grunt output
+dist/
+
+## OS files
+.DS_Store
