@@ -1,16 +1,8 @@
-var Blobber = (function () {
-    'use strict'
+/*global define: true, Blob: true, window: true, XMLHttpRequest: true*/
+define('tools/blobber', function () {
+    "use strict";
 
-    // private variables and functions
-
-    // constructor
-    var blobber = function () {
-        //
-    };
-
-    // prototype
-    blobber.prototype = {
-        constructor: blobber,
+    return {
         blobify: function (file, type, callback) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', file, true);
@@ -24,7 +16,7 @@ var Blobber = (function () {
             xhr.send();
         },
 
-        buffery: function(file, callback) {
+        buffery: function (file, callback) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', file, true);
             xhr.responseType = 'arraybuffer';
@@ -36,7 +28,4 @@ var Blobber = (function () {
             xhr.send();
         }
     };
-
-    // return module
-    return blobber;
-})();
+});

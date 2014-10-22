@@ -19,13 +19,8 @@
     "browser": {}
   },
   "precompile": [
-     "lib/Readium.embedded.js",
-     "lib/curl.js",
-     "lib/jquery.js",
-     "lib/underscore.js",
-     "lib/handlebars.amd.js",
-     "lib/backbone.js",
-     "js/templates.js",
+     "js/Readium.embedded.js",
+     "js/curl.js",
      "js/app.js"
   ]
 }

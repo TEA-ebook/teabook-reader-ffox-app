@@ -1,4 +1,7 @@
-curl(["router"], function(AppRouter) {
-        new AppRouter();
-    }
-);
+/*global curl: true*/
+(function () {
+    'use strict';
+
+    var require = curl;
+    require(["router"]);
+}());

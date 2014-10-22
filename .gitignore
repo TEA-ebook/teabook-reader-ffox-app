@@ -11,3 +11,4 @@ dist/
 
 ## OS files
 .DS_Store
+epubs/*

@@ -1,4 +1,5 @@
-define("model/ebook", ["backbone"], function(Backbone) {
+/*global define: true*/
+define("model/ebook", ["backbone"], function (Backbone) {
     "use strict";
 
     var EbookModel = Backbone.Model.extend();

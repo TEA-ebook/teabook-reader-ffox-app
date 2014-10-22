@@ -7,6 +7,7 @@ html {
 }
 
 html, body {
+  background-color: #ececec;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -16,4 +17,54 @@ iframe {
   border: 0;
   height: 100%;
   width: 100%;
+}
+
+#content, .readium, .shelf {
+  height: 100%;
+}
+
+.shelf > .shelf-tab {
+  align-items: flex-end;
+  background: url('../images/shelf-tab.jpg') repeat-x bottom, linear-gradient(to bottom, #ececec, #c8c8c8);
+  display: flex;
+  justify-content: space-around;
+  height: 120px;
+  width: 100%;
+}
+
+.shelf > .shelf-tab > .ebook {
+  background: linear-gradient(to bottom, #45b8ec, #417a95);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  height: 80px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  text-align: center;
+  width: 60px;
+}
+
+.shelf > .shelf-tab > .ebook.open {
+  box-shadow: 0px 3px 50px 0px rgba(0, 0, 0, 0.5);
+  transition-property: box-shadow;
+  transition-duration: 0.4s;
+}
+
+.ebook-toolbar {
+  background-color: rgba(154, 152, 163, 0.89);
+  display: flex;
+  height: 30px;
+  justify-content: flex-start;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.ebook-toolbar > .back {
+  background-color: #ffffff;
+  border: 0;
+  color: #000000;
+  font-size: 1.5rem;
+  height: 100%;
+  width: 60px;
+  z-index: 500;
 }

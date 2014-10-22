@@ -74,7 +74,6 @@
             else if (event.data.action === "epub") {
                 var epubFile = new Blob([event.data.content], { "type": event.data.type });
                 window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-                    console.debug(options.metadata.title);
                     window.parent.postMessage("readyToRead", "*");
                 });
             }
@@ -91,6 +90,11 @@
             require(['Readium'], function (Readium) {
                 window.readium = new Readium({ jsLibRoot: "" }, { el: '#epub-reader-frame' }, function (error) {
                     console.error(error);
+                });
+                $.map(ReadiumSDK.Events, function(event) {
+                    window.readium.reader.on(event, function() {
+                        window.parent.postMessage(event, "*");
+                    });
                 });
                 window.parent.postMessage("sendEpub", "*");
             });

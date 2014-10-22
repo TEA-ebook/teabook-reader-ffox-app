@@ -1,26 +1,19 @@
-define('router', ['backbone', 'collection/ebooks', 'view/shelf'], function (Backbone, EbookCollection, ShelfView) {
-    "use strict";
+/*global define: true*/
+define('router', ['backbone', 'route/bookshelf', 'route/ebook'],
+    function (Backbone, bookshelfRoute, ebookRoute) {
+        "use strict";
 
-    var AppRouter = Backbone.Router.extend({
+        var AppRouter = Backbone.Router.extend({
 
-        initialize: function() {
-            Backbone.history.start({ pushState: false, root: "/" });
-        },
+            initialize: function () {
+                Backbone.history.start({ pushState: false, root: "/" });
+            },
 
-        routes: {
-            '': 'bookShelf',
-            'test': 'test'
-        },
+            routes: {
+                '': bookshelfRoute,
+                'ebook/:uri': ebookRoute
+            }
+        });
 
-        bookShelf: function() {
-            console.debug("shelf route activated");
-            new ShelfView({ collection: new EbookCollection() });
-        },
-
-        test: function() {
-            console.debug("Test route activated");
-        }
+        return new AppRouter();
     });
-
-    return AppRouter;
-});

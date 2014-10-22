@@ -7,79 +7,95 @@ var map = require('map-stream');
 var runSequence = require('run-sequence');
 var gulpif = require('gulp-if');
 var pngcrush = require('imagemin-pngcrush');
+var amd = require('amd-optimize');
 
 var debug = args.debug ? true : false;
 
 var paths = {
     less: ['./app/less/*.less'],
-    js: [
-        './app/js/model/*.js',
-        './app/js/collection/*.js',
-        './app/js/view/*.js',
-        './app/js/router.js',
-        './app/js/app.js'
-    ],
+    js: ['./app/js/**/*.js'],
     images: ['./app/images/*'],
     html: ['./app/*.html'],
     manifest: ['./app/manifest.*'],
-    templates: ['./app/template/*.hbs'],
+    epubs: ['./epubs/*'],
+    templates: ['./app/js/template/**/*.hbs'],
     readium: './readium-js',
-    readiumEmbedded: './readium-js/out/Readium.embedded.js',
+    readiumEmbedded: [
+        './readium-js/out/Readium.embedded.js',
+        './app/vendor/requirejs/require.js'
+    ],
     dist: {
         css: './dist/css/',
-        lib: './dist/lib/',
         js: './dist/js/',
+        templates: './app/js/template/',
         images: './dist/images/',
-        html: './dist/'
+        html: './dist/',
+        epubs: './dist/books/'
     },
-    vendor: {
-        js: [
-            './app/vendor/jquery/dist/jquery.js',
-            './app/vendor/underscore/underscore.js',
-            './app/vendor/handlebars/handlebars.amd.js',
-            './app/vendor/backbone/backbone.js'
-        ],
-        curl: [
-            './app/vendor/curl/src/curl.js',
-            './app/config.js'
-        ]
-    },
+    curl: [
+        './app/misc/*.js',
+        './app/vendor/curl/src/curl.js'
+    ],
     test: ['./js/tests/**.js']
 };
 
+
+/****************** *****************/
+/************ WEB SERVER ************/
+/****************** *****************/
+
+gulp.task('web-server', function () {
+    return plugins.connect.server({
+        root: 'dist',
+        livereload: true
+    });
+});
+
+
+/***************** *****************/
+/************** CLEAN **************/
+/***************** *****************/
+
 gulp.task('clean', function (cb) {
-    del(['dist'], cb);
+    del(['./dist'], cb);
+});
+
+gulp.task('clean-templates', function (cb) {
+    del(['./app/js/template/**/*.js'], cb);
+});
+
+gulp.task('post-clean', ['build'], function (cb) {
+    del(['./app/js/template/**/*.js'], cb);
 });
 
 gulp.task('clean-readium', function (cb) {
     del([paths.readium + "/out"], cb);
 });
 
-gulp.task('connect', function () {
-    plugins.connect.server({
-        root: 'dist',
-        livereload: true
-    });
-});
 
-gulp.task('styles', function () {
-    gulp.src(paths.less)
+
+/***************** *****************/
+/************** BUILD **************/
+/***************** *****************/
+
+gulp.task('compile-less', function () {
+    return gulp.src(paths.less)
         .pipe(plugins.less())
         .pipe(gulpif(!debug, plugins.cssmin()))
         .pipe(gulp.dest(paths.dist.css))
         .pipe(plugins.connect.reload());
 });
 
-gulp.task('scripts', function () {
-    gulp.src(paths.js)
-        .pipe(plugins.concat('app.js'))
-        .pipe(gulpif(!debug, plugins.uglify()))
-        .pipe(gulp.dest(paths.dist.js))
-        .pipe(plugins.connect.reload());
+gulp.task('process-styles', ['compile-less'], function () {
+    return gulp.src(paths.dist.css + "main.css")
+        .pipe(plugins.uncss({
+            html: ['./app/index.html']
+        }))
+        .pipe(gulp.dest(paths.dist.css));
 });
 
-gulp.task('images', function () {
-    gulp.src(paths.images)
+gulp.task('process-images', function () {
+    return gulp.src(paths.images)
         .pipe(plugins.imagemin({
             progressive: true,
             svgoPlugins: [
@@ -91,78 +107,102 @@ gulp.task('images', function () {
         .pipe(plugins.connect.reload());
 });
 
-gulp.task('templates', function() {
-    gulp.src(paths.templates)
+gulp.task('compile-curl', function () {
+    return gulp.src(paths.curl)
+        .pipe(plugins.concat('curl.js'))
+        .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(gulp.dest(paths.dist.js))
+        .pipe(plugins.connect.reload());
+});
+
+gulp.task('compile-templates', ['clean-templates'], function() {
+    return gulp.src(paths.templates)
         .pipe(plugins.handlebars())
         .pipe(plugins.wrapper({
-            header: 'Handlebars.default.template(',
-            footer: ')'
+            header: function(file) { var templateName = file.path.match(/template\/([\w\/]*)/); return 'define("template/' + templateName[1] + '", ["handlebars"], function(Handlebars) {\nreturn Handlebars.default.template('; },
+            footer: '); });\n'
         }))
-        .pipe(map(function(file, cb) {
-            cb(null, file);
+        .pipe(plugins.rename(function (path) {
+            path.extname = ".js";
         }))
-        .pipe(plugins.wrapper({
-            header: function(file) { return 'define("template/' + path.basename(file.path, path.extname(file.path)) + '", ["handlebars"], function(Handlebars) {\nreturn '; },
-            footer: '; });\n'
+        .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(gulp.dest(paths.dist.templates));
+});
+
+gulp.task('compile-scripts', ['compile-templates'], function() {
+    return gulp.src(paths.js)
+        // Traces all modules and outputs them in the correct order.
+        .pipe(amd("app", {
+            baseUrl: "app/js",
+            paths: {
+                "backbone": "../vendor/backbone/backbone",
+                "jquery": "../vendor/jquery/dist/jquery",
+                "underscore": "../vendor/underscore/underscore",
+                "handlebars": "../vendor/handlebars/handlebars.amd",
+                "keymaster": "../vendor/keymaster/keymaster",
+                "spin": "../vendor/spin.js/spin"
+            }
         }))
-        .pipe(plugins.concat('templates.js'))
+        .pipe(plugins.concat("app.js"))
+        .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(gulp.dest(paths.dist.js))
+        .pipe(plugins.connect.reload());
+});
+
+gulp.task('copy-readium', function () {
+    return gulp.src(paths.readiumEmbedded)
         .pipe(gulpif(!debug, plugins.uglify()))
         .pipe(gulp.dest(paths.dist.js));
 });
 
-gulp.task('vendor', function () {
-    gulp.src(paths.vendor.js)
-        .pipe(gulpif(!debug, plugins.uglify()))
-        .pipe(gulp.dest(paths.dist.lib))
-        .pipe(plugins.connect.reload());
-});
-
-gulp.task('curl', function () {
-    gulp.src(paths.vendor.curl)
-        .pipe(plugins.concat('curl.js'))
-        .pipe(gulpif(!debug, plugins.uglify()))
-        .pipe(gulp.dest(paths.dist.lib))
-        .pipe(plugins.connect.reload());
-});
-
-gulp.task('readium-copy', function () {
-    gulp.src(paths.readiumEmbedded)
-        .pipe(gulpif(!debug, plugins.uglify()))
-        .pipe(gulp.dest(paths.dist.lib));
-});
-
-gulp.task('manifest', function () {
-    gulp.src(paths.manifest)
+gulp.task('copy-manifest', function () {
+    return gulp.src(paths.manifest)
         .pipe(gulp.dest(paths.dist.html))
         .pipe(plugins.connect.reload());
 });
 
-gulp.task('html', function () {
-    gulp.src(paths.html)
+gulp.task('copy-epubs', function () {
+    if(debug) {
+        return gulp.src(paths.epubs)
+            .pipe(gulp.dest(paths.dist.epubs));
+    }
+});
+
+gulp.task('process-html', function () {
+    return gulp.src(paths.html)
         .pipe(plugins.preprocess({ context: { DEBUG: debug.toString() } }))
         .pipe(gulpif(!debug, plugins.htmlmin({ collapseWhitespace: true })))
         .pipe(gulp.dest(paths.dist.html))
         .pipe(plugins.connect.reload());
 });
 
-gulp.task("firefox", function () {
-    gulp.src(paths.html)
-        .pipe(plugins.open("", { app: "firefox", url: "http://localhost:8080/" }));
+gulp.task("open-browser", function () {
+    return gulp.src(paths.html)
+        .pipe(plugins.open("", { url: "http://localhost:8080/" }));
 });
 
-gulp.task('build', ['styles', 'scripts', 'images', 'templates', 'curl', 'vendor', 'readium-copy', 'manifest', 'html']);
+gulp.task('build', ['compile-less', 'process-images', 'process-html', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-curl', 'compile-scripts']);
 
-gulp.task('watch', ['build'], function () {
+gulp.task('watch-codebase', ['build', 'post-clean'], function () {
     if (debug) {
-        gulp.watch(paths.less, ['styles']);
-        gulp.watch(paths.js, ['scripts']);
-        gulp.watch(paths.images, ['images']);
-        gulp.watch(paths.templates, ['templates']);
-        gulp.watch(paths.vendor.curl, ['curl']);
-        gulp.watch(paths.manifest, ['manifest']);
-        gulp.watch(paths.html, ['html']);
+        gulp.watch(paths.less, ['compile-less']);
+        gulp.watch(paths.templates, ['compile-scripts']);
+        gulp.watch(paths.js, ['compile-scripts']);
+        gulp.watch(paths.images, ['process-images']);
+        gulp.watch(paths.manifest, ['copy-manifest']);
+        gulp.watch(paths.html, ['copy-html']);
     }
 });
+
+gulp.task('default', function () {
+    runSequence('clean', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
+});
+
+
+
+/******************* *****************/
+/************** READIUM **************/
+/******************* *****************/
 
 gulp.task('readium', ['clean-readium'], function () {
     plugins.grunt(gulp, {
@@ -172,6 +212,18 @@ gulp.task('readium', ['clean-readium'], function () {
     gulp.run("readium-embedded");
 });
 
-gulp.task('default', function () {
-    runSequence('clean', 'connect', 'watch', 'firefox');
+
+
+/******************* *****************/
+/************ CODE QUALITY ***********/
+/******************* *****************/
+
+gulp.task('jslint', function() {
+    return gulp.src(paths.js)
+        .pipe(plugins.ignore.exclude(/template\/.*/))
+        .pipe(plugins.jslint({
+            node: true
+        }));
 });
+
+gulp.task('check-code', ['jslint']);

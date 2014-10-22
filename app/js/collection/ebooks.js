@@ -1,3 +1,4 @@
+/*global define: true, navigator: true*/
 define("collection/ebooks", ["backbone", "model/ebook"], function (Backbone, EbookModel) {
     "use strict";
 
@@ -6,14 +7,18 @@ define("collection/ebooks", ["backbone", "model/ebook"], function (Backbone, Ebo
         model: EbookModel,
 
         fetch: function () {
-            var ebooks = [];
+            var ebooks = [],
+                ebookFiles,
+                cursor,
+                collection;
+
             if (navigator && navigator.getDeviceStorage) {
-                var ebookFiles = navigator.getDeviceStorage('sdcard');
+                ebookFiles = navigator.getDeviceStorage('sdcard');
 
                 // Let's browse all the images available
-                var cursor = ebookFiles.enumerate("books");
+                cursor = ebookFiles.enumerate("books");
 
-                var collection = this;
+                collection = this;
                 cursor.onsuccess = function () {
                     var file = this.result;
                     if (file) {
@@ -25,8 +30,7 @@ define("collection/ebooks", ["backbone", "model/ebook"], function (Backbone, Ebo
 
                     if (!this.done) {
                         this.continue();
-                    }
-                    else {
+                    } else {
                         collection.reset(ebooks);
                     }
                 };
@@ -34,16 +38,8 @@ define("collection/ebooks", ["backbone", "model/ebook"], function (Backbone, Ebo
                 cursor.onerror = function () {
                     console.warn("No ebook file found: " + this.error);
                 };
-            }
-            else {
+            } else {
                 console.warn("You have no SD card access");
-                for(var i = 0; i < 10; i++) {
-                    ebooks.push(new EbookModel({
-                        name: "FakeFile-" + i,
-                        size: 0
-                    }));
-                }
-                this.reset(ebooks);
             }
         }
     });
