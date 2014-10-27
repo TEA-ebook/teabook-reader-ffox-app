@@ -8,6 +8,7 @@ var runSequence = require('run-sequence');
 var gulpif = require('gulp-if');
 var pngcrush = require('imagemin-pngcrush');
 var amd = require('amd-optimize');
+var mochaPhantomJS = require('gulp-mocha-phantomjs');
 
 var debug = args.debug ? true : false;
 
@@ -18,11 +19,12 @@ var paths = {
     html: ['./app/*.html'],
     manifest: ['./app/manifest.*'],
     epubs: ['./epubs/*'],
-    templates: ['./app/js/template/**/*.hbs'],
+    templates: ['./app/template/**/*.hbs'],
     readium: './readium-js',
     readiumEmbedded: [
+        './app/vendor/requirejs/require.js',
         './readium-js/out/Readium.embedded.js',
-        './app/vendor/requirejs/require.js'
+        './app/js/helper/gestures.js'
     ],
     dist: {
         css: './dist/css/',
@@ -33,10 +35,20 @@ var paths = {
         epubs: './dist/books/'
     },
     curl: [
-        './app/misc/*.js',
+        './app/polyfill/*.js',
         './app/vendor/curl/src/curl.js'
     ],
-    test: ['./js/tests/**.js']
+    test: {
+        runner: './test/index.html',
+        specs: './test/spec/**/*.js',
+        sinon: {
+            source: './test/sinon-server-1.10.3.js',
+            dest: './test/vendor/sinon/lib'
+        },
+        dist: {
+            images: './test/images/'
+        }
+    }
 };
 
 
@@ -61,11 +73,7 @@ gulp.task('clean', function (cb) {
 });
 
 gulp.task('clean-templates', function (cb) {
-    del(['./app/js/template/**/*.js'], cb);
-});
-
-gulp.task('post-clean', ['build'], function (cb) {
-    del(['./app/js/template/**/*.js'], cb);
+    del([paths.dist.templates], cb);
 });
 
 gulp.task('clean-readium', function (cb) {
@@ -139,7 +147,6 @@ gulp.task('compile-scripts', ['compile-templates'], function() {
                 "jquery": "../vendor/jquery/dist/jquery",
                 "underscore": "../vendor/underscore/underscore",
                 "handlebars": "../vendor/handlebars/handlebars.amd",
-                "keymaster": "../vendor/keymaster/keymaster",
                 "spin": "../vendor/spin.js/spin"
             }
         }))
@@ -151,6 +158,7 @@ gulp.task('compile-scripts', ['compile-templates'], function() {
 
 gulp.task('copy-readium', function () {
     return gulp.src(paths.readiumEmbedded)
+        .pipe(plugins.concat("readium.js"))
         .pipe(gulpif(!debug, plugins.uglify()))
         .pipe(gulp.dest(paths.dist.js));
 });
@@ -181,13 +189,14 @@ gulp.task("open-browser", function () {
         .pipe(plugins.open("", { url: "http://localhost:8080/" }));
 });
 
-gulp.task('build', ['compile-less', 'process-images', 'process-html', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-curl', 'compile-scripts']);
+gulp.task('build', ['process-images', 'process-html', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
 
-gulp.task('watch-codebase', ['build', 'post-clean'], function () {
+gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
         gulp.watch(paths.less, ['compile-less']);
         gulp.watch(paths.templates, ['compile-scripts']);
-        gulp.watch(paths.js, ['compile-scripts']);
+        gulp.watch(paths.js, ['compile-scripts', 'tests']);
+        gulp.watch(paths.test.specs, ['tests']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
         gulp.watch(paths.html, ['copy-html']);
@@ -227,3 +236,27 @@ gulp.task('jslint', function() {
 });
 
 gulp.task('check-code', ['jslint']);
+
+
+
+/******************* *****************/
+/************* UNIT TESTS ************/
+/******************* *****************/
+
+gulp.task('tests', ['copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources'], function() {
+    return gulp
+        .src(paths.test.runner)
+        .pipe(mochaPhantomJS());
+});
+
+gulp.task('copy-sinon-server', function() {
+    return gulp
+        .src(paths.test.sinon.source)
+        .pipe(gulp.dest(paths.test.sinon.dest));
+});
+
+gulp.task('copy-test-resources', function() {
+    return gulp
+        .src(paths.images)
+        .pipe(gulp.dest(paths.test.dist.images));
+});

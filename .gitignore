@@ -2,7 +2,7 @@
 .idea/
 .iml
 
-## nodejs modules
+## js modules
 node_modules/
 app/vendor/
 
@@ -12,3 +12,6 @@ dist/
 ## OS files
 .DS_Store
 epubs/*
+
+## Generated templates scripts
+app/js/template/**/*.js

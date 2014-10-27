@@ -19,7 +19,7 @@
     "browser": {}
   },
   "precompile": [
-     "js/Readium.embedded.js",
+     "js/readium.js",
      "js/curl.js",
      "js/app.js"
   ]

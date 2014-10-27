@@ -9,6 +9,8 @@ define('view/bookshelf/index', ['backbone', 'view/bookshelf/book', 'template/boo
             className: "shelf",
 
             initialize: function () {
+                this.listenTo(Backbone, 'destroy', this.close.bind(this));
+
                 this.shelves = [];
 
                 var i = 0;
@@ -55,6 +57,11 @@ define('view/bookshelf/index', ['backbone', 'view/bookshelf/book', 'template/boo
                     return freeShelves[0];
                 }
                 return false;
+            },
+
+            close: function () {
+                this.stopListening(this.collection);
+                this.remove();
             }
         });
         return IndexView;

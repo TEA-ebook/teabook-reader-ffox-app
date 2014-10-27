@@ -1,6 +1,6 @@
-/*global define: true, navigator: true, FileReader: true, window: true*/
-define('view/ebook', ['backbone', 'jquery', 'tools/blobber', 'template/ebook', 'spin', 'keymaster'],
-    function (Backbone, $, Blobber, ebookTemplate, Spinner) {
+/*global define: true, navigator: true, FileReader: true, window: true, key: true*/
+define('view/ebook', ['backbone', 'helper/blobber', 'template/ebook', 'spin'],
+    function (Backbone, Blobber, ebookTemplate, Spinner) {
         "use strict";
 
         var EbookView = Backbone.View.extend({
@@ -8,15 +8,24 @@ define('view/ebook', ['backbone', 'jquery', 'tools/blobber', 'template/ebook', '
             className: "readium",
 
             events: {
+                "click": "displayToolbar",
                 "click button.back": "backToBookshelf"
             },
 
             initialize: function () {
+                this.listenTo(Backbone, 'visibility:visible', this.requestFullScreen);
+                this.listenTo(Backbone, 'message', this.receiveMessage.bind(this));
+                this.listenTo(Backbone, 'destroy', this.close.bind(this));
                 this.render();
             },
 
             render: function () {
+                // open ebook in fullscreen
+                this.requestFullScreen();
+
                 this.$el.html(ebookTemplate(this.model.attributes));
+
+                // spinning wheel : ebook load is long
                 this.spinner = new Spinner({
                     hwaccel: true,
                     lines: 12,
@@ -26,10 +35,6 @@ define('view/ebook', ['backbone', 'jquery', 'tools/blobber', 'template/ebook', '
                     width: 12
                 });
                 this.spin();
-
-                this.$el.find(".ebook-toolbar").focus();
-
-                $(window).on("message", this.receiveMessage.bind(this));
             },
 
             backToBookshelf: function () {
@@ -38,26 +43,24 @@ define('view/ebook', ['backbone', 'jquery', 'tools/blobber', 'template/ebook', '
             },
 
             receiveMessage: function (event) {
-                if (event.originalEvent.data === "sendResources") {
-                    this.transferFile("js/require.js", "text/javascript", this.getSandbox());
-                    this.transferFile("js/Readium.embedded.js", "text/javascript", this.getSandbox());
-                } else if (event.originalEvent.data === "sendEpub") {
-                    this.sendEpub();
-                } else if (event.originalEvent.data === "readyToRead") {
-                    key('left', function() {
-                        this.sendMessage("prevPage", this.getSandbox());
-                    }.bind(this));
-                    key('right', function() {
-                        this.sendMessage("nextPage", this.getSandbox());
-                    }.bind(this));
-                } else if (event.originalEvent.data === "PaginationChanged") {
-                    this.stopSpin();
-                } else if (event.originalEvent.data === "ContentDocumentLoadStart") {
-                    this.spin();
-                } else if (event.originalEvent.data === "ContentDocumentLoaded") {
-                    this.stopSpin();
+                if (event && event.data) {
+                    if (event.data === "sendResources") {
+                        this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
+                    } else if (event.data === "sendEpub") {
+                        this.sendEpub();
+                    } else if (event.data === "readyToRead") {
+                        this.hideToolbar();
+                    } else if (event.data === "PaginationChanged") {
+                        this.stopSpin();
+                    } else if (event.data === "ContentDocumentLoadStart") {
+                        this.spin();
+                    } else if (event.data === "ContentDocumentLoaded") {
+                        this.stopSpin();
+                    } else if (event.data === "click" || event.data === "tap") {
+                        this.displayToolbar();
+                    }
                 } else {
-                    console.debug("Received message from Readium : " + event.originalEvent.data);
+                  console.warn("received empty message");
                 }
             },
 
@@ -81,9 +84,11 @@ define('view/ebook', ['backbone', 'jquery', 'tools/blobber', 'template/ebook', '
                     request = sdcard.get(this.model.get('name')),
                     sandbox = this.getSandbox();
 
+                // read epub from storage
                 request.onsuccess = function () {
                     var reader = new FileReader();
                     reader.onload = function (e) {
+                        // pass epub data to readium sandboxed iframe
                         sandbox.postMessage({
                             action: "epub",
                             type: "application/epub+zip",
@@ -93,12 +98,14 @@ define('view/ebook', ['backbone', 'jquery', 'tools/blobber', 'template/ebook', '
                     reader.readAsArrayBuffer(this.result);
                 };
 
+                // need to better handle that
                 request.onerror = function () {
                     console.error(this.error);
                 };
             },
 
             transferFile: function (filePath, fileType, dest) {
+                // transfer resource to iframe
                 Blobber.buffery(filePath, function (buffer) {
                     var objData = {
                         action: "transfer",
@@ -116,8 +123,26 @@ define('view/ebook', ['backbone', 'jquery', 'tools/blobber', 'template/ebook', '
                 }, "*");
             },
 
+            hideToolbar: function () {
+                this.$el.find(".ebook-toolbar").addClass("hidden");
+            },
+
+            displayToolbar: function () {
+                this.$el.find(".ebook-toolbar").removeClass("hidden");
+                setTimeout(this.hideToolbar.bind(this), 4000);
+            },
+
+            requestFullScreen: function () {
+                Backbone.trigger("fullscreen:enter");
+            },
+
+            exitFullScreen: function () {
+                Backbone.trigger("fullscreen:exit");
+            },
+
             close: function () {
-                $(window).off("message");
+                this.stopListening(Backbone);
+                this.exitFullScreen();
                 this.remove();
             }
         });

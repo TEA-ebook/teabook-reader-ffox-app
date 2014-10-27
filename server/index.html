@@ -87,15 +87,30 @@
     var isReadiumReady = function () {
         if (typeof require !== "undefined" && typeof readiumReady !== "undefined") {
             clearInterval(reeadiumReadyTest);
-            require(['Readium'], function (Readium) {
-                window.readium = new Readium({ jsLibRoot: "" }, { el: '#epub-reader-frame' }, function (error) {
+
+            require(['Readium', 'gestures'], function (Readium, GesturesHandler) {
+                var readerOptions = { el: '#epub-reader-frame' };
+                window.readium = new Readium({ jsLibRoot: "" }, readerOptions, function (error) {
                     console.error(error);
                 });
+
+                // setup gestures support with hammer
+                var gesturesHandler = new GesturesHandler(readium.reader, readerOptions.el);
+                gesturesHandler.initialize();
+
+                // transfer all Readium events to the app
                 $.map(ReadiumSDK.Events, function(event) {
                     window.readium.reader.on(event, function() {
                         window.parent.postMessage(event, "*");
                     });
                 });
+
+                //
+                $(window).click(function() {
+                    window.parent.postMessage("click", "*");
+                });
+
+                // request epub data
                 window.parent.postMessage("sendEpub", "*");
             });
         }

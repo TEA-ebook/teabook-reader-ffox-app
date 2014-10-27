@@ -1,5 +1,5 @@
 /*global define: true, Blob: true, window: true, XMLHttpRequest: true*/
-define('tools/blobber', function () {
+define('helper/blobber', function () {
     "use strict";
 
     return {

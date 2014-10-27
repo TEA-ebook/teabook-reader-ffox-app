@@ -1,0 +1,11 @@
+{
+    "name": "teabook-reader-app-tests",
+    "private": true,
+    "dependencies": {
+        "mocha": "~2.0.1",
+        "chai": "~1.9.2",
+        "sinon": "~1.10.3",
+        "sinon-chai": "~2.6.0"
+    },
+    "devDependencies": {}
+}

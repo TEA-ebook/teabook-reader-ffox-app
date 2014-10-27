@@ -15,7 +15,7 @@ define("collection/ebooks", ["backbone", "model/ebook"], function (Backbone, Ebo
             if (navigator && navigator.getDeviceStorage) {
                 ebookFiles = navigator.getDeviceStorage('sdcard');
 
-                // Let's browse all the images available
+                // Let's browse all the ebooks available
                 cursor = ebookFiles.enumerate("books");
 
                 collection = this;

@@ -13,6 +13,7 @@ define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
             },
 
             initialize: function () {
+                this.listenTo(Backbone, 'destroy', this.remove.bind(this));
                 this.render();
             },
 
@@ -27,7 +28,6 @@ define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
                     Backbone.history.navigate("ebook/" + window.encodeURIComponent(this.model.get("name")), true);
                 }.bind(this), 300);
             }
-
         });
 
         return BookView;

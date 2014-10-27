@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mocha Spec Runner</title>
+    <link rel="stylesheet" href="vendor/mocha/mocha.css">
+</head>
+<body>
+    <div id="mocha"></div>
+    <script src="vendor/mocha/mocha.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        mocha.setup('bdd');
+        mocha.bail(false);
+    </script>
+
+    <script src="vendor/chai/chai.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var should = chai.should();
+    </script>
+
+    <!-- include source files here... -->
+    <script type="text/javascript">
+        var curl = {
+            baseUrl: '../app/js',
+            pluginPath: '../vendor/curl/src/curl/plugin',
+            paths: {
+                'jquery': '../vendor/jquery/dist/jquery.min.js',
+                'underscore': '../vendor/underscore/underscore.js',
+                'backbone': '../vendor/backbone/backbone.js',
+                'handlebars': '../vendor/handlebars/handlebars.amd.js',
+                'spin': '../vendor/spin.js/spin.js',
+                'sinon-chai': '../../test/vendor/sinon-chai/lib/sinon-chai'
+            },
+            packages: [
+                {
+                    name: 'sinon',
+                    location: '../../test/vendor/sinon/lib',
+                    main: 'sinon-server-1.10.3.js'
+                }
+            ]
+        };
+    </script>
+    <script type="text/javascript" src="../dist/js/curl.js"></script>
+
+    <!-- include spec files here... -->
+    <script src="spec/model/ebook.js" type="text/javascript"></script>
+    <script src="spec/collection/ebooks.js" type="text/javascript"></script>
+    <script src="spec/route/bookshelf.js" type="text/javascript"></script>
+    <script src="spec/route/ebook.js" type="text/javascript"></script>
+    <script src="spec/view/bookshelf/index.js" type="text/javascript"></script>
+    <script src="spec/view/bookshelf/book.js" type="text/javascript"></script>
+    <script src="spec/view/ebook.js" type="text/javascript"></script>
+    <script src="spec/helper/domEvents.js" type="text/javascript"></script>
+    <script src="spec/router.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        curl(['backbone', 'jquery', 'sinon', 'sinon-chai'], function (Backbone, $, sinon, sinonChai) {
+            chai.use(sinonChai);
+            if (window.mochaPhantomJS) {
+                mochaPhantomJS.run();
+            } else {
+                mocha.run();
+            }
+        });
+    </script>
+</body>
+</html>

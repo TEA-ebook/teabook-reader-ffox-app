@@ -1,5 +1,6 @@
 html {
   box-sizing: border-box;
+  font-family: Fira Sans Light;
 }
 
 *, *:before, *:after {
@@ -11,6 +12,10 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+body:fullscreen, body:-moz-full-screen, body:-webkit-full-screen {
+  overflow: hidden;
 }
 
 iframe {
@@ -33,7 +38,7 @@ iframe {
 }
 
 .shelf > .shelf-tab > .ebook {
-  background: linear-gradient(to bottom, #45b8ec, #417a95);
+  background: linear-gradient(to bottom, #00CAF2, #008EAB);
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.8);
   cursor: pointer;
   height: 80px;
@@ -50,21 +55,38 @@ iframe {
 }
 
 .ebook-toolbar {
-  background-color: rgba(154, 152, 163, 0.89);
+  background: linear-gradient(to bottom, #cd6623, #bb482d);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.6);
+  color: #ffffff;
   display: flex;
-  height: 30px;
+  font-family: Fira Sans Regular;
+  height: 3rem;
   justify-content: flex-start;
+  overflow: hidden;
   position: absolute;
   top: 0;
   width: 100%;
+  transition: height 0.5s;
+}
+
+.ebook-toolbar.hidden {
+  box-shadow: none;
+  height: 0px;
+  transition-property: height 1s;
 }
 
 .ebook-toolbar > .back {
-  background-color: #ffffff;
-  border: 0;
-  color: #000000;
-  font-size: 1.5rem;
+  background: none transparent;
+  border: 0px;
+  border-radius: 0px;
   height: 100%;
-  width: 60px;
+  padding: 0;
+  width: 2rem;
   z-index: 500;
+}
+
+.ebook-toolbar > h1 {
+  line-height: 3rem;
+  margin: 0;
+  padding-left: 1rem;
 }
