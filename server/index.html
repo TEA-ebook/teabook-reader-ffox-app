@@ -74,7 +74,10 @@
             else if (event.data.action === "epub") {
                 var epubFile = new Blob([event.data.content], { "type": event.data.type });
                 window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-                    window.parent.postMessage("readyToRead", "*");
+                    packageDocument.getTocText(function(toc) {
+                        window.parent.postMessage({ type: "toc", data: toc }, "*");
+                        window.parent.postMessage("readyToRead", "*");
+                    });
                 });
             }
         }

@@ -15,6 +15,7 @@ define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
             initialize: function () {
                 this.listenTo(Backbone, 'destroy', this.remove.bind(this));
                 this.render();
+                this.ell = this.$el[0];
             },
 
             render: function () {
@@ -23,7 +24,7 @@ define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
             },
 
             open: function () {
-                this.$el.addClass("open");
+                this.ell.classList.add("open");
                 setTimeout(function () {
                     Backbone.history.navigate("ebook/" + window.encodeURIComponent(this.model.get("name")), true);
                 }.bind(this), 300);

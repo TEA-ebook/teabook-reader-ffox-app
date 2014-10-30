@@ -13,7 +13,11 @@ var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var debug = args.debug ? true : false;
 
 var paths = {
-    less: ['./app/less/*.less'],
+    less: [
+        './app/vendor/font-awesome/less/font-awesome.less',
+        './app/less/*.less'
+    ],
+    fonts: ['./app/vendor/font-awesome/fonts/*'],
     js: ['./app/js/**/*.js'],
     images: ['./app/images/*'],
     html: ['./app/*.html'],
@@ -28,6 +32,7 @@ var paths = {
     ],
     dist: {
         css: './dist/css/',
+        fonts: './dist/fonts/',
         js: './dist/js/',
         templates: './app/js/template/',
         images: './dist/images/',
@@ -90,8 +95,14 @@ gulp.task('compile-less', function () {
     return gulp.src(paths.less)
         .pipe(plugins.less())
         .pipe(gulpif(!debug, plugins.cssmin()))
+        .pipe(plugins.concat('main.css'))
         .pipe(gulp.dest(paths.dist.css))
         .pipe(plugins.connect.reload());
+});
+
+gulp.task('copy-fonts', function () {
+    return gulp.src(paths.fonts)
+        .pipe(gulp.dest(paths.dist.fonts));
 });
 
 gulp.task('process-styles', ['compile-less'], function () {
@@ -189,7 +200,7 @@ gulp.task("open-browser", function () {
         .pipe(plugins.open("", { url: "http://localhost:8080/" }));
 });
 
-gulp.task('build', ['process-images', 'process-html', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
+gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
 
 gulp.task('watch-codebase', ['build'], function () {
     if (debug) {

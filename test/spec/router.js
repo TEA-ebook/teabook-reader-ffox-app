@@ -13,6 +13,9 @@
             server = sinon.fakeServer.create();
             server.autoRespond = true;
             server.respondWith("GET", "books/list", [200, { "Content-Type": "text/plain" }, 'myepub1.epub\nmyepub2.epub']);
+
+            // mute console
+            sandbox.stub(console, "info");
         });
 
         afterEach(function () {
@@ -22,9 +25,9 @@
         });
 
         describe('instance', function () {
-            it('should have 2 routes', function (done) {
+            it('should have 3 routes', function (done) {
                 curl(['router'], function (appRouter) {
-                    appRouter.routes.should.have.keys(['', 'ebook/:uri']);
+                    appRouter.routes.should.have.keys(['', 'ebook/:uri', 'ebook/:uri/:chapter']);
                     done();
                 });
             });

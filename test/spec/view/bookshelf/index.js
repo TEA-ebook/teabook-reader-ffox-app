@@ -21,29 +21,20 @@
         });
 
         describe('instance', function () {
-            it('is a Backbone.View', function (done) {
-                curl(['collection/ebooks', 'view/bookshelf/index'], function (EbookCollection, BookshelfView) {
-                    var bookshelfView = new BookshelfView({ collection: new EbookCollection() });
-                    bookshelfView.close();
-
-                    bookshelfView.should.be.an.instanceof(Backbone.View);
-
-                    done();
-                });
-            });
-
             it('should render itself', function (done) {
                 curl(['collection/ebooks', 'model/ebook', 'view/bookshelf/index'], function (EbookCollection, EbookModel, BookshelfView) {
                     sandbox.spy(BookshelfView.prototype, "render");
 
+                    // Given a bookshelf view with an empty ebook collection
                     var ebooks = new EbookCollection();
-
                     var bookshelfView = new BookshelfView({ collection: ebooks });
+
+                    // When the ebook collection is loaded
                     ebooks.trigger('reset');
                     bookshelfView.close();
 
+                    // The view should be rendered
                     BookshelfView.prototype.render.should.have.been.calledOnce;
-
                     bookshelfView.$el.find(".shelf-tab").should.have.length.above(1);
 
                     done();
@@ -52,17 +43,20 @@
 
             it('should render books if collection is populated', function (done) {
                 curl(['collection/ebooks', 'model/ebook', 'view/bookshelf/index'], function (EbookCollection, EbookModel, BookshelfView) {
-                    sandbox.stub(BookshelfView.prototype, "renderEbook");
+                    sandbox.spy(BookshelfView.prototype, "renderEbook");
 
+                    // Given a bookshelf view with 2 ebooks in the collection
                     var ebooks = new EbookCollection();
                     ebooks.add(new EbookModel());
                     ebooks.add(new EbookModel());
-
                     var bookshelfView = new BookshelfView({ collection: ebooks });
+
+                    // When the ebook collection is loaded
                     ebooks.trigger('reset');
                     bookshelfView.close();
 
-                    BookshelfView.prototype.renderEbook.should.have.been.calledTwice;
+                    // 2 books should be visible
+                    bookshelfView.$el.find(".ebook").should.have.length(2);
 
                     done();
                 });

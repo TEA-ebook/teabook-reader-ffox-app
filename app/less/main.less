@@ -1,3 +1,5 @@
+@import "variables.less";
+
 html {
   box-sizing: border-box;
   font-family: Fira Sans Light;
@@ -8,7 +10,7 @@ html {
 }
 
 html, body {
-  background-color: #ececec;
+  background-color: @app-background-color;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -30,7 +32,7 @@ iframe {
 
 .shelf > .shelf-tab {
   align-items: flex-end;
-  background: url('../images/shelf-tab.jpg') repeat-x bottom, linear-gradient(to bottom, #ececec, #c8c8c8);
+  background: url('../images/shelf-tab.jpg') repeat-x bottom, linear-gradient(to bottom, @shelf-gradient-start, @shelf-gradient-end);
   display: flex;
   justify-content: space-around;
   height: 120px;
@@ -55,38 +57,72 @@ iframe {
 }
 
 .ebook-toolbar {
-  background: linear-gradient(to bottom, #cd6623, #bb482d);
+  background: linear-gradient(to bottom, @toolbar-gradient-start, @toolbar-gradient-end);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.6);
   color: #ffffff;
   display: flex;
   font-family: Fira Sans Regular;
-  height: 3rem;
+  height: @toolbar-height;
   justify-content: flex-start;
   overflow: hidden;
   position: absolute;
   top: 0;
   width: 100%;
-  transition: height 0.5s;
+  transition: height 0.5s ease;
 }
 
 .ebook-toolbar.hidden {
   box-shadow: none;
   height: 0px;
-  transition-property: height 1s;
+  transition: height 0.5s ease;
+}
+
+.ebook-toolbar button {
+  background: none transparent;
+  border: 0px;
+  border-radius: 0px;
+  color: #ffffff;
+  float: right;
+  line-height: inherit;
+  z-index: 500;
 }
 
 .ebook-toolbar > .back {
   background: none transparent;
   border: 0px;
   border-radius: 0px;
+  color: #ffffff;
   height: 100%;
-  padding: 0;
+  line-height: inherit;
   width: 2rem;
   z-index: 500;
 }
 
-.ebook-toolbar > h1 {
-  line-height: 3rem;
-  margin: 0;
-  padding-left: 1rem;
+.ebook-toolbar-buttons {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.ebook-toolbar-buttons > button {
+  padding: 0 8px;
+}
+
+.ebook-toc {
+  background-color: #ffffff;
+  bottom: -@toolbar-height;
+  height: 100%;
+  opacity: 0.9;
+  position: absolute;
+  width: 100%;
+  transition: bottom 0.5s ease;
+}
+
+.ebook-toc.hidden {
+  bottom: -600px;
+  transition: bottom 0.5s ease;
+}
+
+.ebook-toc > ul {
+  list-style: none;
 }

@@ -1,1 +1,5 @@
-define("template/bookshelf/book",["handlebars"],function(e){return e.default.template({compiler:[6,">= 2.0.0-beta.1"],main:function(e){var a=this.lambda,t=this.escapeExpression;return t(a(null!=e?e.name:e,e))},useData:!0})});
+define("template/bookshelf/book", ["handlebars"], function(Handlebars) {
+return Handlebars.default.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return escapeExpression(lambda((depth0 != null ? depth0.name : depth0), depth0));
+  },"useData":true}); });

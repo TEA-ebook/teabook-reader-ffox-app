@@ -13,22 +13,19 @@
             // restore the environment as it was before
             sandbox.restore();
         });
+
         describe('instance', function () {
-            it('is a Backbone.View', function (done) {
-                curl(['model/ebook', 'view/bookshelf/book'], function (EbookModel, BookView) {
-                    var bookView = new BookView({ model: new EbookModel() });
-
-                    bookView.should.be.an.instanceof(Backbone.View);
-
-                    done();
-                });
-            });
-
             it('should render the name of the book', function (done) {
                 curl(['model/ebook', 'view/bookshelf/book'], function (EbookModel, BookView) {
-                    var bookView = new BookView({ model: new EbookModel({ name: "myebook" }) });
+                    // Given a book view with an ebook model
+                    var bookView;
+                    var ebookModel = new EbookModel({ name: "myebook" });
 
-                    bookView.$el.text().should.match(/^myebook$/);
+                    // When the view is created and rendered
+                    bookView = new BookView({ model: ebookModel });
+
+                    // The name of the book should be visible
+                    bookView.$el[0].textContent.should.match(/^myebook$/);
 
                     done();
                 });

@@ -1,0 +1,4 @@
+<h3>Sommaire</h3>
+{{#each model.items}}
+    <li class="ebook-toc-item"><a href="#/ebook/{{../uri}}/{{this.content}}">{{this.text}}</a></li>
+{{/each}}
