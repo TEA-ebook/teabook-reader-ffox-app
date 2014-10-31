@@ -6,10 +6,11 @@ define('view/ebook/index',
         'model/ebook-pagination',
         'view/ebook/toolbar',
         'view/ebook/toc',
+        'view/ebook/options',
         'view/ebook/pagination',
         'template/ebook/index',
         'spin'],
-    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, PaginationView, template, Spinner) {
+    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, OptionsView, PaginationView, template, Spinner) {
         "use strict";
 
         var EbookView = Backbone.View.extend({
@@ -20,7 +21,8 @@ define('view/ebook/index',
                 "click button.back": "backToBookshelf",
                 "click button.bookshelf": "backToBookshelf",
                 "click button.table-of-contents": "showToc",
-                "click .ebook-pagination-chapters": "showToc"
+                "click .ebook-pagination-chapters": "showToc",
+                "click button.options": "showOptions"
             },
 
             autoHideTime: 5000,
@@ -33,10 +35,9 @@ define('view/ebook/index',
                 });
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
 
-                this.paginationInfo = new EbookPaginationModel();
-                this.paginationView = new PaginationView({ model: this.paginationInfo });
-
+                this.paginationView = new PaginationView({ model: new EbookPaginationModel() });
                 this.toolbarView = new ToolbarView();
+                this.optionsView = new OptionsView();
 
                 this.render();
             },
@@ -51,6 +52,10 @@ define('view/ebook/index',
 
                 // render sanboxed iframe
                 this.$el.append(template(this.model.attributes));
+
+                // render options
+                this.optionsView.render();
+                this.$el.append(this.optionsView.el);
 
                 // render pagination
                 this.paginationView.render();
@@ -199,11 +204,22 @@ define('view/ebook/index',
                 event.stopImmediatePropagation();
                 this.clearUiTempo();
 
-                if (this.tocViewEl[0].classList.contains("hidden")) {
-                    this.tocViewEl[0].classList.remove("hidden");
+                if (this.tocView.toggle()) {
+                    this.toolbarView.show();
                     this.paginationView.hide();
                 } else {
                     this.hideToc();
+                }
+            },
+
+            showOptions: function (event) {
+                event.stopImmediatePropagation();
+                this.clearUiTempo();
+
+                if (this.optionsView.toggle()) {
+                    this.toolbarView.show();
+                    this.paginationView.hide();
+                    this.tocView.hide();
                 }
             },
 

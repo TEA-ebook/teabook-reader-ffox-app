@@ -15,12 +15,12 @@ define('view/ebook/toolbar', ['backbone', 'template/ebook/toolbar'],
 
             toggle: function () {
                 if (this.$el[0].classList.contains("hidden")) {
-                    return this.display();
+                    return this.show();
                 }
                 return this.hide();
             },
 
-            display: function () {
+            show: function () {
                 this.$el[0].classList.remove("hidden");
                 return true;
             },

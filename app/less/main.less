@@ -62,7 +62,6 @@ iframe {
 /** ebook Toolbar **/
 .ebook-toolbar {
   background-color: @toolbar-color;
-  /*box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.6);*/
   color: #ffffff;
   display: flex;
   font-family: Fira Sans Regular;
@@ -104,6 +103,7 @@ iframe {
 .ebook-toolbar-buttons {
   display: flex;
   justify-content: flex-start;
+  margin-left: 16px;
   width: 100%;
 }
 
@@ -121,7 +121,6 @@ iframe {
 .ebook-toc {
   background-color: #ffffff;
   bottom: -@toolbar-height;
-  /*box-shadow: 0px -2px 2px 0px rgba(0, 0, 0, 0.6);*/
   height: 100%;
   overflow-y: auto;
   position: absolute;
@@ -184,4 +183,21 @@ iframe {
 
 .ebook-pagination-pages > progress::-moz-progress-bar {
   background-color: #00AACC;
+}
+
+
+/** ebook Options **/
+.ebook-options {
+  background-color: #d3d3d3;
+  top: @toolbar-height;
+  height: 50%;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  transition: height 0.5s ease;
+}
+
+.ebook-options.hidden {
+  height: 0;
+  transition: height 0.5s ease;
 }
