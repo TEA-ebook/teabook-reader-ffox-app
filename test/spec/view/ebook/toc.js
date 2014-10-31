@@ -15,11 +15,18 @@
         });
 
         describe('instance', function () {
-            it('is a Backbone.View', function (done) {
-                curl(['view/ebook/toc'], function (EbookTocView) {
-                    var ebookTocView = new EbookTocView({});
+            it('should render 20 items', function (done) {
+                curl(['model/ebook-toc', 'view/ebook/toc', 'text!../../test/samples/epub-toc.ncx'], function (EbookTocModel, EbookTocView, tocXml) {
+                    // Given a toc and an ebookToc view
+                    var toc = new EbookTocModel();
+                    toc.load(tocXml);
+                    var ebookTocView = new EbookTocView({ model: toc, uri: 'books/myebook.epub' });
 
-                    ebookTocView.should.be.an.instanceof(Backbone.View);
+                    // When it renders
+                    ebookTocView.render();
+
+                    // It should render 2 items in the toc
+                    ebookTocView.$el.find("li").should.have.length(20);
 
                     done();
                 });

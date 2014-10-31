@@ -30,6 +30,8 @@ iframe {
   height: 100%;
 }
 
+
+/** Bookshelf **/
 .shelf > .shelf-tab {
   align-items: flex-end;
   background: url('../images/shelf-tab.jpg') repeat-x bottom, linear-gradient(to bottom, @shelf-gradient-start, @shelf-gradient-end);
@@ -56,9 +58,11 @@ iframe {
   transition-duration: 0.4s;
 }
 
+
+/** ebook Toolbar **/
 .ebook-toolbar {
-  background: linear-gradient(to bottom, @toolbar-gradient-start, @toolbar-gradient-end);
-  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.6);
+  background-color: @toolbar-color;
+  /*box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.6);*/
   color: #ffffff;
   display: flex;
   font-family: Fira Sans Regular;
@@ -72,7 +76,6 @@ iframe {
 }
 
 .ebook-toolbar.hidden {
-  box-shadow: none;
   height: 0px;
   transition: height 0.5s ease;
 }
@@ -100,7 +103,7 @@ iframe {
 
 .ebook-toolbar-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   width: 100%;
 }
 
@@ -108,21 +111,77 @@ iframe {
   padding: 0 8px;
 }
 
+.ebook-toolbar-buttons > button:last-child {
+  margin-left: auto;
+  padding: 0 16px;
+}
+
+
+/** ebook Table Of Contents **/
 .ebook-toc {
   background-color: #ffffff;
   bottom: -@toolbar-height;
+  /*box-shadow: 0px -2px 2px 0px rgba(0, 0, 0, 0.6);*/
   height: 100%;
-  opacity: 0.9;
+  overflow-y: auto;
   position: absolute;
   width: 100%;
   transition: bottom 0.5s ease;
 }
 
 .ebook-toc.hidden {
-  bottom: -600px;
+  bottom: -100%;
   transition: bottom 0.5s ease;
 }
 
 .ebook-toc > ul {
+  font-size: 1.2rem;
   list-style: none;
+  margin-bottom: @toolbar-height + 2rem;
+}
+
+
+/** ebook Pagination **/
+.ebook-pagination {
+  align-items: baseline;
+  background-color: @toolbar-color;
+  bottom: 0;
+  color: #ffffff;
+  display: flex;
+  height: 1.5rem;
+  justify-content: space-around;
+  position: absolute;
+  width: 100%;
+  transition: height 0.5s ease;
+}
+
+.ebook-pagination.hidden {
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.5s ease;
+}
+
+.ebook-pagination-chapters {
+  text-align: center;
+  width: 25%;
+}
+
+.ebook-pagination-chapters > * {
+  padding: 4px;
+}
+
+.ebook-pagination-pages {
+  text-align: center;
+  width: 75%;
+}
+
+.ebook-pagination-pages > progress {
+  background-color: #F4F4F4;
+  border: 0;
+  height: 1rem;
+  width: 90%;
+}
+
+.ebook-pagination-pages > progress::-moz-progress-bar {
+  background-color: #00AACC;
 }

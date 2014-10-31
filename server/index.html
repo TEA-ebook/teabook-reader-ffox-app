@@ -71,9 +71,13 @@
                     readium.reader.openPagePrev();
                 }
             }
+            else if (event.data.action === "chapter") {
+                window.readium.reader.openContentUrl(event.data.content);
+            }
             else if (event.data.action === "epub") {
                 var epubFile = new Blob([event.data.content], { "type": event.data.type });
                 window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
+                    window.parent.postMessage({ type: "chapters", data: packageDocument.spineLength() }, "*");
                     packageDocument.getTocText(function(toc) {
                         window.parent.postMessage({ type: "toc", data: toc }, "*");
                         window.parent.postMessage("readyToRead", "*");
@@ -101,10 +105,26 @@
                 var gesturesHandler = new GesturesHandler(readium.reader, readerOptions.el);
                 gesturesHandler.initialize();
 
-                // transfer all Readium events to the app
-                $.map(ReadiumSDK.Events, function(event) {
+                // transfer pagination info to the app
+                window.readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function(pageChangeData) {
+                    window.parent.postMessage({
+                        type: "readium",
+                        event: {
+                            type: ReadiumSDK.Events.PAGINATION_CHANGED,
+                            data: pageChangeData.paginationInfo.openPages[0]
+                        }
+                    }, "*");
+                });
+
+                // transfer all other Readium events to the app
+                [ ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED ].forEach(function(event) {
                     window.readium.reader.on(event, function() {
-                        window.parent.postMessage(event, "*");
+                        window.parent.postMessage({
+                            type: "readium",
+                            event: {
+                                type: event
+                            }
+                        }, "*");
                     });
                 });
 

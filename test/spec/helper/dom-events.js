@@ -37,7 +37,7 @@ function fireEvent(element, event) {
 
         describe('instance', function () {
             it('should handle visibility change events', function (done) {
-                curl(['helper/domEvents'], function (DomEvents) {
+                curl(['helper/dom-events'], function (DomEvents) {
                     sandbox.stub(DomEvents, "handleVisibilityChange");
 
                     DomEvents.initialize();
@@ -51,7 +51,7 @@ function fireEvent(element, event) {
             });
 
             it('should handle postMessage events', function (done) {
-                curl(['helper/domEvents'], function (DomEvents) {
+                curl(['helper/dom-events'], function (DomEvents) {
                     sandbox.stub(DomEvents, "handleMessage");
 
                     DomEvents.initialize();
@@ -65,7 +65,7 @@ function fireEvent(element, event) {
             });
 
             it('should handle full screen requests', function (done) {
-                curl(['helper/domEvents'], function (DomEvents) {
+                curl(['helper/dom-events'], function (DomEvents) {
                     sandbox.stub(DomEvents, "enterFullScreen");
                     sandbox.stub(DomEvents, "exitFullScreen");
 

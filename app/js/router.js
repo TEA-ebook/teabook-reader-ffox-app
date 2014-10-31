@@ -1,5 +1,5 @@
 /*global define: true, window: true*/
-define('router', ['backbone', 'helper/domEvents', 'route/bookshelf', 'route/ebook', 'route/ebook-chapter'],
+define('router', ['backbone', 'helper/dom-events', 'route/bookshelf', 'route/ebook', 'route/ebook-chapter'],
     function (Backbone, DomEvents, bookshelfRoute, ebookRoute, ebookChapterRoute) {
         "use strict";
 

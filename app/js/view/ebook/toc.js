@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define: true, window: true*/
 define('view/ebook/toc', ['backbone', 'template/ebook/toc'],
     function (Backbone, tocTemplate) {
         "use strict";
@@ -7,10 +7,6 @@ define('view/ebook/toc', ['backbone', 'template/ebook/toc'],
 
             tagName: 'ul',
 
-            events: {
-                "click": "goToChapter"
-            },
-
             initialize: function (options) {
                 this.uri = options.uri;
             },
@@ -18,15 +14,9 @@ define('view/ebook/toc', ['backbone', 'template/ebook/toc'],
             render: function () {
                 this.$el.html(tocTemplate({
                     model: this.model.attributes,
-                    uri: this.uri
+                    uri: window.encodeURIComponent(this.uri)
                 }));
-            },
-
-            goToChapter: function (event) {
-                console.debug("gotcha");
-
-                event.originalEvent.stopImmediatePropagation();
-                return false;
+                return this;
             }
         });
 

@@ -1,6 +1,6 @@
 /*global define: true, window: true*/
 /*jslint nomen: true*/
-define('helper/domEvents', ['backbone', 'underscore', 'jquery'], function (Backbone, _, $) {
+define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Backbone, _, $) {
     "use strict";
     var DomEvents = {};
 

@@ -38,15 +38,14 @@
 
             it('hides the toolbar after 5s', function (done) {
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
-                    sandbox.spy(EbookView.prototype, "hideToolbar");
                     sandbox.useFakeTimers();
 
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
                     Backbone.trigger("message", { data: "readyToRead" });
 
-                    // When the toolbar is displayed and 5s passed
-                    ebookView.displayToolbar();
+                    // When the user tap once the screen and waits for 5s
+                    Backbone.trigger("message", { data: "tap" });
                     sandbox.clock.tick(5000);
 
                     // The toolbar should be automatically hidden
@@ -98,8 +97,6 @@
         describe('should react to events :', function () {
             it('tap once -> display the toolbar', function (done) {
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
-                    sandbox.spy(EbookView.prototype, "displayToolbar");
-
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
                     Backbone.trigger("message", { data: "readyToRead" });
@@ -108,7 +105,6 @@
                     Backbone.trigger("message", { data: "tap" });
 
                     // The toolbar should be visible
-                    EbookView.prototype.displayToolbar.should.have.been.calledOnce;
                     ebookView.$el.find(".ebook-toolbar").hasClass("hidden").should.be.false;
 
                     ebookView.close();
@@ -118,8 +114,6 @@
 
             it('tap twice -> hide the toolbar if it\'s visible', function (done) {
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
-                    sandbox.spy(EbookView.prototype, "displayToolbar");
-
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
                     Backbone.trigger("message", { data: "readyToRead" });
@@ -129,7 +123,6 @@
                     Backbone.trigger("message", { data: "tap" });
 
                     // The toolbar should be hidden
-                    EbookView.prototype.displayToolbar.should.have.been.calledTwice;
                     ebookView.$el.find(".ebook-toolbar").hasClass("hidden").should.be.true;
 
                     ebookView.close();
@@ -146,11 +139,11 @@
 
                     // When a 'sendResources' event is triggered
                     Backbone.trigger("message", { data: "sendResources" });
-                    ebookView.close();
 
                     // It should transfer the resources
                     EbookView.prototype.transferFile.should.have.been.calledOnce;
 
+                    ebookView.close();
                     done();
                 });
             });
@@ -175,8 +168,6 @@
 
             it('readyToRead -> toolbar hidden', function (done) {
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
-                    sandbox.spy(EbookView.prototype, "hideToolbar");
-
                     // Given an ebook view
                     var ebookView = new EbookView({ model: new EbookModel() });
 
@@ -199,7 +190,12 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium starts loading the epub
-                    Backbone.trigger("message", { data: "ContentDocumentLoadStart" });
+                    Backbone.trigger("message", {
+                        data: {
+                            type: "readium",
+                            event: { type: "ContentDocumentLoadStart" }
+                        }
+                    });
                     ebookView.close();
 
                     // It should spin the spinner
@@ -209,7 +205,7 @@
                 });
             });
 
-            it('PaginationChanged -> spinner should stop spinning', function (done) {
+            it('ContentDocumentLoaded -> spinner should stop spinning', function (done) {
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
                     sandbox.stub(EbookView.prototype, "stopSpin");
 
@@ -217,7 +213,12 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium has loaded the epub
-                    Backbone.trigger("message", { data: "ContentDocumentLoaded" });
+                    Backbone.trigger("message", {
+                        data: {
+                            type: "readium",
+                            event: { type: "ContentDocumentLoaded" }
+                        }
+                    });
                     ebookView.close();
 
                     // It should stop the spinner
@@ -235,7 +236,12 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium has changed its pagination
-                    Backbone.trigger("message", { data: "PaginationChanged" });
+                    Backbone.trigger("message", {
+                        data: {
+                            type: "readium",
+                            event: { type: "PaginationChanged" }
+                        }
+                    });
                     ebookView.close();
 
                     // It should stop the spinner

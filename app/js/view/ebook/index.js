@@ -1,6 +1,15 @@
 /*global define: true, navigator: true, FileReader: true, window: true, key: true*/
-define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'view/ebook/toolbar', 'view/ebook/toc', 'template/ebook/index', 'spin'],
-    function (Backbone, Blobber, EbookTocModel, ToolbarView, TocView, ebookTemplate, Spinner) {
+define('view/ebook/index',
+    [   'backbone',
+        'helper/blobber',
+        'model/ebook-toc',
+        'model/ebook-pagination',
+        'view/ebook/toolbar',
+        'view/ebook/toc',
+        'view/ebook/pagination',
+        'template/ebook/index',
+        'spin'],
+    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, PaginationView, template, Spinner) {
         "use strict";
 
         var EbookView = Backbone.View.extend({
@@ -11,13 +20,21 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
                 "click button.back": "backToBookshelf",
                 "click button.bookshelf": "backToBookshelf",
                 "click button.table-of-contents": "showToc",
-                "click": "displayToolbar"
+                "click .ebook-pagination-chapters": "showToc"
             },
 
+            autoHideTime: 5000,
+
             initialize: function () {
-                this.listenTo(Backbone, 'visibility:visible', this.requestFullScreen);
-                this.listenTo(Backbone, 'message', this.receiveMessage.bind(this));
+                Backbone.on({
+                    'visibility:visible': this.requestFullScreen,
+                    'ebook:chapter': this.openChapter.bind(this),
+                    'message': this.receiveMessage.bind(this)
+                });
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
+
+                this.paginationInfo = new EbookPaginationModel();
+                this.paginationView = new PaginationView({ model: this.paginationInfo });
 
                 this.toolbarView = new ToolbarView();
 
@@ -33,7 +50,12 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
                 this.$el.html(this.toolbarView.el);
 
                 // render sanboxed iframe
-                this.$el.append(ebookTemplate(this.model.attributes));
+                this.$el.append(template(this.model.attributes));
+
+                // render pagination
+                this.paginationView.render();
+                this.$el.append(this.paginationView.el);
+                this.paginationView.hide();
 
                 // spinning wheel : ebook is indeed long to load
                 this.spinner = new Spinner({
@@ -45,6 +67,8 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
                     width: 12
                 });
                 this.spin();
+
+                return this;
             },
 
             backToBookshelf: function () {
@@ -59,22 +83,45 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
                     } else if (event.data === "sendEpub") {
                         this.sendEpub();
                     } else if (event.data === "readyToRead") {
-                        this.hideToolbar();
-                    } else if (event.data === "PaginationChanged") {
-                        this.stopSpin();
-                    } else if (event.data === "ContentDocumentLoadStart") {
-                        this.spin();
-                    } else if (event.data === "ContentDocumentLoaded") {
-                        this.stopSpin();
+                        this.toolbarView.hide();
                     } else if (event.data === "click" || event.data === "tap") {
-                        this.displayToolbar();
-                    } else if (typeof event.data === "object") {
-                        if (event.data.type === "toc") {
-                            this.generateToc(event.data.data);
+                        if (this.toolbarView.toggle()) {
+                            this.hideUiTempo();
+                        } else {
+                            this.clearUiTempo();
                         }
+                        this.paginationView.toggle();
+                    } else if (typeof event.data === "object") {
+                        this.handleReadiumEvent(event);
                     }
                 } else {
                     console.warn("received empty message");
+                }
+            },
+
+            handleReadiumEvent: function (event) {
+                if (event.data.type === "toc") {
+                    this.generateToc(event.data.data);
+                } else if (event.data.type === "readium") {
+                    var readiumEvent = event.data.event;
+                    if (readiumEvent.type === "PaginationChanged") {
+                        this.stopSpin();
+                    } else if (readiumEvent.type === "ContentDocumentLoadStart") {
+                        this.spin();
+                    } else if (readiumEvent.type === "ContentDocumentLoaded") {
+                        this.stopSpin();
+                    }
+                }
+            },
+
+            openChapter: function (chapter) {
+                var sandbox = this.getSandbox();
+                if (sandbox !== null) {
+                    sandbox.postMessage({
+                        action: "chapter",
+                        content: chapter
+                    }, "*");
+                    this.hideToc();
                 }
             },
 
@@ -90,7 +137,6 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
                 if (!this.sandbox) {
                     this.sandbox = this.$el.find('iframe')[0].contentWindow;
                 }
-                console.debug("ebook>index>getSandbox", this.sandbox);
                 return this.sandbox;
             },
 
@@ -138,27 +184,6 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
                 }, "*");
             },
 
-            hideToolbar: function () {
-                this.toolbarView.$el[0].classList.add("hidden");
-                this.disableToolbarAutoHide();
-            },
-
-            displayToolbar: function () {
-                if (this.toolbarView.$el[0].classList.contains("hidden")) {
-                    this.toolbarView.$el[0].classList.remove("hidden");
-                    this.toolbarTimer = window.setTimeout(this.hideToolbar.bind(this), 5000);
-                } else {
-                    this.hideToolbar();
-                }
-            },
-
-            disableToolbarAutoHide: function () {
-                if (this.toolbarTimer) {
-                    window.clearTimeout(this.toolbarTimer);
-                    this.toolbarTimer = null;
-                }
-            },
-
             generateToc: function (tocXml) {
                 var toc = new EbookTocModel();
                 toc.load(tocXml);
@@ -172,14 +197,33 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
 
             showToc: function (event) {
                 event.stopImmediatePropagation();
+                this.clearUiTempo();
 
                 if (this.tocViewEl[0].classList.contains("hidden")) {
                     this.tocViewEl[0].classList.remove("hidden");
-                    this.disableToolbarAutoHide();
+                    this.paginationView.hide();
                 } else {
-                    this.tocViewEl[0].classList.add("hidden");
-                    this.hideToolbar();
+                    this.hideToc();
                 }
+            },
+
+            hideUiTempo: function () {
+                this.uiTempo = setTimeout(function () {
+                    this.toolbarView.hide();
+                    this.paginationView.hide();
+                }.bind(this), this.autoHideTime);
+            },
+
+            clearUiTempo: function () {
+                if (this.uiTempo) {
+                    window.clearTimeout(this.uiTempo);
+                    this.uiTempo = null;
+                }
+            },
+
+            hideToc: function () {
+                this.tocViewEl[0].classList.add("hidden");
+                this.toolbarView.hide();
             },
 
             requestFullScreen: function () {
@@ -191,10 +235,13 @@ define('view/ebook/index', ['backbone', 'helper/blobber', 'model/ebook-toc', 'vi
             },
 
             close: function () {
-                this.stopListening(Backbone, "message");
-                this.stopListening(Backbone, "visibility:visible");
+                Backbone.off("message");
+                Backbone.off("visibility:visible");
+
                 this.exitFullScreen();
+
                 this.toolbarView.remove();
+                this.paginationView.close();
                 if (this.tocView) {
                     this.tocView.remove();
                 }
