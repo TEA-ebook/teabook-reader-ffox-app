@@ -74,6 +74,11 @@
             else if (event.data.action === "chapter") {
                 window.readium.reader.openContentUrl(event.data.content);
             }
+            else if (event.data.action === "font-size") {
+                window.readium.reader.updateSettings({
+                    fontSize: event.data.content
+                });
+            }
             else if (event.data.action === "epub") {
                 var epubFile = new Blob([event.data.content], { "type": event.data.type });
                 window.readium.openPackageDocument(epubFile, function (packageDocument, options) {

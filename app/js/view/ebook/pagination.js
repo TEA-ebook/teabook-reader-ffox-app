@@ -39,13 +39,13 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
 
             toggle: function () {
                 if (this.$el[0].classList.contains("hidden")) {
-                    this.display();
+                    this.show();
                 } else {
                     this.hide();
                 }
             },
 
-            display: function () {
+            show: function () {
                 this.$el[0].classList.remove("hidden");
                 return true;
             },

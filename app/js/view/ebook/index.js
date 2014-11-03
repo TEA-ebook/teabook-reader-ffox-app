@@ -6,10 +6,11 @@ define('view/ebook/index',
         'model/ebook-pagination',
         'view/ebook/toolbar',
         'view/ebook/toc',
+        'view/ebook/options',
         'view/ebook/pagination',
         'template/ebook/index',
         'spin'],
-    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, PaginationView, template, Spinner) {
+    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, OptionsView, PaginationView, template, Spinner) {
         "use strict";
 
         var EbookView = Backbone.View.extend({
@@ -20,6 +21,7 @@ define('view/ebook/index',
                 "click button.back": "backToBookshelf",
                 "click button.bookshelf": "backToBookshelf",
                 "click button.table-of-contents": "showToc",
+                "click button.options": "showOptions",
                 "click .ebook-pagination-chapters": "showToc"
             },
 
@@ -29,14 +31,15 @@ define('view/ebook/index',
                 Backbone.on({
                     'visibility:visible': this.requestFullScreen,
                     'ebook:chapter': this.openChapter.bind(this),
-                    'message': this.receiveMessage.bind(this)
+                    'font-size:set': this.changeFontSize.bind(this),
+                    'message': this.receiveMessage.bind(this),
+                    'options:closed': this.hideUi.bind(this)
                 });
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
 
-                this.paginationInfo = new EbookPaginationModel();
-                this.paginationView = new PaginationView({ model: this.paginationInfo });
-
+                this.paginationView = new PaginationView({ model: new EbookPaginationModel() });
                 this.toolbarView = new ToolbarView();
+                this.optionsView = new OptionsView();
 
                 this.render();
             },
@@ -51,6 +54,10 @@ define('view/ebook/index',
 
                 // render sanboxed iframe
                 this.$el.append(template(this.model.attributes));
+
+                // render options
+                this.optionsView.render();
+                this.$el.append(this.optionsView.el);
 
                 // render pagination
                 this.paginationView.render();
@@ -84,13 +91,16 @@ define('view/ebook/index',
                         this.sendEpub();
                     } else if (event.data === "readyToRead") {
                         this.toolbarView.hide();
+                        this.optionsView.hide();
+                        this.paginationView.hide();
                     } else if (event.data === "click" || event.data === "tap") {
                         if (this.toolbarView.toggle()) {
+                            this.paginationView.show();
                             this.hideUiTempo();
                         } else {
+                            this.paginationView.hide();
                             this.clearUiTempo();
                         }
-                        this.paginationView.toggle();
                     } else if (typeof event.data === "object") {
                         this.handleReadiumEvent(event);
                     }
@@ -122,6 +132,16 @@ define('view/ebook/index',
                         content: chapter
                     }, "*");
                     this.hideToc();
+                }
+            },
+
+            changeFontSize: function (fontSize) {
+                var sandbox = this.getSandbox();
+                if (sandbox !== null) {
+                    sandbox.postMessage({
+                        action: "font-size",
+                        content: fontSize
+                    }, "*");
                 }
             },
 
@@ -191,27 +211,47 @@ define('view/ebook/index',
                 this.tocView = new TocView({ model: toc, uri: this.model.get("name") });
                 this.tocView.render();
 
-                this.tocViewEl = this.$el.find(".ebook-toc");
-                this.tocViewEl.html(this.tocView.el);
+                this.$el.append(this.tocView.el);
             },
 
             showToc: function (event) {
                 event.stopImmediatePropagation();
                 this.clearUiTempo();
 
-                if (this.tocViewEl[0].classList.contains("hidden")) {
-                    this.tocViewEl[0].classList.remove("hidden");
+                if (this.tocView.toggle()) {
+                    this.toolbarView.show();
+                    this.optionsView.hide();
                     this.paginationView.hide();
                 } else {
                     this.hideToc();
                 }
             },
 
+            hideToc: function () {
+                this.tocView.hide();
+                this.toolbarView.hide();
+            },
+
+            showOptions: function (event) {
+                event.stopImmediatePropagation();
+                this.clearUiTempo();
+
+                if (this.optionsView.toggle()) {
+                    this.toolbarView.show();
+                    this.paginationView.show();
+                    this.tocView.hide();
+                }
+            },
+
+            hideUi: function () {
+                this.toolbarView.hide();
+                this.optionsView.hide();
+                this.tocView.hide();
+                this.paginationView.hide();
+            },
+
             hideUiTempo: function () {
-                this.uiTempo = setTimeout(function () {
-                    this.toolbarView.hide();
-                    this.paginationView.hide();
-                }.bind(this), this.autoHideTime);
+                this.uiTempo = setTimeout(this.hideUi.bind(this), this.autoHideTime);
             },
 
             clearUiTempo: function () {
@@ -219,11 +259,6 @@ define('view/ebook/index',
                     window.clearTimeout(this.uiTempo);
                     this.uiTempo = null;
                 }
-            },
-
-            hideToc: function () {
-                this.tocViewEl[0].classList.add("hidden");
-                this.toolbarView.hide();
             },
 
             requestFullScreen: function () {

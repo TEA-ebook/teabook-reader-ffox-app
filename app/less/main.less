@@ -62,7 +62,6 @@ iframe {
 /** ebook Toolbar **/
 .ebook-toolbar {
   background-color: @toolbar-color;
-  /*box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.6);*/
   color: #ffffff;
   display: flex;
   font-family: Fira Sans Regular;
@@ -104,6 +103,7 @@ iframe {
 .ebook-toolbar-buttons {
   display: flex;
   justify-content: flex-start;
+  margin-left: 16px;
   width: 100%;
 }
 
@@ -121,7 +121,6 @@ iframe {
 .ebook-toc {
   background-color: #ffffff;
   bottom: -@toolbar-height;
-  /*box-shadow: 0px -2px 2px 0px rgba(0, 0, 0, 0.6);*/
   height: 100%;
   overflow-y: auto;
   position: absolute;
@@ -134,10 +133,15 @@ iframe {
   transition: bottom 0.5s ease;
 }
 
+.ebook-toc > h3 {
+  padding-left: 3rem;
+}
+
 .ebook-toc > ul {
   font-size: 1.2rem;
   list-style: none;
   margin-bottom: @toolbar-height + 2rem;
+  padding-left: 3rem;
 }
 
 
@@ -184,4 +188,77 @@ iframe {
 
 .ebook-pagination-pages > progress::-moz-progress-bar {
   background-color: #00AACC;
+}
+
+
+/** ebook Options **/
+.ebook-options {
+  background-color: rgba(0, 0, 0, 0.70);
+  height: 100%;
+  opacity: 1;
+  overflow-y: auto;
+  position: absolute;
+  top: @toolbar-height;
+  width: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.ebook-options.hidden {
+  opacity: 0;
+  z-index: -2;
+  transition: opacity 0.3s ease;
+}
+
+.ebook-options.hidden > .ebook-options-content {
+  height: 0;
+  transition: height 0.5s ease;
+}
+
+.ebook-options-content {
+  background-color: @options-panel-color;
+  height: 25%;
+  transition: height 0.5s ease;
+}
+
+.ebook-options-footer {
+  background: url(../images/actionicon_settings_30x30.png) @options-panel-footer-color no-repeat center;
+  height: 2rem;
+}
+
+.ebook-option {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px;
+  width: 100%;
+}
+
+.ebook-option.font-size > span:first-child {
+  font-size: 1.5rem;
+}.ebook-option.font-size > span:last-child {
+   font-size: 2rem;
+ }
+
+input[type=range] {
+  background: transparent;
+  border: none;
+  height: 1.5rem;
+  margin: 0 0.5rem;
+  outline: none;
+  width: 80%;
+}
+
+input[type=range]::-moz-range-track {
+  background: @slider-color;
+  height: 0.2rem;
+}
+
+input[type=range]::-moz-range-thumb {
+  border-radius: 1rem;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+input[type=range]:focus::-moz-range-thumb {
+  border: 0.3rem solid @slider-color;
 }

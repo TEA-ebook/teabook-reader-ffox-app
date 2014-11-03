@@ -11,6 +11,9 @@ var amd = require('amd-optimize');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
 
 var debug = args.debug ? true : false;
+var openBrowser = args['nobrowser'] ? false : true;
+
+console.dir(args);
 
 var paths = {
     less: [
@@ -197,7 +200,7 @@ gulp.task('process-html', function () {
 
 gulp.task("open-browser", function () {
     return gulp.src(paths.html)
-        .pipe(plugins.open("", { url: "http://localhost:8080/" }));
+        .pipe(gulpif(openBrowser, plugins.open("", { url: "http://localhost:8080/" })));
 });
 
 gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
@@ -206,7 +209,7 @@ gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
         gulp.watch(paths.less, ['compile-less']);
         gulp.watch(paths.templates, ['compile-scripts']);
-        gulp.watch(paths.js, ['compile-scripts', 'tests']);
+        gulp.watch(paths.js, ['compile-scripts']);
         gulp.watch(paths.test.specs, ['tests']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
@@ -254,7 +257,11 @@ gulp.task('check-code', ['jslint']);
 /************* UNIT TESTS ************/
 /******************* *****************/
 
-gulp.task('tests', ['copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources'], function() {
+gulp.task('tests', function() {
+    runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'mocha');
+});
+
+gulp.task('mocha', function() {
     return gulp
         .src(paths.test.runner)
         .pipe(mochaPhantomJS());
