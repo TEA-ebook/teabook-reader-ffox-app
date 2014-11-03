@@ -1,1 +1,0 @@
-define("template/bookshelf/book",["handlebars"],function(e){return e.default.template({compiler:[6,">= 2.0.0-beta.1"],main:function(e){var a=this.lambda,t=this.escapeExpression;return t(a(null!=e?e.name:e,e))},useData:!0})});

@@ -22,8 +22,8 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
                         if (readiumEvent.data) {
                             this.model.set({
                                 chapterCurrent: readiumEvent.data.spineItemIndex + 1,
-                                pageCurrent: readiumEvent.data.spineItemPageIndex,
-                                pageTotal: readiumEvent.data.spineItemPageCount - 1
+                                pageCurrent: readiumEvent.data.spineItemPageIndex + 1,
+                                pageTotal: readiumEvent.data.spineItemPageCount
                             });
                         }
                     }

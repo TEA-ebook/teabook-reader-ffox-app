@@ -8,17 +8,17 @@ define("model/ebook-pagination", ["backbone"], function (Backbone) {
             chapterCurrent: 0,
             pageTotal: 0,
             pageCurrent: 0,
-            pageDisplayed: false
+            monoPage: false
         },
 
         initialize: function () {
-            this.updatePageDisplayed();
-            this.on('change:pageCurrent', this.updatePageDisplayed, this);
-            this.on('change:pageTotal', this.updatePageDisplayed, this);
+            this.computeProperties();
+            this.on('change:pageCurrent', this.computeProperties, this);
+            this.on('change:pageTotal', this.computeProperties, this);
         },
 
-        updatePageDisplayed: function () {
-            this.set({ 'pageDisplayed': (this.get('pageTotal') > 0) }, { silent: true });
+        computeProperties: function () {
+            this.set({ 'monoPage': (this.get('pageTotal') <= 1) }, { silent: true });
         }
     });
 
