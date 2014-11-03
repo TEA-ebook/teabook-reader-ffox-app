@@ -23,51 +23,10 @@
                     // When it renders
                     ebookOptionsView.render();
 
-                    // It should render 2 buttons
-                    ebookOptionsView.$el.find("button").should.have.length(2);
+                    // It should render 1 range input
+                    ebookOptionsView.$el.find("input[type=range]").should.have.length(1);
 
                     done();
-                });
-            });
-        });
-
-
-        describe('click', function () {
-            it('on A+ -> ask for Readium to increase font size', function (done) {
-                curl(['view/ebook/options'], function (EbookOptionsView) {
-                    Backbone.on("font-size:increase", checkIncreaseEvent);
-
-                    // Given an ebookOptions rendered view
-                    var ebookOptionsView = new EbookOptionsView();
-                    ebookOptionsView.render();
-
-                    // When the user taps on A+
-                    ebookOptionsView.$el.find("button.increase-font-size").click();
-
-                    // It should receive the right event
-                    function checkIncreaseEvent() {
-                        Backbone.off("font-size:increase");
-                        done();
-                    }
-                });
-            });
-
-            it('on A- -> ask for Readium to decrease font size', function (done) {
-                curl(['view/ebook/options'], function (EbookOptionsView) {
-                    Backbone.on("font-size:decrease", checkDecreaseEvent);
-
-                    // Given an ebookOptions view
-                    var ebookOptionsView = new EbookOptionsView();
-                    ebookOptionsView.render();
-
-                    // When it renders
-                    ebookOptionsView.$el.find("button.decrease-font-size").click();
-
-                    // It should receive the right event
-                    function checkDecreaseEvent() {
-                        Backbone.off("font-size:decrease");
-                        done();
-                    }
                 });
             });
         });

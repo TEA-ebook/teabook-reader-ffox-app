@@ -9,29 +9,26 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
             className: 'ebook-options hidden',
 
             events: {
-                "click button.increase-font-size": "increaseFontSize",
-                "click button.decrease-font-size": "decreaseFontSize"
+                "change input[type=range]": "updateFontSize",
+                "click": "hideIfOutClick"
             },
 
             render: function () {
-                this.$el.html(template());
+                this.$el.html(template({
+                    fontSize: 120
+                }));
                 return this;
             },
 
-            increaseFontSize: function () {
-                Backbone.trigger("font-size:increase");
-            },
-
-            decreaseFontSize: function () {
-                Backbone.trigger("font-size:decrease");
+            updateFontSize: function (event) {
+                Backbone.trigger("font-size:set", event.target.value);
             },
 
             toggle: function () {
                 if (this.$el[0].classList.contains("hidden")) {
-                    this.show();
-                } else {
-                    this.hide();
+                    return this.show();
                 }
+                this.hide();
             },
 
             show: function () {
@@ -42,6 +39,17 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
             hide: function () {
                 this.$el[0].classList.add("hidden");
                 return false;
+            },
+
+            focus: function (event) {
+                this.$(event.target).focus();
+            },
+
+            hideIfOutClick: function (event) {
+                if (event.target.classList.contains("ebook-options")) {
+                    Backbone.trigger("options:closed");
+                    this.hide();
+                }
             }
         });
 

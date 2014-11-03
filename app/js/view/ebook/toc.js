@@ -5,7 +5,8 @@ define('view/ebook/toc', ['backbone', 'template/ebook/toc'],
 
         var EbookTocView = Backbone.View.extend({
 
-            tagName: 'ul',
+            tagName: 'div',
+            className: 'ebook-toc hidden',
 
             initialize: function (options) {
                 this.uri = options.uri;
@@ -21,10 +22,9 @@ define('view/ebook/toc', ['backbone', 'template/ebook/toc'],
 
             toggle: function () {
                 if (this.$el[0].classList.contains("hidden")) {
-                    this.show();
-                } else {
-                    this.hide();
+                    return this.show();
                 }
+                return this.hide();
             },
 
             show: function () {
