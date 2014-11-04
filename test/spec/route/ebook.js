@@ -1,7 +1,7 @@
 /*global describe: true, should: true, it: true, curl: true, sinon: true, $: true, console: true, Backbone: true */
 (function() {
     "use strict";
-    describe('Ebook route', function () {
+    describe('Ebook', function () {
         var sandbox;
 
         beforeEach(function() {
@@ -19,14 +19,22 @@
             Backbone.trigger('destroy');
         });
 
-        describe('is', function () {
-            it('called with a URI', function (done) {
+        describe('route', function () {
+            it('is called with a URI', function (done) {
                 curl(['route/ebook'], function (ebookRouteHandler) {
                     ebookRouteHandler.should.be.an.instanceof(Function);
 
                     ebookRouteHandler("/books/myfile.epub");
                     console.info.should.have.been.calledOnce;
 
+                    done();
+                });
+            });
+
+            it('should open a chapter in the book', function (done) {
+                curl(['route/ebook'], function (ebookRouteHandler) {
+                    ebookRouteHandler("/books/myfile.epub", "this-is-a-chapter.html");
+                    console.info.should.have.been.calledTwice;
                     done();
                 });
             });

@@ -89,7 +89,6 @@ gulp.task('clean-readium', function (cb) {
 });
 
 
-
 /***************** *****************/
 /************** BUILD **************/
 /***************** *****************/
@@ -137,11 +136,14 @@ gulp.task('compile-curl', function () {
         .pipe(plugins.connect.reload());
 });
 
-gulp.task('compile-templates', ['clean-templates'], function() {
+gulp.task('compile-templates', function () {
     return gulp.src(paths.templates)
         .pipe(plugins.handlebars())
         .pipe(plugins.wrapper({
-            header: function(file) { var templateName = file.path.match(/template\/([\w\/]*)/); return 'define("template/' + templateName[1] + '", ["handlebars"], function(Handlebars) {\nreturn Handlebars.default.template('; },
+            header: function (file) {
+                var templateName = file.path.match(/template\/([\w\/]*)/);
+                return 'define("template/' + templateName[1] + '", ["handlebars"], function(Handlebars) {\nreturn Handlebars.default.template(';
+            },
             footer: '); });\n'
         }))
         .pipe(plugins.rename(function (path) {
@@ -151,7 +153,7 @@ gulp.task('compile-templates', ['clean-templates'], function() {
         .pipe(gulp.dest(paths.dist.templates));
 });
 
-gulp.task('compile-scripts', ['compile-templates'], function() {
+gulp.task('compile-scripts', ['compile-templates'], function () {
     return gulp.src(paths.js)
         // Traces all modules and outputs them in the correct order.
         .pipe(amd("app", {
@@ -184,7 +186,7 @@ gulp.task('copy-manifest', function () {
 });
 
 gulp.task('copy-epubs', function () {
-    if(debug) {
+    if (debug) {
         return gulp.src(paths.epubs)
             .pipe(gulp.dest(paths.dist.epubs));
     }
@@ -192,15 +194,15 @@ gulp.task('copy-epubs', function () {
 
 gulp.task('process-html', function () {
     return gulp.src(paths.html)
-        .pipe(plugins.preprocess({ context: { DEBUG: debug.toString() } }))
-        .pipe(gulpif(!debug, plugins.htmlmin({ collapseWhitespace: true })))
+        .pipe(plugins.preprocess({context: {DEBUG: debug.toString()}}))
+        .pipe(gulpif(!debug, plugins.htmlmin({collapseWhitespace: true})))
         .pipe(gulp.dest(paths.dist.html))
         .pipe(plugins.connect.reload());
 });
 
 gulp.task("open-browser", function () {
     return gulp.src(paths.html)
-        .pipe(gulpif(openBrowser, plugins.open("", { url: "http://localhost:8080/" })));
+        .pipe(gulpif(openBrowser, plugins.open("", {url: "http://localhost:8080/"})));
 });
 
 gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
@@ -210,7 +212,6 @@ gulp.task('watch-codebase', ['build'], function () {
         gulp.watch(paths.less, ['compile-less']);
         gulp.watch(paths.templates, ['compile-scripts']);
         gulp.watch(paths.js, ['compile-scripts']);
-        gulp.watch(paths.test.specs, ['tests']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
         gulp.watch(paths.html, ['copy-html']);
@@ -218,9 +219,8 @@ gulp.task('watch-codebase', ['build'], function () {
 });
 
 gulp.task('default', function () {
-    runSequence('clean', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
+    runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
 });
-
 
 
 /******************* *****************/
@@ -236,12 +236,11 @@ gulp.task('readium', ['clean-readium'], function () {
 });
 
 
-
 /******************* *****************/
 /************ CODE QUALITY ***********/
 /******************* *****************/
 
-gulp.task('jslint', function() {
+gulp.task('jslint', function () {
     return gulp.src(paths.js)
         .pipe(plugins.ignore.exclude(/template\/.*/))
         .pipe(plugins.jslint({
@@ -252,28 +251,32 @@ gulp.task('jslint', function() {
 gulp.task('check-code', ['jslint']);
 
 
-
 /******************* *****************/
 /************* UNIT TESTS ************/
 /******************* *****************/
 
-gulp.task('tests', function() {
+gulp.task('tests', function () {
     runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'mocha');
 });
 
-gulp.task('mocha', function() {
+gulp.task('watch-tests', function () {
+    gulp.watch(paths.js, ['tests']);
+    gulp.watch(paths.test.specs, ['tests']);
+});
+
+gulp.task('mocha', function () {
     return gulp
         .src(paths.test.runner)
         .pipe(mochaPhantomJS());
 });
 
-gulp.task('copy-sinon-server', function() {
+gulp.task('copy-sinon-server', function () {
     return gulp
         .src(paths.test.sinon.source)
         .pipe(gulp.dest(paths.test.sinon.dest));
 });
 
-gulp.task('copy-test-resources', function() {
+gulp.task('copy-test-resources', function () {
     return gulp
         .src(paths.images)
         .pipe(gulp.dest(paths.test.dist.images));

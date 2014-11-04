@@ -1,6 +1,6 @@
 /*global define: true, window: true*/
-define('router', ['backbone', 'helper/dom-events', 'route/bookshelf', 'route/ebook', 'route/ebook-chapter'],
-    function (Backbone, DomEvents, bookshelfRoute, ebookRoute, ebookChapterRoute) {
+define('router', ['backbone', 'helper/dom-events', 'route/bookshelf', 'route/ebook'],
+    function (Backbone, DomEvents, bookshelfRoute, ebookRoute) {
         "use strict";
 
         var AppRouter = Backbone.Router.extend({
@@ -13,7 +13,7 @@ define('router', ['backbone', 'helper/dom-events', 'route/bookshelf', 'route/ebo
             routes: {
                 '': bookshelfRoute,
                 'ebook/:uri': ebookRoute,
-                'ebook/:uri/:chapter': ebookChapterRoute
+                'ebook/:uri/:chapter': ebookRoute
             }
         });
 

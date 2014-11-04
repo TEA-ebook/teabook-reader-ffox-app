@@ -21,7 +21,7 @@
         }
 
         function writeScript(event) {
-            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
+            var scriptSrc = new Blob([event.data.content], {"type": event.data.type});
             var script = document.createElement("script");
             script.type = event.data.type;
             script.src = URL.createObjectURL(scriptSrc);
@@ -29,7 +29,7 @@
         }
 
         function writeInline(event, tag) {
-            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
+            var scriptSrc = new Blob([event.data.content], {"type": event.data.type});
             var script = document.createElement(tag);
             script.type = event.data.type;
             getText(scriptSrc, function (text) {
@@ -47,7 +47,7 @@
         }
 
         function writeScript(event) {
-            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
+            var scriptSrc = new Blob([event.data.content], {"type": event.data.type});
             var script = document.createElement('script');
             script.type = event.data.type;
             script.src = window.URL.createObjectURL(scriptSrc);
@@ -64,10 +64,10 @@
                 }
             }
             else if (event.data.action === "message") {
-                if(event.data.content === "nextPage") {
+                if (event.data.content === "nextPage") {
                     readium.reader.openPageNext();
                 }
-                else if(event.data.content === "prevPage") {
+                else if (event.data.content === "prevPage") {
                     readium.reader.openPagePrev();
                 }
             }
@@ -80,14 +80,22 @@
                 });
             }
             else if (event.data.action === "epub") {
-                var epubFile = new Blob([event.data.content], { "type": event.data.type });
+                var epubFile = new Blob([event.data.content], {"type": event.data.type});
+                var openPageRequest = false;
+                if (event.data.chapter && event.data.chapter.length > 0) {
+                    openPageRequest = {
+                        contentRefUrl: event.data.chapter,
+                        sourceFileHref: "."
+                    };
+                }
+
                 window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-                    window.parent.postMessage({ type: "chapters", data: packageDocument.spineLength() }, "*");
-                    packageDocument.getTocText(function(toc) {
-                        window.parent.postMessage({ type: "toc", data: toc }, "*");
+                    window.parent.postMessage({type: "chapters", data: packageDocument.spineLength()}, "*");
+                    packageDocument.getTocText(function (toc) {
+                        window.parent.postMessage({type: "toc", data: toc}, "*");
                         window.parent.postMessage("readyToRead", "*");
                     });
-                });
+                }, openPageRequest);
             }
         }
         window.addEventListener("message", receiveMessage, false);
@@ -101,8 +109,8 @@
             clearInterval(reeadiumReadyTest);
 
             require(['Readium', 'gestures'], function (Readium, GesturesHandler) {
-                var readerOptions = { el: '#epub-reader-frame' };
-                window.readium = new Readium({ jsLibRoot: "" }, readerOptions, function (error) {
+                var readerOptions = {el: '#epub-reader-frame'};
+                window.readium = new Readium({jsLibRoot: ""}, readerOptions, function (error) {
                     console.error(error);
                 });
 
@@ -111,7 +119,7 @@
                 gesturesHandler.initialize();
 
                 // transfer pagination info to the app
-                window.readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function(pageChangeData) {
+                window.readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
                     window.parent.postMessage({
                         type: "readium",
                         event: {
@@ -122,8 +130,8 @@
                 });
 
                 // transfer all other Readium events to the app
-                [ ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED ].forEach(function(event) {
-                    window.readium.reader.on(event, function() {
+                [ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED].forEach(function (event) {
+                    window.readium.reader.on(event, function () {
                         window.parent.postMessage({
                             type: "readium",
                             event: {
@@ -134,7 +142,7 @@
                 });
 
                 //
-                $(window).click(function() {
+                $(window).click(function () {
                     window.parent.postMessage("click", "*");
                 });
 

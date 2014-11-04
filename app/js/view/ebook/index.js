@@ -1,6 +1,6 @@
 /*global define: true, navigator: true, FileReader: true, window: true, key: true*/
 define('view/ebook/index',
-    [   'backbone',
+    ['backbone',
         'helper/blobber',
         'model/ebook-toc',
         'model/ebook-pagination',
@@ -32,12 +32,12 @@ define('view/ebook/index',
                     'visibility:visible': this.requestFullScreen,
                     'ebook:chapter': this.openChapter.bind(this),
                     'font-size:set': this.changeFontSize.bind(this),
-                    'message': this.receiveMessage.bind(this),
+                    'message': this.handleBackboneEvent.bind(this),
                     'options:closed': this.hideUi.bind(this)
                 });
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
 
-                this.paginationView = new PaginationView({ model: new EbookPaginationModel() });
+                this.paginationView = new PaginationView({model: new EbookPaginationModel()});
                 this.toolbarView = new ToolbarView();
                 this.optionsView = new OptionsView();
 
@@ -83,7 +83,7 @@ define('view/ebook/index',
                 Backbone.history.navigate('/', true);
             },
 
-            receiveMessage: function (event) {
+            handleBackboneEvent: function (event) {
                 if (event && event.data) {
                     if (event.data === "sendResources") {
                         this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
@@ -163,18 +163,25 @@ define('view/ebook/index',
             sendEpub: function () {
                 var sdcard = navigator.getDeviceStorage('sdcard'),
                     request = sdcard.get(this.model.get('name')),
-                    sandbox = this.getSandbox();
+                    chapter = this.model.get("chapter"),
+                    sandbox = this.getSandbox(),
+                    epubData = {
+                        action: "epub",
+                        type: "application/epub+zip"
+                    };
 
                 // read epub from storage
                 request.onsuccess = function () {
                     var reader = new FileReader();
                     reader.onload = function (e) {
                         // pass epub data to readium sandboxed iframe
-                        sandbox.postMessage({
-                            action: "epub",
-                            type: "application/epub+zip",
-                            content: e.target.result
-                        }, "*");
+                        epubData.content = e.target.result;
+
+                        if (chapter) {
+                            epubData.chapter = chapter;
+                        }
+
+                        sandbox.postMessage(epubData, "*");
                     };
                     reader.readAsArrayBuffer(this.result);
                 };
@@ -208,7 +215,7 @@ define('view/ebook/index',
                 var toc = new EbookTocModel();
                 toc.load(tocXml);
 
-                this.tocView = new TocView({ model: toc, uri: this.model.get("name") });
+                this.tocView = new TocView({model: toc, uri: this.model.get("name")});
                 this.tocView.render();
 
                 this.$el.append(this.tocView.el);

@@ -43,6 +43,7 @@
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
                     Backbone.trigger("message", { data: "readyToRead" });
+                    Backbone.trigger("message", { data: { type: "toc", content: "" } });
 
                     // When the user tap once the screen and waits for 5s
                     Backbone.trigger("message", { data: "tap" });
