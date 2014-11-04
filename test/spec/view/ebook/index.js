@@ -1,4 +1,4 @@
-/*global describe: true, should: true, it: true, curl: true, sinon: true, $: true, Backbone: true, EbookView: true*/
+/*global describe: true, should: true, it: true, curl: true, sinon: true, $: true, Backbone: true, Teavents: true*/
 (function () {
     "use strict";
     describe('Ebook view', function () {
@@ -42,11 +42,11 @@
 
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
-                    Backbone.trigger("message", { data: "readyToRead" });
-                    Backbone.trigger("message", { data: { type: "toc", content: "" } });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "readyToRead" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: { type: "toc", content: "" } });
 
                     // When the user tap once the screen and waits for 5s
-                    Backbone.trigger("message", { data: "tap" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
                     sandbox.clock.tick(5000);
 
                     // The toolbar should be automatically hidden
@@ -100,10 +100,10 @@
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
-                    Backbone.trigger("message", { data: "readyToRead" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "readyToRead" });
 
                     // When the user taps the screen
-                    Backbone.trigger("message", { data: "tap" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
 
                     // The toolbar should be visible
                     ebookView.$el.find(".ebook-toolbar").hasClass("hidden").should.be.false;
@@ -117,11 +117,11 @@
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
-                    Backbone.trigger("message", { data: "readyToRead" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "readyToRead" });
 
                     // When the user taps twice the screen
-                    Backbone.trigger("message", { data: "tap" });
-                    Backbone.trigger("message", { data: "tap" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
 
                     // The toolbar should be hidden
                     ebookView.$el.find(".ebook-toolbar").hasClass("hidden").should.be.true;
@@ -139,7 +139,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When a 'sendResources' event is triggered
-                    Backbone.trigger("message", { data: "sendResources" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "sendResources" });
 
                     // It should transfer the resources
                     EbookView.prototype.transferFile.should.have.been.calledOnce;
@@ -157,7 +157,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When a 'sendEpub' event is triggered
-                    Backbone.trigger("message", { data: "sendEpub" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "sendEpub" });
                     ebookView.close();
 
                     // It should send the epub
@@ -173,7 +173,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When the epub is loaded
-                    Backbone.trigger("message", { data: "readyToRead" });
+                    Backbone.trigger(Teavents.MESSAGE, { data: "readyToRead" });
 
                     // The toolbar should be hidden
                     ebookView.$el.find(".ebook-toolbar").hasClass("hidden").should.be.true;
@@ -191,7 +191,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium starts loading the epub
-                    Backbone.trigger("message", {
+                    Backbone.trigger(Teavents.MESSAGE, {
                         data: {
                             type: "readium",
                             event: { type: "ContentDocumentLoadStart" }
@@ -214,7 +214,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium has loaded the epub
-                    Backbone.trigger("message", {
+                    Backbone.trigger(Teavents.MESSAGE, {
                         data: {
                             type: "readium",
                             event: { type: "ContentDocumentLoaded" }
@@ -237,7 +237,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium has changed its pagination
-                    Backbone.trigger("message", {
+                    Backbone.trigger(Teavents.MESSAGE, {
                         data: {
                             type: "readium",
                             event: { type: "PaginationChanged" }
@@ -260,7 +260,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium sends the table of contents
-                    Backbone.trigger("message", { data: { type: "toc", data: '<ncx><navMap><navPoint><navLabel><text>PIPO</text></navLabel><content src="plop.html" /></navPoint></navMap></ncx>' } });
+                    Backbone.trigger(Teavents.MESSAGE, { data: { type: "toc", data: '<ncx><navMap><navPoint><navLabel><text>PIPO</text></navLabel><content src="plop.html" /></navPoint></navMap></ncx>' } });
                     ebookView.close();
 
                     // It should generate the html toc
@@ -281,7 +281,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When the dom becomes visible to the user
-                    Backbone.trigger("visibility:visible");
+                    Backbone.trigger(Teavents.VISIBILITY_VISIBLE);
                     ebookView.close();
 
                     // It should request full screen

@@ -1,4 +1,4 @@
-/*global describe: true, should: true, it: true, curl: true, sinon: true, $: true, Backbone: true, EbookView: true*/
+/*global describe: true, should: true, it: true, curl: true, sinon: true, $: true, Backbone: true, Teavents: true*/
 (function() {
     "use strict";
     describe('Ebook.Pagination view', function () {
@@ -67,7 +67,7 @@
                     var ebookPaginationView = new EbookPaginationView({ model: pagination });
 
                     // When readium has changed its pagination
-                    Backbone.trigger("message", {
+                    Backbone.trigger(Teavents.MESSAGE, {
                         data: {
                             type: "readium",
                             event: {

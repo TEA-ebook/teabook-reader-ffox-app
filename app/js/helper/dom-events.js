@@ -1,4 +1,4 @@
-/*global define: true, window: true*/
+/*global define: true, window: true, Teavents: true*/
 /*jslint nomen: true*/
 define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Backbone, _, $) {
     "use strict";
@@ -7,19 +7,19 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
     _.extend(DomEvents, Backbone.Events);
 
     DomEvents.initialize = function () {
-        $(window).on("message", this.handleMessage);
-        $(window.document).on("visibilitychange", this.handleVisibilityChange);
+        $(window).on(Teavents.MESSAGE, this.handleMessage);
+        $(window.document).on(Teavents.VISIBILITY_CHANGE, this.handleVisibilityChange);
 
-        this.listenTo(Backbone, "fullscreen:enter", this.enterFullScreen);
-        this.listenTo(Backbone, "fullscreen:exit", this.exitFullScreen);
+        this.listenTo(Backbone, Teavents.FULLSCREEN_ENTER, this.enterFullScreen);
+        this.listenTo(Backbone, Teavents.FULLSCREEN_EXIT, this.exitFullScreen);
     };
 
     DomEvents.handleMessage = function (event) {
-        Backbone.trigger("message", event.originalEvent);
+        Backbone.trigger(Teavents.MESSAGE, event.originalEvent);
     };
 
     DomEvents.handleVisibilityChange = function () {
-        Backbone.trigger("visibility:" + (window.document.hidden ? "hidden" : "visible"));
+        Backbone.trigger((window.document.hidden ? Teavents.VISIBILITY_HIDDEN : Teavents.VISIBILITY_VISIBLE));
     };
 
     DomEvents.enterFullScreen = function () {
@@ -49,8 +49,8 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
     };
 
     DomEvents.stop = function () {
-        $(window).off("message");
-        $(window.document).off("visibilitychange");
+        $(window).off(Teavents.MESSAGE);
+        $(window.document).off(Teavents.VISIBILITY_CHANGE);
         this.stopListening(Backbone);
     };
 

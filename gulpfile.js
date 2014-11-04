@@ -8,12 +8,11 @@ var runSequence = require('run-sequence');
 var gulpif = require('gulp-if');
 var pngcrush = require('imagemin-pngcrush');
 var amd = require('amd-optimize');
+var addsrc = require('gulp-add-src');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
 
 var debug = args.debug ? true : false;
 var openBrowser = args['nobrowser'] ? false : true;
-
-console.dir(args);
 
 var paths = {
     less: [
@@ -29,6 +28,7 @@ var paths = {
     templates: ['./app/template/**/*.hbs'],
     readium: './readium-js',
     readiumEmbedded: [
+        './app/js/events.js',
         './app/vendor/requirejs/require.js',
         './readium-js/out/Readium.embedded.js',
         './app/js/helper/gestures.js'
@@ -155,7 +155,6 @@ gulp.task('compile-templates', function () {
 
 gulp.task('compile-scripts', ['compile-templates'], function () {
     return gulp.src(paths.js)
-        // Traces all modules and outputs them in the correct order.
         .pipe(amd("app", {
             baseUrl: "app/js",
             paths: {
@@ -166,6 +165,7 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
                 "spin": "../vendor/spin.js/spin"
             }
         }))
+        .pipe(addsrc('app/js/events.js'))
         .pipe(plugins.concat("app.js"))
         .pipe(gulpif(!debug, plugins.uglify()))
         .pipe(gulp.dest(paths.dist.js))

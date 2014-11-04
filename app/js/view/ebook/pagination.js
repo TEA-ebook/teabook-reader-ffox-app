@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define: true, Teavents: true*/
 define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
     function (Backbone, template) {
         "use strict";
@@ -9,9 +9,7 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             className: 'ebook-pagination',
 
             initialize: function () {
-                Backbone.on({
-                    'message': this.readiumEvent.bind(this)
-                });
+                Backbone.on(Teavents.MESSAGE, this.readiumEvent.bind(this));
                 this.model.on("change", this.render, this);
             },
 
@@ -56,7 +54,7 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             },
 
             close: function () {
-                Backbone.off("message");
+                Backbone.off(Teavents.MESSAGE);
                 this.remove();
             }
         });

@@ -1,4 +1,4 @@
-/*global define: true, navigator: true, FileReader: true, window: true, key: true*/
+/*global define: true, navigator: true, FileReader: true, window: true, Teavents: true*/
 define('view/ebook/index',
     ['backbone',
         'helper/blobber',
@@ -28,13 +28,12 @@ define('view/ebook/index',
             autoHideTime: 5000,
 
             initialize: function () {
-                Backbone.on({
-                    'visibility:visible': this.requestFullScreen,
-                    'ebook:chapter': this.openChapter.bind(this),
-                    'font-size:set': this.changeFontSize.bind(this),
-                    'message': this.handleBackboneEvent.bind(this),
-                    'options:closed': this.hideUi.bind(this)
-                });
+                Backbone.on(Teavents.MESSAGE, this.handleBackboneEvent.bind(this));
+                Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
+                Backbone.on(Teavents.EBOOK_CHAPTER, this.openChapter.bind(this));
+                Backbone.on(Teavents.FONTSIZE_SET, this.changeFontSize.bind(this));
+                Backbone.on(Teavents.OPTIONS_CLOSED, this.hideUi.bind(this));
+
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
 
                 this.paginationView = new PaginationView({model: new EbookPaginationModel()});
@@ -85,11 +84,11 @@ define('view/ebook/index',
 
             handleBackboneEvent: function (event) {
                 if (event && event.data) {
-                    if (event.data === "sendResources") {
+                    if (event.data === Teavents.SEND_RESOURCES) {
                         this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
-                    } else if (event.data === "sendEpub") {
+                    } else if (event.data === Teavents.EPUB_SEND) {
                         this.sendEpub();
-                    } else if (event.data === "readyToRead") {
+                    } else if (event.data === Teavents.READY_TO_READ) {
                         this.toolbarView.hide();
                         this.optionsView.hide();
                         this.paginationView.hide();
@@ -114,11 +113,11 @@ define('view/ebook/index',
                     this.generateToc(event.data.data);
                 } else if (event.data.type === "readium") {
                     var readiumEvent = event.data.event;
-                    if (readiumEvent.type === "PaginationChanged") {
+                    if (readiumEvent.type === Teavents.Readium.PAGINATION_CHANGED) {
                         this.stopSpin();
-                    } else if (readiumEvent.type === "ContentDocumentLoadStart") {
+                    } else if (readiumEvent.type === Teavents.Readium.CONTENT_LOAD_START) {
                         this.spin();
-                    } else if (readiumEvent.type === "ContentDocumentLoaded") {
+                    } else if (readiumEvent.type === Teavents.Readium.CONTENT_LOADED) {
                         this.stopSpin();
                     }
                 }
@@ -206,7 +205,7 @@ define('view/ebook/index',
 
             sendMessage: function (message, dest) {
                 dest.postMessage({
-                    action: "message",
+                    action: Teavents.MESSAGE,
                     content: message
                 }, "*");
             },
@@ -269,16 +268,16 @@ define('view/ebook/index',
             },
 
             requestFullScreen: function () {
-                Backbone.trigger("fullscreen:enter");
+                Backbone.trigger(Teavents.FULLSCREEN_ENTER);
             },
 
             exitFullScreen: function () {
-                Backbone.trigger("fullscreen:exit");
+                Backbone.trigger(Teavents.FULLSCREEN_EXIT);
             },
 
             close: function () {
-                Backbone.off("message");
-                Backbone.off("visibility:visible");
+                Backbone.off(Teavents.MESSAGE);
+                Backbone.off(Teavents.VISIBILITY_VISIBLE);
 
                 this.exitFullScreen();
 

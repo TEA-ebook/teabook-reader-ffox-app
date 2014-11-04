@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define: true, Teavents: true*/
 define('view/ebook/options', ['backbone', 'template/ebook/options'],
     function (Backbone, template) {
         "use strict";
@@ -21,7 +21,7 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
             },
 
             updateFontSize: function (event) {
-                Backbone.trigger("font-size:set", event.target.value);
+                Backbone.trigger(Teavents.FONTSIZE_SET, event.target.value);
             },
 
             toggle: function () {
@@ -47,7 +47,7 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
 
             hideIfOutClick: function (event) {
                 if (event.target.classList.contains("ebook-options")) {
-                    Backbone.trigger("options:closed");
+                    Backbone.trigger(Teavents.OPTIONS_CLOSED);
                     this.hide();
                 }
             }

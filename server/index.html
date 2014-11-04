@@ -63,7 +63,7 @@
                     writeInlineStyle(event);
                 }
             }
-            else if (event.data.action === "message") {
+            else if (event.data.action === Teavents.MESSAGE) {
                 if (event.data.content === "nextPage") {
                     readium.reader.openPageNext();
                 }
@@ -93,7 +93,7 @@
                     window.parent.postMessage({type: "chapters", data: packageDocument.spineLength()}, "*");
                     packageDocument.getTocText(function (toc) {
                         window.parent.postMessage({type: "toc", data: toc}, "*");
-                        window.parent.postMessage("readyToRead", "*");
+                        window.parent.postMessage(Teavents.READY_TO_READ, "*");
                     });
                 }, openPageRequest);
             }
@@ -147,7 +147,7 @@
                 });
 
                 // request epub data
-                window.parent.postMessage("sendEpub", "*");
+                window.parent.postMessage(Teavents.EPUB_SEND, "*");
             });
         }
     };

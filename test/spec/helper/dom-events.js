@@ -1,4 +1,4 @@
-/*global describe: true, should: true, it: true, curl: true, sinon: true, window: true */
+/*global describe: true, should: true, it: true, curl: true, sinon: true, window: true, Teavents: true*/
 
 function fireEvent(element, event) {
     "use strict";
@@ -41,7 +41,7 @@ function fireEvent(element, event) {
                     sandbox.stub(DomEvents, "handleVisibilityChange");
 
                     DomEvents.initialize();
-                    fireEvent(window.document, "visibilitychange");
+                    fireEvent(window.document, Teavents.VISIBILITY_CHANGE);
                     DomEvents.stop();
 
                     DomEvents.handleVisibilityChange.should.have.been.calledOnce;
@@ -55,7 +55,7 @@ function fireEvent(element, event) {
                     sandbox.stub(DomEvents, "handleMessage");
 
                     DomEvents.initialize();
-                    fireEvent(window, "message");
+                    fireEvent(window, Teavents.MESSAGE);
                     DomEvents.stop();
 
                     DomEvents.handleMessage.should.have.been.calledOnce;
@@ -70,8 +70,8 @@ function fireEvent(element, event) {
                     sandbox.stub(DomEvents, "exitFullScreen");
 
                     DomEvents.initialize();
-                    Backbone.trigger("fullscreen:enter");
-                    Backbone.trigger("fullscreen:exit");
+                    Backbone.trigger(Teavents.FULLSCREEN_ENTER);
+                    Backbone.trigger(Teavents.FULLSCREEN_EXIT);
                     DomEvents.stop();
 
                     DomEvents.enterFullScreen.should.have.been.calledOnce;
