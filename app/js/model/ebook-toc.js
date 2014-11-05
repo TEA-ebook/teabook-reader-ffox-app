@@ -1,5 +1,5 @@
 /*global define: true, DOMParser: true*/
-define("model/ebook-toc", ["backbone"], function (Backbone) {
+define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbone, TocItemModel) {
     "use strict";
 
     var EbookTocModel = Backbone.Model.extend({
@@ -14,12 +14,30 @@ define("model/ebook-toc", ["backbone"], function (Backbone) {
 
         load: function (xml) {
             var tocDom = (new DOMParser()).parseFromString(xml, "text/xml");
-            Array.prototype.forEach.call(tocDom.querySelectorAll("navPoint"), function (navPoint) {
-                this.get("items").push({
-                    text: navPoint.querySelector("navLabel").textContent.trim(),
-                    content: navPoint.querySelector("content").getAttribute("src").trim()
-                });
-            }.bind(this));
+            this.set("items", this.parseNavPoint(tocDom.querySelector("navPoint"), []));
+        },
+
+        parseNavPoint: function (navPoint, items) {
+            var item, navPointChild;
+
+            item = new TocItemModel({
+                label: navPoint.querySelector("navLabel").textContent.trim(),
+                href: navPoint.querySelector("content").getAttribute("src").trim()
+            });
+
+            navPointChild = navPoint.querySelector("navPoint");
+            if (navPointChild) {
+                item.set("items", this.parseNavPoint(navPointChild, []));
+            }
+
+            items.push(item);
+
+            // next nav point
+            if (navPoint.nextElementSibling) {
+                this.parseNavPoint(navPoint.nextElementSibling, items);
+            }
+
+            return items;
         }
     });
 

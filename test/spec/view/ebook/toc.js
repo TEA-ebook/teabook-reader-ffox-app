@@ -15,7 +15,7 @@
         });
 
         describe('instance', function () {
-            it('should render 20 items', function (done) {
+            it('should render 12 items', function (done) {
                 curl(['model/ebook-toc', 'view/ebook/toc', 'text!../../test/samples/epub-toc.ncx'], function (EbookTocModel, EbookTocView, tocXml) {
                     // Given a toc and an ebookToc view
                     var toc = new EbookTocModel();
@@ -26,7 +26,7 @@
                     ebookTocView.render();
 
                     // It should render 2 items in the toc
-                    ebookTocView.$el.find("li").should.have.length(20);
+                    ebookTocView.$el.find("li").should.have.length(12);
 
                     done();
                 });

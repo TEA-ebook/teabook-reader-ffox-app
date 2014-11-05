@@ -20,7 +20,7 @@
                     ebookToc.load(xmlToc);
 
                     // It should parse it and populate the model
-                    ebookToc.get('items').should.have.length(20);
+                    ebookToc.get('items').should.have.length(12);
 
                     done();
                 });
