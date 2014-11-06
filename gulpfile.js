@@ -141,7 +141,7 @@ gulp.task('compile-templates', function () {
         .pipe(plugins.handlebars())
         .pipe(plugins.wrapper({
             header: function (file) {
-                var templateName = file.path.match(/template\/([\w\/]*)/);
+                var templateName = file.path.match(/template\/([\w\-\/]*)/);
                 return 'define("template/' + templateName[1] + '", ["handlebars"], function(Handlebars) {\nreturn Handlebars.default.template(';
             },
             footer: '); });\n'

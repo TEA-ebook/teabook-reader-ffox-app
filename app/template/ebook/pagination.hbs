@@ -1,3 +1,4 @@
+{{#if chapterCurrent}}
 <span class="ebook-pagination-chapters">
     <i class="fa fa-list"></i>{{chapterCurrent}}/{{chapterTotal}}
 </span>
@@ -6,3 +7,6 @@
     <progress value="{{pageCurrent}}" max="{{pageTotal}}"></progress>
 {{/unless}}
 </span>
+{{else}}
+    <span class="ebook-pagination-title">{{title}}</span>
+{{/if}}

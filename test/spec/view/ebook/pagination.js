@@ -73,15 +73,18 @@
                             event: {
                                 type: "PaginationChanged",
                                 data: {
-                                    spineItemIndex: 1,
-                                    spineItemPageIndex: 15,
-                                    spineItemPageCount: paginationInfo.pageTotal
+                                    pageInfo: {
+                                        spineItemIndex: 1,
+                                        spineItemPageIndex: 15,
+                                        spineItemPageCount: paginationInfo.pageTotal
+                                    },
+                                    spineHref: ''
                                 }
                             }
                         }
                     });
 
-                    // It should stop the spinner
+                    // It should render itself
                     EbookPaginationView.prototype.render.should.have.been.calledOnce;
 
                     ebookPaginationView.close();

@@ -80,7 +80,7 @@
                 });
             }
             else if (event.data.action === "epub") {
-                var epubFile = new Blob([event.data.content], {"type": event.data.type});
+                var epubFile = new Blob([event.data.content], { "type": event.data.type });
                 var openPageRequest = false;
                 if (event.data.chapter && event.data.chapter.length > 0) {
                     openPageRequest = {
@@ -90,9 +90,10 @@
                 }
 
                 window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-                    window.parent.postMessage({type: "chapters", data: packageDocument.spineLength()}, "*");
+                    window.parent.postMessage({ type: "chapters", data: packageDocument.spineLength() }, "*");
+                    window.parent.postMessage({ type: "title", data: options.metadata.title }, "*");
                     packageDocument.getTocText(function (toc) {
-                        window.parent.postMessage({type: "toc", data: toc}, "*");
+                        window.parent.postMessage({ type: "toc", data: toc }, "*");
                         window.parent.postMessage(Teavents.READY_TO_READ, "*");
                     });
                 }, openPageRequest);
@@ -124,7 +125,10 @@
                         type: "readium",
                         event: {
                             type: ReadiumSDK.Events.PAGINATION_CHANGED,
-                            data: pageChangeData.paginationInfo.openPages[0]
+                            data: {
+                                pageInfo: pageChangeData.paginationInfo.openPages[0],
+                                spineHref: window.readium.reader.getLoadedSpineItems()[0].href
+                            }
                         }
                     }, "*");
                 });

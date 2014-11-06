@@ -36,7 +36,7 @@ define('view/ebook/index',
 
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
 
-                this.paginationView = new PaginationView({model: new EbookPaginationModel()});
+                this.paginationView = new PaginationView({ model: new EbookPaginationModel() });
                 this.toolbarView = new ToolbarView();
                 this.optionsView = new OptionsView();
 
@@ -111,6 +111,8 @@ define('view/ebook/index',
             handleReadiumEvent: function (event) {
                 if (event.data.type === "toc") {
                     this.generateToc(event.data.data);
+                } else if (event.data.type === "title") {
+                    this.setEbookTitle(event.data.data);
                 } else if (event.data.type === "readium") {
                     var readiumEvent = event.data.event;
                     if (readiumEvent.type === Teavents.Readium.PAGINATION_CHANGED) {
@@ -203,19 +205,14 @@ define('view/ebook/index',
                 });
             },
 
-            sendMessage: function (message, dest) {
-                dest.postMessage({
-                    action: Teavents.MESSAGE,
-                    content: message
-                }, "*");
-            },
-
             generateToc: function (tocXml) {
                 var toc = new EbookTocModel();
                 toc.load(tocXml);
 
-                this.tocView = new TocView({model: toc, uri: this.model.get("name")});
+                this.tocView = new TocView({ model: toc, uri: this.model.get("name") });
                 this.tocView.render();
+
+                this.paginationView.setToc(toc);
 
                 this.$el.append(this.tocView.el);
             },
@@ -236,6 +233,10 @@ define('view/ebook/index',
             hideToc: function () {
                 this.tocView.hide();
                 this.toolbarView.hide();
+            },
+
+            setEbookTitle: function (title) {
+                this.paginationView.model.set('title', title);
             },
 
             showOptions: function (event) {

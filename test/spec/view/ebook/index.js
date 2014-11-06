@@ -3,6 +3,7 @@
     "use strict";
     describe('Ebook view', function () {
         var sandbox;
+        var fakeTocNcx = '<ncx><navMap><navPoint><navLabel><text>PIPO</text></navLabel><content src="plop.html" /></navPoint></navMap></ncx>';
 
         beforeEach(function () {
             // create a sandbox
@@ -43,7 +44,7 @@
                     // Given an ebook view with a loaded epub
                     var ebookView = new EbookView({ model: new EbookModel() });
                     Backbone.trigger(Teavents.MESSAGE, { data: "readyToRead" });
-                    Backbone.trigger(Teavents.MESSAGE, { data: { type: "toc", content: "" } });
+                    Backbone.trigger(Teavents.MESSAGE, { data: { type: "toc", data: fakeTocNcx } });
 
                     // When the user tap once the screen and waits for 5s
                     Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
@@ -260,7 +261,7 @@
                     var ebookView = new EbookView({ model: new EbookModel() });
 
                     // When readium sends the table of contents
-                    Backbone.trigger(Teavents.MESSAGE, { data: { type: "toc", data: '<ncx><navMap><navPoint><navLabel><text>PIPO</text></navLabel><content src="plop.html" /></navPoint></navMap></ncx>' } });
+                    Backbone.trigger(Teavents.MESSAGE, { data: { type: "toc", data: fakeTocNcx } });
                     ebookView.close();
 
                     // It should generate the html toc

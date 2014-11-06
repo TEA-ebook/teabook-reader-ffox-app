@@ -1,134 +1,271 @@
-<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="fr">
-    <head>
-        <meta content="7d252bbc-4340-4d13-9f80-813176e7cd78" name="dtb:uid"/>
-        <meta content="2" name="dtb:depth"/>
-        <meta content="calibre (0.7.24)" name="dtb:generator"/>
-        <meta content="0" name="dtb:totalPageCount"/>
-        <meta content="0" name="dtb:maxPageNumber"/>
-    </head>
-    <docTitle>
-        <text>La voix des morts</text>
-    </docTitle>
-    <navMap>
-        <navPoint id="50648b83-b31f-4944-8fc8-fb028c3f5f05" playOrder="1">
-            <navLabel>
-                <text>QUELQUES PERSONNALITES DE LUSITANIA</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_002.html"/>
-        </navPoint>
-        <navPoint id="f36c1a64-f7e0-4a09-8ec3-ba20063faaa9" playOrder="2">
-            <navLabel>
-                <text>PROLOGUE</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_003.html"/>
-        </navPoint>
-        <navPoint id="b3304bff-5ee6-4869-a425-683f202b187e" playOrder="3">
-            <navLabel>
-                <text>PIPO</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_004.html"/>
-        </navPoint>
-        <navPoint id="f1e33781-809a-4cb3-bd5c-7c9871cf334b" playOrder="4">
-            <navLabel>
-                <text>TRONDHEIM</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_005.html"/>
-        </navPoint>
-        <navPoint id="6d04bbb1-824a-415c-9048-97afcccd760a" playOrder="5">
-            <navLabel>
-                <text>LIBO</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_006.html"/>
-        </navPoint>
-        <navPoint id="493e7c5a-3698-42cc-99e6-1b1e5cac3195" playOrder="6">
-            <navLabel>
-                <text>ENDER</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_007.html"/>
-        </navPoint>
-        <navPoint id="eef59372-01da-4de2-85d9-bbf5adb87b1f" playOrder="7">
-            <navLabel>
-                <text>VALENTINE</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_008.html"/>
-        </navPoint>
-        <navPoint id="43aa6678-db5a-481f-af45-8656ac8114bf" playOrder="8">
-            <navLabel>
-                <text>OLHADO</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_009.html"/>
-        </navPoint>
-        <navPoint id="13ef83a7-f621-44a3-a911-2f7cc4990d9d" playOrder="9">
-            <navLabel>
-                <text>LA MAISON DES RIBEIRA</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_010.html"/>
-        </navPoint>
-        <navPoint id="f8cc44c4-e563-459e-b48e-4fdf73f97da8" playOrder="10">
-            <navLabel>
-                <text>DONA IVANOVA</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_011.html"/>
-        </navPoint>
-        <navPoint id="56457ca8-21e2-446f-a019-d869ee999c7b" playOrder="11">
-            <navLabel>
-                <text>MALADIE CONGENITALE</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_012.html"/>
-        </navPoint>
-        <navPoint id="00c7f426-484a-4226-bfb7-dd177974d458" playOrder="12">
-            <navLabel>
-                <text>LES ENFANTS DE L’ESPRIT</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_013.html"/>
-        </navPoint>
-        <navPoint id="3ac09c8b-5189-47d7-b7a0-baedcee9ce09" playOrder="13">
-            <navLabel>
-                <text>JANE</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_014.html"/>
-        </navPoint>
-        <navPoint id="9fb6540d-5cf7-47de-94ca-b0fa4e05c55d" playOrder="14">
-            <navLabel>
-                <text>ARCHIVES</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_015.html"/>
-        </navPoint>
-        <navPoint id="0bffd244-5276-4451-9c67-f498f259f600" playOrder="15">
-            <navLabel>
-                <text>ELA</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_016.html"/>
-        </navPoint>
-        <navPoint id="b8e73b84-5fc9-44c0-9113-fa64c0cf595b" playOrder="16">
-            <navLabel>
-                <text>RENÉGATS</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_017.html"/>
-        </navPoint>
-        <navPoint id="05c44e21-26aa-40bb-8686-caf81cfb409c" playOrder="17">
-            <navLabel>
-                <text>PAROLE</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_018.html"/>
-        </navPoint>
-        <navPoint id="1c2dc71b-283c-4cc8-a3db-397d0f3f2a18" playOrder="18">
-            <navLabel>
-                <text>LA CLÔTURE</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_019.html"/>
-        </navPoint>
-        <navPoint id="c96beda6-1e91-4689-9d90-a76aebbb4343" playOrder="19">
-            <navLabel>
-                <text>LES ÉPOUSES</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_020.html"/>
-        </navPoint>
-        <navPoint id="d3a013ed-7ab7-48bd-8a29-55816a6d11f2" playOrder="20">
-            <navLabel>
-                <text>LA REINE</text>
-            </navLabel>
-            <content src="Card,Orson Scott-[le cycle d'Ender-2]La voix des morts(1986).French.ebook.AlexandriZ_split_021.html"/>
-        </navPoint>
-    </navMap>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+
+<ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+  <head>
+    <meta name="dtb:uid" content="urn:uuid:BB00A1E9-6CE9-1014-8CD4-FE4D2F538F61" />
+    <meta name="dtb:depth" content="1" />
+    <meta name="dtb:totalPageCount" content="0" />
+    <meta name="dtb:maxPageNumber" content="0" />
+  </head>
+  <docTitle>
+    <text>Episcopo et cie</text>
+  </docTitle>
+  <docAuthor>
+    <text>Gabriele dAnnunzio</text>
+  </docAuthor>
+  <navMap>
+    <navPoint id="PRÉFACE DU TRADUCTEUR" playOrder="1" class="">
+      <navLabel>
+        <text>PRÉFACE DU TRADUCTEUR</text>
+      </navLabel>
+      <content src="book_0002.xhtml#auto-toc0" />
+    </navPoint>
+    <navPoint id="EPISCOPO ET Cie(5)" playOrder="2" class="">
+      <navLabel>
+        <text>EPISCOPO ET Cie(5)</text>
+      </navLabel>
+      <content src="book_0003.xhtml#auto-toc1" />
+    </navPoint>
+    <navPoint id="LES CLOCHES(6)" playOrder="3" class="">
+      <navLabel>
+        <text>LES CLOCHES(6)</text>
+      </navLabel>
+      <content src="book_0004.xhtml#auto-toc2" />
+    </navPoint>
+    <navPoint id="LA BELLE-SŒUR(7)" playOrder="4" class="">
+      <navLabel>
+        <text>LA BELLE-SŒUR(7)</text>
+      </navLabel>
+      <content src="book_0005.xhtml#auto-toc3" />
+      <navPoint id="I" playOrder="5" class="">
+        <navLabel>
+          <text>I</text>
+        </navLabel>
+        <content src="book_0006.xhtml#auto-toc4" />
+      </navPoint>
+      <navPoint id="II" playOrder="6" class="">
+        <navLabel>
+          <text>II</text>
+        </navLabel>
+        <content src="book_0007.xhtml#auto-toc5" />
+      </navPoint>
+      <navPoint id="III" playOrder="7" class="">
+        <navLabel>
+          <text>III</text>
+        </navLabel>
+        <content src="book_0008.xhtml#auto-toc6" />
+      </navPoint>
+      <navPoint id="IV" playOrder="8" class="">
+        <navLabel>
+          <text>IV</text>
+        </navLabel>
+        <content src="book_0009.xhtml#auto-toc7" />
+      </navPoint>
+      <navPoint id="V" playOrder="9" class="">
+        <navLabel>
+          <text>V</text>
+        </navLabel>
+        <content src="book_0010.xhtml#auto-toc8" />
+      </navPoint>
+      <navPoint id="VI" playOrder="10" class="">
+        <navLabel>
+          <text>VI</text>
+        </navLabel>
+        <content src="book_0011.xhtml#auto-toc9" />
+      </navPoint>
+      <navPoint id="VII" playOrder="11" class="">
+        <navLabel>
+          <text>VII</text>
+        </navLabel>
+        <content src="book_0012.xhtml#auto-toc10" />
+      </navPoint>
+    </navPoint>
+    <navPoint id="LA SIESTE(8)" playOrder="12" class="">
+      <navLabel>
+        <text>LA SIESTE(8)</text>
+      </navLabel>
+      <content src="book_0013.xhtml#auto-toc11" />
+      <navPoint id="I" playOrder="13" class="">
+        <navLabel>
+          <text>I</text>
+        </navLabel>
+        <content src="book_0014.xhtml#auto-toc12" />
+      </navPoint>
+      <navPoint id="II" playOrder="14" class="">
+        <navLabel>
+          <text>II</text>
+        </navLabel>
+        <content src="book_0015.xhtml#auto-toc13" />
+      </navPoint>
+      <navPoint id="III" playOrder="15" class="">
+        <navLabel>
+          <text>III</text>
+        </navLabel>
+        <content src="book_0016.xhtml#auto-toc14" />
+      </navPoint>
+    </navPoint>
+    <navPoint id="LA HUCHE(9)" playOrder="16" class="">
+      <navLabel>
+        <text>LA HUCHE(9)</text>
+      </navLabel>
+      <content src="book_0017.xhtml#auto-toc15" />
+    </navPoint>
+    <navPoint id="LES SEQUINS(10)" playOrder="17" class="">
+      <navLabel>
+        <text>LES SEQUINS(10)</text>
+      </navLabel>
+      <content src="book_0018.xhtml#auto-toc16" />
+    </navPoint>
+    <navPoint id="LE MARTYR(11)" playOrder="18" class="">
+      <navLabel>
+        <text>LE MARTYR(11)</text>
+      </navLabel>
+      <content src="book_0019.xhtml#auto-toc17" />
+    </navPoint>
+    <navPoint id="SAINT PANTALÉON(12)" playOrder="19" class="">
+      <navLabel>
+        <text>SAINT PANTALÉON(12)</text>
+      </navLabel>
+      <content src="book_0020.xhtml#auto-toc18" />
+      <navPoint id="I" playOrder="20" class="">
+        <navLabel>
+          <text>I</text>
+        </navLabel>
+        <content src="book_0021.xhtml#auto-toc19" />
+      </navPoint>
+      <navPoint id="II" playOrder="21" class="">
+        <navLabel>
+          <text>II</text>
+        </navLabel>
+        <content src="book_0022.xhtml#auto-toc20" />
+      </navPoint>
+      <navPoint id="III" playOrder="22" class="">
+        <navLabel>
+          <text>III</text>
+        </navLabel>
+        <content src="book_0023.xhtml#auto-toc21" />
+      </navPoint>
+      <navPoint id="IV" playOrder="23" class="">
+        <navLabel>
+          <text>IV</text>
+        </navLabel>
+        <content src="book_0024.xhtml#auto-toc22" />
+      </navPoint>
+      <navPoint id="V" playOrder="24" class="">
+        <navLabel>
+          <text>V</text>
+        </navLabel>
+        <content src="book_0025.xhtml#auto-toc23" />
+      </navPoint>
+    </navPoint>
+    <navPoint id="LE HÉROS(13)" playOrder="25" class="">
+      <navLabel>
+        <text>LE HÉROS(13)</text>
+      </navLabel>
+      <content src="book_0026.xhtml#auto-toc24" />
+    </navPoint>
+    <navPoint id="ANNALES D’ANNE(14)" playOrder="26" class="">
+      <navLabel>
+        <text>ANNALES D’ANNE(14)</text>
+      </navLabel>
+      <content src="book_0027.xhtml#auto-toc25" />
+      <navPoint id="I" playOrder="27" class="">
+        <navLabel>
+          <text>I</text>
+        </navLabel>
+        <content src="book_0028.xhtml#auto-toc26" />
+      </navPoint>
+      <navPoint id="II" playOrder="28" class="">
+        <navLabel>
+          <text>II</text>
+        </navLabel>
+        <content src="book_0029.xhtml#auto-toc27" />
+      </navPoint>
+      <navPoint id="III" playOrder="29" class="">
+        <navLabel>
+          <text>III</text>
+        </navLabel>
+        <content src="book_0030.xhtml#auto-toc28" />
+      </navPoint>
+      <navPoint id="IV" playOrder="30" class="">
+        <navLabel>
+          <text>IV</text>
+        </navLabel>
+        <content src="book_0031.xhtml#auto-toc29" />
+      </navPoint>
+      <navPoint id="V" playOrder="31" class="">
+        <navLabel>
+          <text>V</text>
+        </navLabel>
+        <content src="book_0032.xhtml#auto-toc30" />
+      </navPoint>
+      <navPoint id="VI" playOrder="32" class="">
+        <navLabel>
+          <text>VI</text>
+        </navLabel>
+        <content src="book_0033.xhtml#auto-toc31" />
+      </navPoint>
+      <navPoint id="VII" playOrder="33" class="">
+        <navLabel>
+          <text>VII</text>
+        </navLabel>
+        <content src="book_0034.xhtml#auto-toc32" />
+      </navPoint>
+      <navPoint id="VIII" playOrder="34" class="">
+        <navLabel>
+          <text>VIII</text>
+        </navLabel>
+        <content src="book_0035.xhtml#auto-toc33" />
+      </navPoint>
+      <navPoint id="IX" playOrder="35" class="">
+        <navLabel>
+          <text>IX</text>
+        </navLabel>
+        <content src="book_0036.xhtml#auto-toc34" />
+      </navPoint>
+      <navPoint id="X" playOrder="36" class="">
+        <navLabel>
+          <text>X</text>
+        </navLabel>
+        <content src="book_0037.xhtml#auto-toc35" />
+      </navPoint>
+      <navPoint id="XI" playOrder="37" class="">
+        <navLabel>
+          <text>XI</text>
+        </navLabel>
+        <content src="book_0038.xhtml#auto-toc36" />
+      </navPoint>
+      <navPoint id="XII" playOrder="38" class="">
+        <navLabel>
+          <text>XII</text>
+        </navLabel>
+        <content src="book_0039.xhtml#auto-toc37" />
+      </navPoint>
+      <navPoint id="XIII" playOrder="39" class="">
+        <navLabel>
+          <text>XIII</text>
+        </navLabel>
+        <content src="book_0040.xhtml#auto-toc38" />
+      </navPoint>
+      <navPoint id="XIV" playOrder="40" class="">
+        <navLabel>
+          <text>XIV</text>
+        </navLabel>
+        <content src="book_0041.xhtml#auto-toc39" />
+      </navPoint>
+      <navPoint id="XV" playOrder="41" class="">
+        <navLabel>
+          <text>XV</text>
+        </navLabel>
+        <content src="book_0042.xhtml#auto-toc40" />
+      </navPoint>
+    </navPoint>
+    <navPoint id="À propos de cette édition électronique" playOrder="42" class="">
+      <navLabel>
+        <text>À propos de cette édition électronique</text>
+      </navLabel>
+      <content src="book_0043.xhtml#auto-toc41" />
+    </navPoint>
+  </navMap>
 </ncx>

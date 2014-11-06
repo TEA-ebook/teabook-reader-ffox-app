@@ -8,7 +8,8 @@ define("model/ebook-pagination", ["backbone"], function (Backbone) {
             chapterCurrent: 0,
             pageTotal: 0,
             pageCurrent: 0,
-            monoPage: false
+            monoPage: false,
+            title: ""
         },
 
         initialize: function () {

@@ -14,7 +14,7 @@ define('view/bookshelf/index', ['backbone', 'view/bookshelf/book', 'template/boo
                 this.shelves = [];
 
                 var i = 0;
-                for (i; i < 20; i += 1) {
+                for (i; i < 5; i += 1) {
                     this.generateNewShelf(3);
                 }
 
