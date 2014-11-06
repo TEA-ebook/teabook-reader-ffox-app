@@ -286,6 +286,7 @@ define('view/ebook/index',
                 if (this.tocView) {
                     this.tocView.remove();
                 }
+                this.optionsView.close();
                 this.remove();
             }
         });

@@ -13,6 +13,10 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
                 "click": "hideIfOutClick"
             },
 
+            initialize: function () {
+                Backbone.on(Teavents.MESSAGE, this.readiumEvent.bind(this));
+            },
+
             render: function () {
                 this.$el.html(template({
                     fontSize: 120
@@ -20,8 +24,20 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
                 return this;
             },
 
+            readiumEvent: function (event) {
+                if (event.data.type === 'readium') {
+                    var readiumEvent = event.data.event;
+                    if (readiumEvent.type === Teavents.Readium.SETTINGS_APPLIED) {
+                        this.notWorking();
+                    }
+                }
+            },
+
             updateFontSize: function (event) {
-                Backbone.trigger(Teavents.FONTSIZE_SET, event.target.value);
+                this.isWorking();
+                setTimeout(function () {
+                    Backbone.trigger(Teavents.FONTSIZE_SET, event.target.value);
+                }, 100);
             },
 
             toggle: function () {
@@ -29,6 +45,18 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
                     return this.show();
                 }
                 this.hide();
+            },
+
+            isWorking: function () {
+                console.debug("set working wheel");
+                this.$el[0].classList.add("working");
+                this.$el.find('input').attr("disabled", "");
+            },
+
+            notWorking: function () {
+                console.debug("stop working wheel");
+                this.$el[0].classList.remove("working");
+                this.$el.find('input').removeAttr("disabled");
             },
 
             show: function () {
@@ -50,6 +78,11 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
                     Backbone.trigger(Teavents.OPTIONS_CLOSED);
                     this.hide();
                 }
+            },
+
+            close: function () {
+                Backbone.off(Teavents.MESSAGE);
+                this.remove();
             }
         });
 

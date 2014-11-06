@@ -1,4 +1,5 @@
 @import "variables.less";
+@import "animations.less";
 
 html {
   box-sizing: border-box;
@@ -30,7 +31,6 @@ iframe {
   height: 100%;
 }
 
-
 /** Bookshelf **/
 .shelf > .shelf-tab {
   align-items: flex-end;
@@ -57,7 +57,6 @@ iframe {
   transition-property: box-shadow;
   transition-duration: 0.4s;
 }
-
 
 /** ebook Toolbar **/
 .ebook-toolbar {
@@ -116,7 +115,6 @@ iframe {
   padding: 0 16px;
 }
 
-
 /** ebook Table Of Contents **/
 .ebook-toc {
   background-color: #ffffff;
@@ -143,7 +141,6 @@ iframe {
   margin-bottom: @toolbar-height + 2rem;
   padding-left: 3rem;
 }
-
 
 /** ebook Pagination **/
 .ebook-pagination {
@@ -190,6 +187,16 @@ iframe {
   background-color: #00AACC;
 }
 
+.ebook-pagination-title {
+  height: 100%;
+  line-height: 1rem;
+  overflow: hidden;
+  padding: 0.2rem 0.5rem;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
 
 /** ebook Options **/
 .ebook-options {
@@ -221,8 +228,20 @@ iframe {
 }
 
 .ebook-options-footer {
-  background: url(../images/actionicon_settings_30x30.png) @options-panel-footer-color no-repeat center;
+  background-color: @options-panel-footer-color;
   height: 2rem;
+}
+
+.ebook-options-footer > .wheel {
+  background: url(../images/actionicon_settings_30x30.png) no-repeat center;
+  height: 2rem;
+}
+
+.ebook-options.working .wheel {
+  .vendors(animation-name, spin);
+  .vendors(animation-duration, 2000ms);
+  .vendors(animation-iteration-count, infinite);
+  .vendors(animation-timing-function, linear);
 }
 
 .ebook-option {
@@ -235,9 +254,11 @@ iframe {
 
 .ebook-option.font-size > span:first-child {
   font-size: 1.5rem;
-}.ebook-option.font-size > span:last-child {
-   font-size: 2rem;
- }
+}
+
+.ebook-option.font-size > span:last-child {
+  font-size: 2rem;
+}
 
 input[type=range] {
   background: transparent;
@@ -246,9 +267,19 @@ input[type=range] {
   margin: 0 0.5rem;
   outline: none;
   width: 80%;
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none;
 }
 
 input[type=range]::-moz-range-track {
+  background: @slider-color;
+  height: 0.2rem;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
   background: @slider-color;
   height: 0.2rem;
 }
@@ -259,6 +290,29 @@ input[type=range]::-moz-range-thumb {
   width: 1.2rem;
 }
 
-input[type=range]:focus::-moz-range-thumb {
+input[type=range]:focus::-moz-range-thumb, input[type=range]:focus::-webkit-slider-thumb {
   border: 0.3rem solid @slider-color;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #ffffff;
+  border: 0.1rem solid #888888;
+  border-radius: 1rem;
+  cursor: pointer;
+  height: 1.2rem;
+  margin-top: -0.5rem;
+  width: 1.2rem;
+}
+
+input[type=range]:focus::-webkit-slider-thumb {
+  border: 0.1rem solid @slider-color;
+}
+
+@-webkit-keyframes spin {
+  .transformKeyframes(webkit);
+}
+
+@-moz-keyframes spin {
+  .transformKeyframes(moz);
 }

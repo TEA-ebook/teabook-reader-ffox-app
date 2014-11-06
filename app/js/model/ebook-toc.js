@@ -18,6 +18,7 @@ define("model/ebook-toc", ["backbone"], function (Backbone) {
                 this.get("items").push({
                     text: navPoint.querySelector("navLabel").textContent.trim(),
                     content: navPoint.querySelector("content").getAttribute("src").trim()
+
                 });
             }.bind(this));
         }

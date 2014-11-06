@@ -130,7 +130,7 @@
                 });
 
                 // transfer all other Readium events to the app
-                [ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED].forEach(function (event) {
+                [ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, ReadiumSDK.Events.SETTINGS_APPLIED].forEach(function (event) {
                     window.readium.reader.on(event, function () {
                         window.parent.postMessage({
                             type: "readium",

@@ -1,0 +1,18 @@
+.vendor(@vendor, @property, @value) {
+  -@{vendor}-@{property}: @value;
+}
+
+.vendors(@property, @value) {
+  -webkit-@{property}: @value;
+  -moz-@{property}: @value;
+  @{property}: @value;
+}
+
+.transformKeyframes (@vendor) {
+  from {
+    .vendor(@vendor, transform, rotate(0deg));
+  }
+  to {
+    .vendor(@vendor, transform, rotate(360deg));
+  }
+}

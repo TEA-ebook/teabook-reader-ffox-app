@@ -16,6 +16,7 @@ window.Teavents = {
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",
         CONTENT_LOAD_START: "ContentDocumentLoadStart",
-        CONTENT_LOADED: "ContentDocumentLoaded"
+        CONTENT_LOADED: "ContentDocumentLoaded",
+        SETTINGS_APPLIED: "SettingsApplied"
     }
 };
