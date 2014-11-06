@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define: true, window: true*/
 define('view/ebook/toc-item', ['backbone', 'template/ebook/toc-item'],
     function (Backbone, template) {
         "use strict";
@@ -11,7 +11,8 @@ define('view/ebook/toc-item', ['backbone', 'template/ebook/toc-item'],
             render: function (uri) {
                 this.uri = uri;
                 this.$el.html(template({
-                    model: this.model.attributes,
+                    label: this.model.get('label'),
+                    href: window.encodeURIComponent(this.model.get('href')),
                     uri: uri
                 }));
                 this.childrenEl = this.$el.find('ul');

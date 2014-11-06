@@ -25,6 +25,53 @@
                     done();
                 });
             });
+
+            it('should get the total end points of the toc', function (done) {
+                curl(['model/ebook-toc', 'text!../../test/samples/epub-toc.ncx'], function (EbookTocModel, xmlToc) {
+                    // Given an ebook-toc model
+                    var ebookToc = new EbookTocModel();
+
+                    // When we load ncx data
+                    ebookToc.load(xmlToc);
+
+                    // We should get 38 end points
+                    ebookToc.getTotalEndPoints().should.be.equal(38);
+
+                    done();
+                });
+            });
+
+            it('should find a toc item position from a href', function (done) {
+                curl(['model/ebook-toc', 'text!../../test/samples/epub-toc.ncx'], function (EbookTocModel, xmlToc) {
+                    // Given an ebook-toc model loaded
+                    var ebookToc = new EbookTocModel();
+                    ebookToc.load(xmlToc);
+
+                    // When we search for the book_0009.xhtml href
+                    var itemPosition = ebookToc.getItemPosition("book_0009.xhtml");
+
+                    // It should tell us it's the 7th item in the toc
+                    itemPosition.should.be.equal(7);
+
+                    done();
+                });
+            });
+
+            it('should not find an unknown toc item', function (done) {
+                curl(['model/ebook-toc', 'text!../../test/samples/epub-toc.ncx'], function (EbookTocModel, xmlToc) {
+                    // Given an ebook-toc model loaded
+                    var ebookToc = new EbookTocModel();
+                    ebookToc.load(xmlToc);
+
+                    // When we search for the book_i_dont_exist.xhtml href
+                    var itemPosition = ebookToc.getItemPosition("book_i_dont_exist.xhtml");
+
+                    // It should tell us that it doesn't exists
+                    itemPosition.should.be.false;
+
+                    done();
+                });
+            });
         });
     });
 }());

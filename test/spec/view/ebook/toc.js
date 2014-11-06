@@ -25,8 +25,8 @@
                     // When it renders
                     ebookTocView.render();
 
-                    // It should render 2 items in the toc
-                    ebookTocView.$el.find("li").should.have.length(12);
+                    // It should render 42 items in the toc
+                    ebookTocView.$el.find("li").should.have.length(42);
 
                     done();
                 });

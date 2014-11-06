@@ -1,4 +1,4 @@
-/*global define: true, DOMParser: true*/
+/*global define: true, DOMParser: true, window: true*/
 define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbone, TocItemModel) {
     "use strict";
 
@@ -14,30 +14,55 @@ define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbo
 
         load: function (xml) {
             var tocDom = (new DOMParser()).parseFromString(xml, "text/xml");
-            this.set("items", this.parseNavPoint(tocDom.querySelector("navPoint"), []));
+            this.set("items", this.parseNavPoint(tocDom.querySelector("navPoint"), [], 0));
         },
 
-        parseNavPoint: function (navPoint, items) {
-            var item, navPointChild;
+        parseNavPoint: function (navPoint, items, endPoints) {
+            var item, navPointChild, navLabel;
 
-            item = new TocItemModel({
-                label: navPoint.querySelector("navLabel").textContent.trim(),
-                href: navPoint.querySelector("content").getAttribute("src").trim()
-            });
+            navLabel = navPoint.querySelector("navLabel");
+            if(navLabel) {
+                item = new TocItemModel({
+                    label: navLabel.textContent.trim(),
+                    href: navPoint.querySelector("content").getAttribute("src").trim()
+                });
 
-            navPointChild = navPoint.querySelector("navPoint");
-            if (navPointChild) {
-                item.set("items", this.parseNavPoint(navPointChild, []));
+                // parsing first child and its siblings
+                navPointChild = navPoint.querySelector("navPoint");
+                if (navPointChild) {
+                    item.set("items", this.parseNavPoint(navPointChild, [], endPoints));
+                } else {
+                    endPoints += 1;
+                    item.set('position', endPoints);
+                }
+
+                items.push(item);
             }
-
-            items.push(item);
 
             // next nav point
             if (navPoint.nextElementSibling) {
-                this.parseNavPoint(navPoint.nextElementSibling, items);
+                this.parseNavPoint(navPoint.nextElementSibling, items, endPoints);
             }
 
             return items;
+        },
+
+        getTotalEndPoints: function () {
+            return this.get('items').reduce(function (sum, item) {
+                return item.getTotalEndPoints() + sum;
+            }, 0);
+        },
+
+        getItemPosition: function (href) {
+            var items, i, position;
+            items = this.get('items');
+            for (i = 0; i < items.length; i += 1) {
+                position = items[i].getItemPosition(href);
+                if (position) {
+                    return position;
+                }
+            }
+            return false;
         }
     });
 

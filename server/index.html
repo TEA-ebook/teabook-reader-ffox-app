@@ -125,7 +125,10 @@
                         type: "readium",
                         event: {
                             type: ReadiumSDK.Events.PAGINATION_CHANGED,
-                            data: pageChangeData.paginationInfo.openPages[0]
+                            data: {
+                                pageInfo: pageChangeData.paginationInfo.openPages[0],
+                                spineHref: window.readium.reader.getLoadedSpineItems()[0].href
+                            }
                         }
                     }, "*");
                 });

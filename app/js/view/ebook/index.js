@@ -212,7 +212,7 @@ define('view/ebook/index',
                 this.tocView = new TocView({ model: toc, uri: this.model.get("name") });
                 this.tocView.render();
 
-                this.paginationView.model.set("fixedChapterTotal", toc.get("items").length);
+                this.paginationView.setToc(toc);
 
                 this.$el.append(this.tocView.el);
             },
