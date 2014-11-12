@@ -233,16 +233,29 @@ iframe {
   height: 2rem;
 }
 
-.ebook-options-footer > .wheel {
+.waiting {
+  background-color: @waiting-background-color;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.wheel {
   background: url(../images/actionicon_settings_30x30.png) no-repeat center;
   height: 2rem;
 }
 
-.ebook-options.working .wheel {
+.ebook-options.working .wheel, .waiting .wheel {
   .vendors(animation-name, spin);
   .vendors(animation-duration, 2000ms);
   .vendors(animation-iteration-count, infinite);
   .vendors(animation-timing-function, linear);
+}
+
+.waiting .wheel {
+  height: 100%;
 }
 
 .ebook-option {

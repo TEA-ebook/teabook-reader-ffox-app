@@ -21,7 +21,7 @@
         }
 
         function writeScript(event) {
-            var scriptSrc = new Blob([event.data.content], {"type": event.data.type});
+            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
             var script = document.createElement("script");
             script.type = event.data.type;
             script.src = URL.createObjectURL(scriptSrc);
@@ -29,7 +29,7 @@
         }
 
         function writeInline(event, tag) {
-            var scriptSrc = new Blob([event.data.content], {"type": event.data.type});
+            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
             var script = document.createElement(tag);
             script.type = event.data.type;
             getText(scriptSrc, function (text) {
@@ -47,7 +47,7 @@
         }
 
         function writeScript(event) {
-            var scriptSrc = new Blob([event.data.content], {"type": event.data.type});
+            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
             var script = document.createElement('script');
             script.type = event.data.type;
             script.src = window.URL.createObjectURL(scriptSrc);
@@ -110,8 +110,8 @@
             clearInterval(reeadiumReadyTest);
 
             require(['Readium', 'gestures'], function (Readium, GesturesHandler) {
-                var readerOptions = {el: '#epub-reader-frame'};
-                window.readium = new Readium({jsLibRoot: ""}, readerOptions, function (error) {
+                var readerOptions = { el: '#epub-reader-frame' };
+                window.readium = new Readium({ jsLibRoot: "" }, readerOptions, function (error) {
                     console.error(error);
                 });
 
@@ -133,8 +133,21 @@
                     }, "*");
                 });
 
+                // transfer updated settings
+                window.readium.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, function () {
+                    window.parent.postMessage({
+                        type: "readium",
+                        event: {
+                            type: ReadiumSDK.Events.SETTINGS_APPLIED,
+                            data: {
+                                fontSize: window.readium.reader.viewerSettings().fontSize
+                            }
+                        }
+                    }, "*");
+                });
+
                 // transfer all other Readium events to the app
-                [ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, ReadiumSDK.Events.SETTINGS_APPLIED].forEach(function (event) {
+                [ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED].forEach(function (event) {
                     window.readium.reader.on(event, function () {
                         window.parent.postMessage({
                             type: "readium",

@@ -15,11 +15,12 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
 
             initialize: function () {
                 Backbone.on(Teavents.MESSAGE, this.readiumEvent.bind(this));
+                this.fontSize = 120;
             },
 
             render: function () {
                 this.$el.html(template({
-                    fontSize: 120
+                    fontSize: this.fontSize
                 }));
                 return this;
             },
@@ -29,6 +30,8 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
                     var readiumEvent = event.data.event;
                     if (readiumEvent.type === Teavents.Readium.SETTINGS_APPLIED) {
                         this.notWorking();
+                        this.fontSize = readiumEvent.data.fontSize;
+                        this.render();
                     }
                 }
             },
@@ -48,13 +51,11 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
             },
 
             isWorking: function () {
-                console.debug("set working wheel");
                 this.$el[0].classList.add("working");
                 this.$el.find('input').attr("disabled", "");
             },
 
             notWorking: function () {
-                console.debug("stop working wheel");
                 this.$el[0].classList.remove("working");
                 this.$el.find('input').removeAttr("disabled");
             },

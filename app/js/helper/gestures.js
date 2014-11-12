@@ -1,4 +1,4 @@
-/*global define: true, ReadiumSDK: true, window: true*/
+/*global define: true, ReadiumSDK: true, window: true, SwipeRecognizer: true*/
 
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
 //
@@ -16,7 +16,7 @@
 define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
     "use strict";
 
-    var gesturesHandler, onSwipeLeft, onSwipeRight, isGestureHandled;
+    var gesturesHandler, onSwipeLeft, onSwipeRight, onPinchIn, onPinchOut, isGestureHandled;
 
     gesturesHandler = function (reader, viewport) {
 
@@ -26,6 +26,48 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
 
         onSwipeRight = function () {
             reader.openPageLeft();
+        };
+
+        onPinchIn = function (event) {
+            if (event.eventType === Hammer.INPUT_END) {
+                window.parent.postMessage("pinchin", "*");
+
+                var scale, fontSize;
+
+                scale = isNaN(parseInt(event.scale, 10)) ? 1 : event.scale;
+                fontSize = reader.viewerSettings().fontSize;
+                fontSize -= Math.round(20 / scale);
+
+                if (fontSize < 50) {
+                    fontSize = 50;
+                }
+                setTimeout(function () {
+                    reader.updateSettings({
+                        fontSize: fontSize
+                    });
+                }, 50);
+            }
+        };
+
+        onPinchOut = function (event) {
+            if (event.eventType === Hammer.INPUT_END) {
+                window.parent.postMessage("pinchout", "*");
+
+                var scale, fontSize;
+
+                scale = isNaN(parseInt(event.scale, 10)) ? 1 : event.scale;
+                fontSize = reader.viewerSettings().fontSize;
+                fontSize += Math.round(10 * scale);
+
+                if (fontSize > 300) {
+                    fontSize = 300;
+                }
+                setTimeout(function () {
+                    reader.updateSettings({
+                        fontSize: fontSize
+                    });
+                }, 50);
+            }
         };
 
         isGestureHandled = function () {
@@ -38,35 +80,18 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
 
             reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, function (iframe) {
                 //set hammer's document root
-                Hammer.DOCUMENT = iframe.contents();
-                //hammer's internal touch events need to be redefined? (doesn't work without)
-                Hammer.event.onTouch(Hammer.DOCUMENT, Hammer.EVENT_MOVE, Hammer.detection.detect);
-                Hammer.event.onTouch(Hammer.DOCUMENT, Hammer.EVENT_END, Hammer.detection.detect);
+                var hammertime = new Hammer(iframe[0].contentDocument.documentElement, { prevent_mouseevents: true });
+                hammertime.get('swipe').set({ threshold: 1, velocity: 0.1 });
+                hammertime.get('pinch').set({ enable: true });
 
-                //set up the hammer gesture events
-                //swiping handlers
-                var swipingOptions = {prevent_mouseevents: true};
-                new Hammer(Hammer.DOCUMENT, swipingOptions).on("swipeleft", function () {
-                    onSwipeLeft();
-                });
-                new Hammer(Hammer.DOCUMENT, swipingOptions).on("swiperight", function () {
-                    onSwipeRight();
-                });
-                new Hammer(Hammer.DOCUMENT, swipingOptions).on("tap", function () {
+                //set up the hammer gesture events swiping handlers
+                hammertime.on("swipeleft", onSwipeLeft);
+                hammertime.on("swiperight", onSwipeRight);
+                hammertime.on("tap", function () {
                     window.parent.postMessage("tap", "*");
                 });
-
-
-                //remove stupid ipad safari elastic scrolling
-                $(Hammer.DOCUMENT).on(
-                    'touchmove',
-                    function (e) {
-                        //hack: check if we are not dealing with a scrollview
-                        if (isGestureHandled()) {
-                            e.preventDefault();
-                        }
-                    }
-                );
+                hammertime.on("pinchin", onPinchIn);
+                hammertime.on("pinchout", onPinchOut);
             });
 
             //remove stupid ipad safari elastic scrolling (improves UX for gestures)
@@ -80,12 +105,10 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
             );
 
             //handlers on viewport
-            $(viewport).hammer().on("swipeleft", function () {
-                onSwipeLeft();
-            });
-            $(viewport).hammer().on("swiperight", function () {
-                onSwipeRight();
-            });
+            $(viewport).hammer().on("swipeleft", onSwipeLeft);
+            $(viewport).hammer().on("swiperight", onSwipeRight);
+            $(viewport).hammer().on("pinchin", onPinchIn);
+            $(viewport).hammer().on("pinchout", onPinchOut);
         };
 
     };

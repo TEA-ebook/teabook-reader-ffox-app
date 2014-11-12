@@ -9,8 +9,9 @@ define('view/ebook/index',
         'view/ebook/options',
         'view/ebook/pagination',
         'template/ebook/index',
+        'template/waiting',
         'spin'],
-    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, OptionsView, PaginationView, template, Spinner) {
+    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, OptionsView, PaginationView, template, waitingTemplate, Spinner) {
         "use strict";
 
         var EbookView = Backbone.View.extend({
@@ -39,6 +40,8 @@ define('view/ebook/index',
                 this.paginationView = new PaginationView({ model: new EbookPaginationModel() });
                 this.toolbarView = new ToolbarView();
                 this.optionsView = new OptionsView();
+
+                this.waitingEl = waitingTemplate();
 
                 this.render();
             },
@@ -92,7 +95,7 @@ define('view/ebook/index',
                         this.toolbarView.hide();
                         this.optionsView.hide();
                         this.paginationView.hide();
-                    } else if (event.data === "click" || event.data === "tap") {
+                    } else if (event.data === Teavents.CLICK || event.data === Teavents.TAP) {
                         if (this.toolbarView.toggle()) {
                             this.paginationView.show();
                             this.hideUiTempo();
@@ -100,6 +103,8 @@ define('view/ebook/index',
                             this.paginationView.hide();
                             this.clearUiTempo();
                         }
+                    } else if (event.data === Teavents.PINCH_IN || event.data === Teavents.PINCH_OUT) {
+                        this.$el.append(this.waitingEl);
                     } else if (typeof event.data === "object") {
                         this.handleReadiumEvent(event);
                     }
@@ -121,6 +126,8 @@ define('view/ebook/index',
                         this.spin();
                     } else if (readiumEvent.type === Teavents.Readium.CONTENT_LOADED) {
                         this.stopSpin();
+                    } else if (readiumEvent.type === Teavents.Readium.SETTINGS_APPLIED) {
+                        this.$el.find(".waiting").remove();
                     }
                 }
             },
