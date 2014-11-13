@@ -16,10 +16,11 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             readiumEvent: function (event) {
                 if (event.type === "Readium:" + Teavents.Readium.PAGINATION_CHANGED) {
                     if (event.data) {
+                        var currentChapter = (this.toc ? this.toc.getItemPosition(event.data.spineHref) : event.data.pageInfo.spineItemIndex + 1);
                         this.model.set({
-                            chapterCurrent: (this.toc ? this.toc.getItemPosition(event.data.spineHref) : event.data.pageInfo.spineItemIndex + 1),
-                            pageCurrent: event.data.pageInfo.spineItemPageIndex + 1,
-                            pageTotal: event.data.pageInfo.spineItemPageCount
+                            chapterCurrent: currentChapter,
+                            pageCurrent: Math.round(100 * (((event.data.pageInfo.spineItemPageIndex / event.data.pageInfo.spineItemPageCount) + currentChapter) / this.model.get('chapterTotal'))),
+                            pageTotal: 100
                         });
                     }
                 } else if (event.type === "chapters") {
