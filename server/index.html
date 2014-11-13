@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>Readium App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
     <link rel="stylesheet" href="readium_js.css"/>
 
@@ -147,7 +147,12 @@
                 });
 
                 // transfer all other Readium events to the app
-                [ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED].forEach(function (event) {
+                [
+                    ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START,
+                    ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED,
+                    ReadiumSDK.Events.GESTURE_PINCH,
+                    ReadiumSDK.Events.GESTURE_TAP
+                ].forEach(function (event) {
                     window.readium.reader.on(event, function () {
                         window.parent.postMessage({
                             type: "readium",

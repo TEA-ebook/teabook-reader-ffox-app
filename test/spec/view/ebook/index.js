@@ -15,6 +15,15 @@
             sandbox.restore();
         });
 
+        var triggerTap = function () {
+            Backbone.trigger(Teavents.MESSAGE, {
+                data: {
+                    type: "readium",
+                    event: { type: "GestureTap" }
+                }
+            });
+        };
+
         describe('instance', function () {
             it('call the render function when created', function (done) {
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
@@ -47,7 +56,7 @@
                     Backbone.trigger(Teavents.MESSAGE, { data: { type: "toc", data: fakeTocNcx } });
 
                     // When the user tap once the screen and waits for 5s
-                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
+                    triggerTap();
                     sandbox.clock.tick(5000);
 
                     // The toolbar should be automatically hidden
@@ -104,7 +113,7 @@
                     Backbone.trigger(Teavents.MESSAGE, { data: "readyToRead" });
 
                     // When the user taps the screen
-                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
+                    triggerTap();
 
                     // The toolbar should be visible
                     ebookView.$el.find(".ebook-toolbar").hasClass("hidden").should.be.false;
@@ -121,8 +130,8 @@
                     Backbone.trigger(Teavents.MESSAGE, { data: "readyToRead" });
 
                     // When the user taps twice the screen
-                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
-                    Backbone.trigger(Teavents.MESSAGE, { data: "tap" });
+                    triggerTap();
+                    triggerTap();
 
                     // The toolbar should be hidden
                     ebookView.$el.find(".ebook-toolbar").hasClass("hidden").should.be.true;

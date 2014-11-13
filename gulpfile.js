@@ -214,7 +214,7 @@ gulp.task('watch-codebase', ['build'], function () {
         gulp.watch(paths.js, ['compile-scripts']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
-        gulp.watch(paths.html, ['copy-html']);
+        gulp.watch(paths.html, ['process-html']);
     }
 });
 

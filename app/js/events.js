@@ -12,15 +12,13 @@ window.Teavents = {
     EPUB_SEND: "sendEpub",
     READY_TO_READ: "readyToRead",
     SEND_RESOURCES: "sendResources",
-    PINCH_IN: "pinchin",
-    PINCH_OUT: "pinchout",
-    TAP: "tap",
-    CLICK: "click",
 
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",
         CONTENT_LOAD_START: "ContentDocumentLoadStart",
         CONTENT_LOADED: "ContentDocumentLoaded",
-        SETTINGS_APPLIED: "SettingsApplied"
+        SETTINGS_APPLIED: "SettingsApplied",
+        GESTURE_TAP: "GestureTap",
+        GESTURE_PINCH: "GesturePinch"
     }
 };

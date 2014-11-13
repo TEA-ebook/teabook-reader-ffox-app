@@ -70,6 +70,7 @@ iframe {
   position: absolute;
   top: 0;
   width: 100%;
+  will-change: height;
   transition: height 0.5s ease;
 }
 
@@ -112,7 +113,7 @@ iframe {
 
 .ebook-toolbar-buttons > button:last-child {
   margin-left: auto;
-  padding: 0 16px;
+  padding: 0 1rem 0 2rem;
 }
 
 /** ebook Table Of Contents **/
@@ -153,6 +154,7 @@ iframe {
   justify-content: space-around;
   position: absolute;
   width: 100%;
+  will-change: height;
   transition: height 0.5s ease;
 }
 
@@ -177,14 +179,22 @@ iframe {
 }
 
 .ebook-pagination-pages > progress {
-  background-color: #F4F4F4;
-  border: 0;
+  background-color: @progress-bar-background;
+  border: none;
   height: 1rem;
   width: 90%;
+  -webkit-appearance: none;
 }
 
 .ebook-pagination-pages > progress::-moz-progress-bar {
-  background-color: #00AACC;
+  background-color: @progress-bar-color;
+}
+
+.ebook-pagination-pages > progress::-webkit-progress-bar {
+  background: @progress-bar-background;
+}
+.ebook-pagination-pages > progress::-webkit-progress-value {
+  background: @progress-bar-color;
 }
 
 .ebook-pagination-title {

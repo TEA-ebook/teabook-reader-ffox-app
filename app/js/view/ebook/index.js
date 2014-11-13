@@ -95,16 +95,6 @@ define('view/ebook/index',
                         this.toolbarView.hide();
                         this.optionsView.hide();
                         this.paginationView.hide();
-                    } else if (event.data === Teavents.CLICK || event.data === Teavents.TAP) {
-                        if (this.toolbarView.toggle()) {
-                            this.paginationView.show();
-                            this.hideUiTempo();
-                        } else {
-                            this.paginationView.hide();
-                            this.clearUiTempo();
-                        }
-                    } else if (event.data === Teavents.PINCH_IN || event.data === Teavents.PINCH_OUT) {
-                        this.$el.append(this.waitingEl);
                     } else if (typeof event.data === "object") {
                         this.handleReadiumEvent(event);
                     }
@@ -128,6 +118,16 @@ define('view/ebook/index',
                         this.stopSpin();
                     } else if (readiumEvent.type === Teavents.Readium.SETTINGS_APPLIED) {
                         this.$el.find(".waiting").remove();
+                    } else if (readiumEvent.type === Teavents.Readium.GESTURE_TAP) {
+                        if (this.toolbarView.toggle()) {
+                            this.paginationView.show();
+                            this.hideUiTempo();
+                        } else {
+                            this.paginationView.hide();
+                            this.clearUiTempo();
+                        }
+                    } else if (readiumEvent.type === Teavents.Readium.GESTURE_PINCH) {
+                        this.$el.append(this.waitingEl);
                     }
                 }
             },

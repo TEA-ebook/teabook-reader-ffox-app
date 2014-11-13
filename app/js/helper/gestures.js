@@ -1,4 +1,4 @@
-/*global define: true, ReadiumSDK: true, window: true, SwipeRecognizer: true*/
+/*global define: true, ReadiumSDK: true, window: true*/
 
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
 //
@@ -16,51 +16,41 @@
 define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
     "use strict";
 
-    var gesturesHandler, onSwipeLeft, onSwipeRight, onPinchIn, onPinchOut, isGestureHandled;
+    var gesturesHandler, onSwipe, onPinch, onTap, isGestureHandled;
 
     gesturesHandler = function (reader, viewport) {
 
-        onSwipeLeft = function () {
-            reader.openPageRight();
-        };
-
-        onSwipeRight = function () {
-            reader.openPageLeft();
-        };
-
-        onPinchIn = function (event) {
-            if (event.eventType === Hammer.INPUT_END) {
-                window.parent.postMessage("pinchin", "*");
-
-                var scale, fontSize;
-
-                scale = isNaN(parseInt(event.scale, 10)) ? 1 : event.scale;
-                fontSize = reader.viewerSettings().fontSize;
-                fontSize -= Math.round(20 / scale);
-
-                if (fontSize < 50) {
-                    fontSize = 50;
-                }
-                setTimeout(function () {
-                    reader.updateSettings({
-                        fontSize: fontSize
-                    });
-                }, 50);
+        onSwipe = function (event) {
+            if (event.direction === Hammer.DIRECTION_LEFT) {
+                reader.trigger(ReadiumSDK.Events.GESTURE_SWIPE_LEFT);
+                reader.openPageRight();
+            } else if (event.direction === Hammer.DIRECTION_RIGHT) {
+                reader.trigger(ReadiumSDK.Events.GESTURE_SWIPE_RIGHT);
+                reader.openPageLeft();
             }
         };
 
-        onPinchOut = function (event) {
+        onTap = function () {
+            reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
+        };
+
+        onPinch = function (event) {
             if (event.eventType === Hammer.INPUT_END) {
-                window.parent.postMessage("pinchout", "*");
+                reader.trigger(ReadiumSDK.Events.GESTURE_PINCH);
 
                 var scale, fontSize;
 
                 scale = isNaN(parseInt(event.scale, 10)) ? 1 : event.scale;
                 fontSize = reader.viewerSettings().fontSize;
-                fontSize += Math.round(10 * scale);
 
-                if (fontSize > 300) {
-                    fontSize = 300;
+                if (scale < 1) {
+                    fontSize -= Math.round(20 / scale);
+                } else {
+                    fontSize += Math.round(10 * scale);
+                }
+
+                if (fontSize < 50) {
+                    fontSize = 50;
                 }
                 setTimeout(function () {
                     reader.updateSettings({
@@ -85,13 +75,11 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
                 hammertime.get('pinch').set({ enable: true });
 
                 //set up the hammer gesture events swiping handlers
-                hammertime.on("swipeleft", onSwipeLeft);
-                hammertime.on("swiperight", onSwipeRight);
-                hammertime.on("tap", function () {
-                    window.parent.postMessage("tap", "*");
-                });
-                hammertime.on("pinchin", onPinchIn);
-                hammertime.on("pinchout", onPinchOut);
+                hammertime.on("swipeleft", onSwipe);
+                hammertime.on("swiperight", onSwipe);
+                hammertime.on("tap", onTap);
+                hammertime.on("pinchin", onPinch);
+                hammertime.on("pinchout", onPinch);
             });
 
             //remove stupid ipad safari elastic scrolling (improves UX for gestures)
@@ -105,10 +93,10 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
             );
 
             //handlers on viewport
-            $(viewport).hammer().on("swipeleft", onSwipeLeft);
-            $(viewport).hammer().on("swiperight", onSwipeRight);
-            $(viewport).hammer().on("pinchin", onPinchIn);
-            $(viewport).hammer().on("pinchout", onPinchOut);
+            $(viewport).hammer().on("swipeleft", onSwipe);
+            $(viewport).hammer().on("swiperight", onSwipe);
+            $(viewport).hammer().on("pinchin", onPinch);
+            $(viewport).hammer().on("pinchout", onPinch);
         };
 
     };
