@@ -88,6 +88,7 @@ define('view/ebook/index',
             handleBackboneEvent: function (event) {
                 if (event && event.data) {
                     if (event.data === Teavents.SEND_RESOURCES) {
+                        this.transferFile("js/iframe.js", "text/javascript", this.getSandbox());
                         this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
                     } else if (event.data === Teavents.EPUB_SEND) {
                         this.sendEpub();

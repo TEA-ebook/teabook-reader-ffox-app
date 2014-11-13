@@ -2,11 +2,46 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Readium App</title>
+    <title>Reader</title>
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-
-    <link rel="stylesheet" href="readium_js.css"/>
-
+    <style type="text/css">
+        html {
+            background-color: #ffffff;
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            position: absolute;
+            overflow: hidden;
+            box-sizing:border-box;
+            -moz-box-sizing:border-box; /* Firefox */
+            -webkit-box-sizing:border-box; /* Safari */
+        }
+        iframe {
+            border-width: 0;
+        }
+        #viewport {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        #reflowable-book-frame {
+            position: absolute !important;
+            left:0;
+            top:30px;
+            right: 0;
+            bottom: 30px;
+        }
+        #reflowable-content-frame {
+            position: absolute !important;
+            opacity: 1;
+            visibility: visible;
+            overflow: hidden;
+        }
+    </style>
     <script type="text/javascript">
         window.onload = function () {
             window.parent.postMessage("sendResources", "*");
@@ -46,15 +81,7 @@
             writeInline(event, "style");
         }
 
-        function writeScript(event) {
-            var scriptSrc = new Blob([event.data.content], { "type": event.data.type });
-            var script = document.createElement('script');
-            script.type = event.data.type;
-            script.src = window.URL.createObjectURL(scriptSrc);
-            document.head.appendChild(script);
-        }
-
-        function receiveMessage(event) {
+        var handleResource = function (event) {
             if (event.data.action === "transfer") {
                 if (event.data.type === "text/javascript") {
                     writeInlineScript(event);
@@ -63,118 +90,12 @@
                     writeInlineStyle(event);
                 }
             }
-            else if (event.data.action === Teavents.MESSAGE) {
-                if (event.data.content === "nextPage") {
-                    readium.reader.openPageNext();
-                }
-                else if (event.data.content === "prevPage") {
-                    readium.reader.openPagePrev();
-                }
-            }
-            else if (event.data.action === "chapter") {
-                window.readium.reader.openContentUrl(event.data.content);
-            }
-            else if (event.data.action === "font-size") {
-                window.readium.reader.updateSettings({
-                    fontSize: event.data.content
-                });
-            }
-            else if (event.data.action === "epub") {
-                var epubFile = new Blob([event.data.content], { "type": event.data.type });
-                var openPageRequest = false;
-                if (event.data.chapter && event.data.chapter.length > 0) {
-                    openPageRequest = {
-                        contentRefUrl: event.data.chapter,
-                        sourceFileHref: "."
-                    };
-                }
-
-                window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-                    window.parent.postMessage({ type: "chapters", data: packageDocument.spineLength() }, "*");
-                    window.parent.postMessage({ type: "title", data: options.metadata.title }, "*");
-                    packageDocument.getTocText(function (toc) {
-                        window.parent.postMessage({ type: "toc", data: toc }, "*");
-                        window.parent.postMessage(Teavents.READY_TO_READ, "*");
-                    });
-                }, openPageRequest);
-            }
         }
-        window.addEventListener("message", receiveMessage, false);
+
+        window.addEventListener("message", handleResource, false);
     </script>
 </head>
 <body>
 <div id="epub-reader-frame"></div>
-<script type="text/javascript">
-    var isReadiumReady = function () {
-        if (typeof require !== "undefined" && typeof readiumReady !== "undefined") {
-            clearInterval(reeadiumReadyTest);
-
-            require(['Readium', 'gestures'], function (Readium, GesturesHandler) {
-                var readerOptions = { el: '#epub-reader-frame' };
-                window.readium = new Readium({ jsLibRoot: "" }, readerOptions, function (error) {
-                    console.error(error);
-                });
-
-                // setup gestures support with hammer
-                var gesturesHandler = new GesturesHandler(readium.reader, readerOptions.el);
-                gesturesHandler.initialize();
-
-                // transfer pagination info to the app
-                window.readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
-                    window.parent.postMessage({
-                        type: "readium",
-                        event: {
-                            type: ReadiumSDK.Events.PAGINATION_CHANGED,
-                            data: {
-                                pageInfo: pageChangeData.paginationInfo.openPages[0],
-                                spineHref: window.readium.reader.getLoadedSpineItems()[0].href
-                            }
-                        }
-                    }, "*");
-                });
-
-                // transfer updated settings
-                window.readium.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, function () {
-                    window.parent.postMessage({
-                        type: "readium",
-                        event: {
-                            type: ReadiumSDK.Events.SETTINGS_APPLIED,
-                            data: {
-                                fontSize: window.readium.reader.viewerSettings().fontSize
-                            }
-                        }
-                    }, "*");
-                });
-
-                // transfer all other Readium events to the app
-                [
-                    ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START,
-                    ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED,
-                    ReadiumSDK.Events.GESTURE_PINCH,
-                    ReadiumSDK.Events.GESTURE_TAP
-                ].forEach(function (event) {
-                    window.readium.reader.on(event, function () {
-                        window.parent.postMessage({
-                            type: "readium",
-                            event: {
-                                type: event
-                            }
-                        }, "*");
-                    });
-                });
-
-                //
-                $(window).click(function () {
-                    window.parent.postMessage("click", "*");
-                });
-
-                // request epub data
-                window.parent.postMessage(Teavents.EPUB_SEND, "*");
-            });
-        }
-    };
-
-    var reeadiumReadyTest = setInterval(isReadiumReady, 100);
-</script>
 </body>
 </html>

@@ -20,6 +20,7 @@ var paths = {
         './app/less/*.less'
     ],
     fonts: ['./app/vendor/font-awesome/fonts/*'],
+    iframeJs: ['./app/js/helper/iframe.js'],
     js: ['./app/js/**/*.js'],
     images: ['./app/images/*'],
     html: ['./app/*.html'],
@@ -120,7 +121,7 @@ gulp.task('process-images', function () {
         .pipe(plugins.imagemin({
             progressive: true,
             svgoPlugins: [
-                {removeViewBox: false}
+                { removeViewBox: false }
             ],
             use: [pngcrush()]
         }))
@@ -192,26 +193,31 @@ gulp.task('copy-epubs', function () {
     }
 });
 
+gulp.task('copy-iframe-js', function () {
+    return gulp.src(paths.iframeJs)
+        .pipe(gulp.dest(paths.dist.js));
+});
+
 gulp.task('process-html', function () {
     return gulp.src(paths.html)
-        .pipe(plugins.preprocess({context: {DEBUG: debug.toString()}}))
-        .pipe(gulpif(!debug, plugins.htmlmin({collapseWhitespace: true})))
+        .pipe(plugins.preprocess({ context: { DEBUG: debug.toString() } }))
+        .pipe(gulpif(!debug, plugins.htmlmin({ collapseWhitespace: true })))
         .pipe(gulp.dest(paths.dist.html))
         .pipe(plugins.connect.reload());
 });
 
 gulp.task("open-browser", function () {
     return gulp.src(paths.html)
-        .pipe(gulpif(openBrowser, plugins.open("", {url: "http://localhost:8080/"})));
+        .pipe(gulpif(openBrowser, plugins.open("", { url: "http://localhost:8080/" })));
 });
 
-gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
+gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-epubs', 'copy-readium', 'copy-iframe-js', 'compile-less', 'compile-curl', 'compile-scripts']);
 
 gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
         gulp.watch(paths.less, ['compile-less']);
         gulp.watch(paths.templates, ['compile-scripts']);
-        gulp.watch(paths.js, ['compile-scripts']);
+        gulp.watch(paths.js, ['compile-scripts', 'copy-iframe-js']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
         gulp.watch(paths.html, ['process-html']);
