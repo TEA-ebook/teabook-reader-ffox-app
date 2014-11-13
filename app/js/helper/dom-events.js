@@ -15,7 +15,7 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
     };
 
     DomEvents.handleMessage = function (event) {
-        Backbone.trigger(Teavents.MESSAGE, event.originalEvent);
+        Backbone.trigger(Teavents.MESSAGE, event.originalEvent.data);
     };
 
     DomEvents.handleVisibilityChange = function () {

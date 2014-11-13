@@ -32,7 +32,7 @@ handleMessage = function (event) {
             window.parent.postMessage({ type: "title", data: options.metadata.title }, "*");
             packageDocument.getTocText(function (toc) {
                 window.parent.postMessage({ type: "toc", data: toc }, "*");
-                window.parent.postMessage(Teavents.READY_TO_READ, "*");
+                window.parent.postMessage({ type: Teavents.READY_TO_READ }, "*");
             });
         }, openPageRequest);
     }
@@ -60,13 +60,10 @@ isReadiumReady = function () {
             // transfer pagination info to the app
             window.readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
                 window.parent.postMessage({
-                    type: "readium",
-                    event: {
-                        type: ReadiumSDK.Events.PAGINATION_CHANGED,
-                        data: {
-                            pageInfo: pageChangeData.paginationInfo.openPages[0],
-                            spineHref: window.readium.reader.getLoadedSpineItems()[0].href
-                        }
+                    type: "Readium:" + ReadiumSDK.Events.PAGINATION_CHANGED,
+                    data: {
+                        pageInfo: pageChangeData.paginationInfo.openPages[0],
+                        spineHref: window.readium.reader.getLoadedSpineItems()[0].href
                     }
                 }, "*");
             });
@@ -74,12 +71,9 @@ isReadiumReady = function () {
             // transfer updated settings
             window.readium.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, function () {
                 window.parent.postMessage({
-                    type: "readium",
-                    event: {
-                        type: ReadiumSDK.Events.SETTINGS_APPLIED,
-                        data: {
-                            fontSize: window.readium.reader.viewerSettings().fontSize
-                        }
+                    type: "Readium:" + ReadiumSDK.Events.SETTINGS_APPLIED,
+                    data: {
+                        fontSize: window.readium.reader.viewerSettings().fontSize
                     }
                 }, "*");
             });
@@ -93,16 +87,13 @@ isReadiumReady = function () {
             ].forEach(function (event) {
                 window.readium.reader.on(event, function () {
                     window.parent.postMessage({
-                        type: "readium",
-                        event: {
-                            type: event
-                        }
+                        type: "Readium:" + event
                     }, "*");
                 });
             });
 
             // request epub data
-            window.parent.postMessage(Teavents.EPUB_SEND, "*");
+            window.parent.postMessage({ type: Teavents.EPUB_SEND }, "*");
         });
     }
 };

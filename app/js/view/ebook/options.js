@@ -26,13 +26,10 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
             },
 
             readiumEvent: function (event) {
-                if (event.data.type === 'readium') {
-                    var readiumEvent = event.data.event;
-                    if (readiumEvent.type === Teavents.Readium.SETTINGS_APPLIED) {
-                        this.notWorking();
-                        this.fontSize = readiumEvent.data.fontSize;
-                        this.render();
-                    }
+                if (event.type === "Readium:" + Teavents.Readium.SETTINGS_APPLIED) {
+                    this.notWorking();
+                    this.fontSize = event.data.fontSize;
+                    this.render();
                 }
             },
 

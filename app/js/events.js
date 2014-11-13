@@ -12,6 +12,7 @@ window.Teavents = {
     EPUB_SEND: "sendEpub",
     READY_TO_READ: "readyToRead",
     SEND_RESOURCES: "sendResources",
+    TOC: "toc",
 
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",

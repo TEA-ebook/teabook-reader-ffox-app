@@ -95,6 +95,7 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
             //handlers on viewport
             $(viewport).hammer().on("swipeleft", onSwipe);
             $(viewport).hammer().on("swiperight", onSwipe);
+            $(viewport).hammer().on("tap", onTap);
             $(viewport).hammer().on("pinchin", onPinch);
             $(viewport).hammer().on("pinchout", onPinch);
         };

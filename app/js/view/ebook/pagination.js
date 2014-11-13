@@ -14,19 +14,16 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             },
 
             readiumEvent: function (event) {
-                if (event.data.type === 'readium') {
-                    var readiumEvent = event.data.event;
-                    if (readiumEvent.type === Teavents.Readium.PAGINATION_CHANGED) {
-                        if (readiumEvent.data) {
-                            this.model.set({
-                                chapterCurrent: (this.toc ? this.toc.getItemPosition(readiumEvent.data.spineHref) : readiumEvent.data.pageInfo.spineItemIndex + 1),
-                                pageCurrent: readiumEvent.data.pageInfo.spineItemPageIndex + 1,
-                                pageTotal: readiumEvent.data.pageInfo.spineItemPageCount
-                            });
-                        }
+                if (event.type === "Readium:" + Teavents.Readium.PAGINATION_CHANGED) {
+                    if (event.data) {
+                        this.model.set({
+                            chapterCurrent: (this.toc ? this.toc.getItemPosition(event.data.spineHref) : event.data.pageInfo.spineItemIndex + 1),
+                            pageCurrent: event.data.pageInfo.spineItemPageIndex + 1,
+                            pageTotal: event.data.pageInfo.spineItemPageCount
+                        });
                     }
-                } else if (event.data.type === "chapters") {
-                    this.model.set("chapterTotal", event.data.data);
+                } else if (event.type === "chapters") {
+                    this.model.set("chapterTotal", event.data);
                 }
             },
 

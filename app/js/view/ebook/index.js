@@ -29,7 +29,7 @@ define('view/ebook/index',
             autoHideTime: 5000,
 
             initialize: function () {
-                Backbone.on(Teavents.MESSAGE, this.handleBackboneEvent.bind(this));
+                Backbone.on(Teavents.MESSAGE, this.handleIframeMessage.bind(this));
                 Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
                 Backbone.on(Teavents.EBOOK_CHAPTER, this.openChapter.bind(this));
                 Backbone.on(Teavents.FONTSIZE_SET, this.changeFontSize.bind(this));
@@ -85,18 +85,22 @@ define('view/ebook/index',
                 Backbone.history.navigate('/', true);
             },
 
-            handleBackboneEvent: function (event) {
-                if (event && event.data) {
-                    if (event.data === Teavents.SEND_RESOURCES) {
+            handleIframeMessage: function (event) {
+                if (event) {
+                    if (event.type === Teavents.SEND_RESOURCES) {
                         this.transferFile("js/iframe.js", "text/javascript", this.getSandbox());
                         this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
-                    } else if (event.data === Teavents.EPUB_SEND) {
+                    } else if (event.type === Teavents.EPUB_SEND) {
                         this.sendEpub();
-                    } else if (event.data === Teavents.READY_TO_READ) {
+                    } else if (event.type === Teavents.READY_TO_READ) {
                         this.toolbarView.hide();
                         this.optionsView.hide();
                         this.paginationView.hide();
-                    } else if (typeof event.data === "object") {
+                    } else if (event.type === "toc") {
+                        this.generateToc(event.data);
+                    } else if (event.type === "title") {
+                        this.setEbookTitle(event.data);
+                    } else if (/^Readium:/.test(event.type)) {
                         this.handleReadiumEvent(event);
                     }
                 } else {
@@ -105,31 +109,25 @@ define('view/ebook/index',
             },
 
             handleReadiumEvent: function (event) {
-                if (event.data.type === "toc") {
-                    this.generateToc(event.data.data);
-                } else if (event.data.type === "title") {
-                    this.setEbookTitle(event.data.data);
-                } else if (event.data.type === "readium") {
-                    var readiumEvent = event.data.event;
-                    if (readiumEvent.type === Teavents.Readium.PAGINATION_CHANGED) {
-                        this.stopSpin();
-                    } else if (readiumEvent.type === Teavents.Readium.CONTENT_LOAD_START) {
-                        this.spin();
-                    } else if (readiumEvent.type === Teavents.Readium.CONTENT_LOADED) {
-                        this.stopSpin();
-                    } else if (readiumEvent.type === Teavents.Readium.SETTINGS_APPLIED) {
-                        this.$el.find(".waiting").remove();
-                    } else if (readiumEvent.type === Teavents.Readium.GESTURE_TAP) {
-                        if (this.toolbarView.toggle()) {
-                            this.paginationView.show();
-                            this.hideUiTempo();
-                        } else {
-                            this.paginationView.hide();
-                            this.clearUiTempo();
-                        }
-                    } else if (readiumEvent.type === Teavents.Readium.GESTURE_PINCH) {
-                        this.$el.append(this.waitingEl);
+                var readiumEvent = event.type.match(/^Readium:(\w*)/)[1];
+                if (readiumEvent === Teavents.Readium.PAGINATION_CHANGED) {
+                    this.stopSpin();
+                } else if (readiumEvent === Teavents.Readium.CONTENT_LOAD_START) {
+                    this.spin();
+                } else if (readiumEvent === Teavents.Readium.CONTENT_LOADED) {
+                    this.stopSpin();
+                } else if (readiumEvent === Teavents.Readium.SETTINGS_APPLIED) {
+                    this.$el.find(".waiting").remove();
+                } else if (readiumEvent === Teavents.Readium.GESTURE_TAP) {
+                    if (this.toolbarView.toggle()) {
+                        this.paginationView.show();
+                        this.hideUiTempo();
+                    } else {
+                        this.paginationView.hide();
+                        this.clearUiTempo();
                     }
+                } else if (readiumEvent === Teavents.Readium.GESTURE_PINCH) {
+                    this.$el.append(this.waitingEl);
                 }
             },
 

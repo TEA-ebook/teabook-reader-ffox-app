@@ -68,19 +68,14 @@
 
                     // When readium has changed its pagination
                     Backbone.trigger(Teavents.MESSAGE, {
+                        type: "Readium:" + Teavents.Readium.PAGINATION_CHANGED,
                         data: {
-                            type: "readium",
-                            event: {
-                                type: "PaginationChanged",
-                                data: {
-                                    pageInfo: {
-                                        spineItemIndex: 1,
-                                        spineItemPageIndex: 15,
-                                        spineItemPageCount: paginationInfo.pageTotal
-                                    },
-                                    spineHref: ''
-                                }
-                            }
+                            pageInfo: {
+                                spineItemIndex: 1,
+                                spineItemPageIndex: 15,
+                                spineItemPageCount: paginationInfo.pageTotal
+                            },
+                            spineHref: ''
                         }
                     });
 
