@@ -13,10 +13,10 @@
 //  used to endorse or promote products derived from this software without specific
 //  prior written permission.
 
-define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
+define('gestures', ['jquery', 'hammer'], function ($, Hammer) {
     "use strict";
 
-    var gesturesHandler, onSwipe, onPinch, onTap, isGestureHandled;
+    var gesturesHandler, onSwipe, onPinch, onTap, isGestureHandled, setupHammer;
 
     gesturesHandler = function (reader, viewport) {
 
@@ -32,6 +32,7 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
 
         onTap = function () {
             reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
+            console.debug("tap iframe");
         };
 
         onPinch = function (event) {
@@ -51,7 +52,7 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
 
                 if (fontSize < 50) {
                     fontSize = 50;
-                } else if(fontSize > 250) {
+                } else if (fontSize > 250) {
                     fontSize = 250;
                 }
 
@@ -69,23 +70,28 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
             return viewType === ReadiumSDK.Views.ReaderView.VIEW_TYPE_FIXED || viewType === ReadiumSDK.Views.ReaderView.VIEW_TYPE_COLUMNIZED;
         };
 
+        setupHammer = function (element) {
+            var hammertime = new Hammer(element, { prevent_mouseevents: true });
+            hammertime.get('swipe').set({ threshold: 1, velocity: 0.1 });
+            hammertime.get('pinch').set({ enable: true });
+
+            // set up the hammer gesture events swiping handlers
+            hammertime.on("swipeleft", onSwipe);
+            hammertime.on("swiperight", onSwipe);
+            hammertime.on("tap", onTap);
+            hammertime.on("pinchin", onPinch);
+            hammertime.on("pinchout", onPinch);
+
+            return hammertime;
+        };
+
         this.initialize = function () {
-
             reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, function (iframe) {
-                //set hammer's document root
-                var hammertime = new Hammer(iframe[0].contentDocument.documentElement, { prevent_mouseevents: true });
-                hammertime.get('swipe').set({ threshold: 1, velocity: 0.1 });
-                hammertime.get('pinch').set({ enable: true });
-
-                //set up the hammer gesture events swiping handlers
-                hammertime.on("swipeleft", onSwipe);
-                hammertime.on("swiperight", onSwipe);
-                hammertime.on("tap", onTap);
-                hammertime.on("pinchin", onPinch);
-                hammertime.on("pinchout", onPinch);
+                // set hammer's document root
+                setupHammer(iframe[0].contentDocument.documentElement);
             });
 
-            //remove stupid ipad safari elastic scrolling (improves UX for gestures)
+            // remove stupid ipad safari elastic scrolling (improves UX for gestures)
             $(viewport).on(
                 'touchmove',
                 function (e) {
@@ -95,12 +101,8 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
                 }
             );
 
-            //handlers on viewport
-            $(viewport).hammer().on("swipeleft", onSwipe);
-            $(viewport).hammer().on("swiperight", onSwipe);
-            $(viewport).hammer().on("tap", onTap);
-            $(viewport).hammer().on("pinchin", onPinch);
-            $(viewport).hammer().on("pinchout", onPinch);
+            // handlers on viewport
+            setupHammer($(viewport)[0]);
         };
 
     };
