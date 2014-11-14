@@ -51,7 +51,10 @@ define('gestures', ['jquery', 'hammer', 'jquery_hammer'], function ($, Hammer) {
 
                 if (fontSize < 50) {
                     fontSize = 50;
+                } else if(fontSize > 250) {
+                    fontSize = 250;
                 }
+
                 setTimeout(function () {
                     reader.updateSettings({
                         fontSize: fontSize
