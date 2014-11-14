@@ -10,6 +10,7 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
 
             events: {
                 "change input[type=range]": "updateFontSize",
+                "click button": "updateTheme",
                 "click": "hideIfOutClick"
             },
 
@@ -37,7 +38,12 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
                 this.isWorking();
                 setTimeout(function () {
                     Backbone.trigger(Teavents.FONTSIZE_SET, event.target.value);
-                }, 100);
+                }, 50);
+            },
+
+            updateTheme: function (event) {
+                var theme = event.target.className.match(/^(\w*)-theme$/)[1];
+                Backbone.trigger(Teavents.THEME_SET, theme);
             },
 
             toggle: function () {

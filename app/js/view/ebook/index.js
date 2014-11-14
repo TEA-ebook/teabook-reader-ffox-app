@@ -33,6 +33,7 @@ define('view/ebook/index',
                 Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
                 Backbone.on(Teavents.EBOOK_CHAPTER, this.openChapter.bind(this));
                 Backbone.on(Teavents.FONTSIZE_SET, this.changeFontSize.bind(this));
+                Backbone.on(Teavents.THEME_SET, this.changeTheme.bind(this));
                 Backbone.on(Teavents.OPTIONS_CLOSED, this.hideUi.bind(this));
 
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
@@ -148,6 +149,16 @@ define('view/ebook/index',
                     sandbox.postMessage({
                         action: "font-size",
                         content: fontSize
+                    }, "*");
+                }
+            },
+
+            changeTheme: function (theme) {
+                var sandbox = this.getSandbox();
+                if (sandbox !== null) {
+                    sandbox.postMessage({
+                        action: "theme",
+                        content: theme
                     }, "*");
                 }
             },

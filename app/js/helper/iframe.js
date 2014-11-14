@@ -1,7 +1,48 @@
-/*global window: true, Teavents: true, Blob: true, ReadiumSDK: true, readiumReady: true*/
+/*global window: true, Teavents: true, Blob: true, ReadiumSDK: true, readiumReady: true, $: true*/
 "use strict";
 
-var readiumReadyTest, isReadiumReady, handleMessage;
+var readiumReadyTest, isReadiumReady, handleMessage, openEpub, themes;
+
+themes = {
+    author: {
+        backgroundColor: '',
+        color: ''
+    },
+    night: {
+        backgroundColor: '#141414',
+        color: '#d7d7d7'
+    },
+    grey: {
+        backgroundColor: '#c4c4c4',
+        color: '#292929'
+    }
+};
+
+/**
+ *
+ * @param data
+ */
+openEpub = function (data) {
+    var epubFile, openPageRequest;
+    epubFile = new Blob([data.content], { "type": data.type });
+
+    openPageRequest = false;
+    if (data.chapter && data.chapter.length > 0) {
+        openPageRequest = {
+            contentRefUrl: data.chapter,
+            sourceFileHref: "."
+        };
+    }
+
+    window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
+        window.parent.postMessage({ type: "chapters", data: packageDocument.spineLength() }, "*");
+        window.parent.postMessage({ type: "title", data: options.metadata.title }, "*");
+        packageDocument.getTocText(function (toc) {
+            window.parent.postMessage({ type: "toc", data: toc }, "*");
+            window.parent.postMessage({ type: Teavents.READY_TO_READ }, "*");
+        });
+    }, openPageRequest);
+};
 
 /**
  * Handle postMessage communication
@@ -15,26 +56,22 @@ handleMessage = function (event) {
         window.readium.reader.updateSettings({
             fontSize: event.data.content
         });
-    } else if (event.data.action === "epub") {
-        var epubFile, openPageRequest;
-        epubFile = new Blob([event.data.content], { "type": event.data.type });
-
-        openPageRequest = false;
-        if (event.data.chapter && event.data.chapter.length > 0) {
-            openPageRequest = {
-                contentRefUrl: event.data.chapter,
-                sourceFileHref: "."
-            };
+    } else if (event.data.action === "theme") {
+        var bookStyle, bookStyles;
+        bookStyle = themes[event.data.content];
+        if (bookStyle) {
+            bookStyles = [{
+                selector: 'body',
+                declarations: {
+                    backgroundColor: bookStyle.backgroundColor,
+                    color: bookStyle.color
+                }
+            }];
+            window.readium.reader.setBookStyles(bookStyles);
+            $('#epub-reader-frame').css(bookStyles[0].declarations);
         }
-
-        window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-            window.parent.postMessage({ type: "chapters", data: packageDocument.spineLength() }, "*");
-            window.parent.postMessage({ type: "title", data: options.metadata.title }, "*");
-            packageDocument.getTocText(function (toc) {
-                window.parent.postMessage({ type: "toc", data: toc }, "*");
-                window.parent.postMessage({ type: Teavents.READY_TO_READ }, "*");
-            });
-        }, openPageRequest);
+    } else if (event.data.action === "epub") {
+        openEpub(event.data);
     }
 };
 

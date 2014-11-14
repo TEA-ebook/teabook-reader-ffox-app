@@ -7,6 +7,7 @@ window.Teavents = {
     FULLSCREEN_ENTER: "fullscreen:enter",
     FULLSCREEN_EXIT: "fullscreen:exit",
     FONTSIZE_SET: "font-size:set",
+    THEME_SET: "theme:set",
     OPTIONS_CLOSED: "options:closed",
     EBOOK_CHAPTER: "ebook:chapter",
     EPUB_SEND: "sendEpub",
