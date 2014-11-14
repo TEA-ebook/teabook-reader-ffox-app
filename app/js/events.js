@@ -6,10 +6,7 @@ window.Teavents = {
     VISIBILITY_CHANGE: "visibilitychange",
     FULLSCREEN_ENTER: "fullscreen:enter",
     FULLSCREEN_EXIT: "fullscreen:exit",
-    FONTSIZE_SET: "font-size:set",
-    THEME_SET: "theme:set",
     OPTIONS_CLOSED: "options:closed",
-    EBOOK_CHAPTER: "ebook:chapter",
     EPUB_SEND: "sendEpub",
     READY_TO_READ: "readyToRead",
     SEND_RESOURCES: "sendResources",
@@ -22,5 +19,13 @@ window.Teavents = {
         SETTINGS_APPLIED: "SettingsApplied",
         GESTURE_TAP: "GestureTap",
         GESTURE_PINCH: "GesturePinch"
+    },
+
+    Actions: {
+        OPEN_EPUB: "open-epub",
+        OPEN_CHAPTER: "open-chapter",
+        OPEN_PAGE: "open-page",
+        SET_FONT_SIZE: "font-size",
+        SET_THEME: "set-theme"
     }
 };

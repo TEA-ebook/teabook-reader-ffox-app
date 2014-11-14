@@ -31,10 +31,12 @@ define('view/ebook/index',
             initialize: function () {
                 Backbone.on(Teavents.MESSAGE, this.handleIframeMessage.bind(this));
                 Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
-                Backbone.on(Teavents.EBOOK_CHAPTER, this.openChapter.bind(this));
-                Backbone.on(Teavents.FONTSIZE_SET, this.changeFontSize.bind(this));
-                Backbone.on(Teavents.THEME_SET, this.changeTheme.bind(this));
                 Backbone.on(Teavents.OPTIONS_CLOSED, this.hideUi.bind(this));
+
+                Backbone.on(Teavents.Actions.OPEN_CHAPTER, this.openChapter.bind(this));
+                Backbone.on(Teavents.Actions.OPEN_PAGE, this.openPage.bind(this));
+                Backbone.on(Teavents.Actions.SET_FONT_SIZE, this.changeFontSize.bind(this));
+                Backbone.on(Teavents.Actions.SET_THEME, this.changeTheme.bind(this));
 
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
 
@@ -89,7 +91,6 @@ define('view/ebook/index',
             handleIframeMessage: function (event) {
                 if (event) {
                     if (event.type === Teavents.SEND_RESOURCES) {
-                        this.transferFile("js/iframe.js", "text/javascript", this.getSandbox());
                         this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
                     } else if (event.type === Teavents.EPUB_SEND) {
                         this.sendEpub();
@@ -136,8 +137,19 @@ define('view/ebook/index',
                 var sandbox = this.getSandbox();
                 if (sandbox !== null) {
                     sandbox.postMessage({
-                        action: "chapter",
+                        action: Teavents.Actions.OPEN_CHAPTER,
                         content: chapter
+                    }, "*");
+                    this.hideToc();
+                }
+            },
+
+            openPage: function (percentage) {
+                var sandbox = this.getSandbox();
+                if (sandbox !== null) {
+                    sandbox.postMessage({
+                        action: Teavents.Actions.OPEN_PAGE,
+                        content: percentage
                     }, "*");
                     this.hideToc();
                 }
@@ -147,7 +159,7 @@ define('view/ebook/index',
                 var sandbox = this.getSandbox();
                 if (sandbox !== null) {
                     sandbox.postMessage({
-                        action: "font-size",
+                        action: Teavents.Actions.SET_FONT_SIZE,
                         content: fontSize
                     }, "*");
                 }
@@ -157,7 +169,7 @@ define('view/ebook/index',
                 var sandbox = this.getSandbox();
                 if (sandbox !== null) {
                     sandbox.postMessage({
-                        action: "theme",
+                        action: Teavents.Actions.SET_THEME,
                         content: theme
                     }, "*");
                 }
@@ -184,7 +196,7 @@ define('view/ebook/index',
                     chapter = this.model.get("chapter"),
                     sandbox = this.getSandbox(),
                     epubData = {
-                        action: "epub",
+                        action: Teavents.Actions.OPEN_EPUB,
                         type: "application/epub+zip"
                     };
 

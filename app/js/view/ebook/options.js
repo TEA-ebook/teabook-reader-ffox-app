@@ -37,13 +37,13 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
             updateFontSize: function (event) {
                 this.isWorking();
                 setTimeout(function () {
-                    Backbone.trigger(Teavents.FONTSIZE_SET, event.target.value);
+                    Backbone.trigger(Teavents.Actions.SET_FONT_SIZE, event.target.value);
                 }, 50);
             },
 
             updateTheme: function (event) {
                 var theme = event.target.className.match(/^(\w*)-theme$/)[1];
-                Backbone.trigger(Teavents.THEME_SET, theme);
+                Backbone.trigger(Teavents.Actions.SET_THEME, theme);
             },
 
             toggle: function () {

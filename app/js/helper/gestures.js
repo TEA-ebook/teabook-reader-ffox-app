@@ -32,7 +32,6 @@ define('gestures', ['jquery', 'hammer'], function ($, Hammer) {
 
         onTap = function () {
             reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
-            console.debug("tap iframe");
         };
 
         onPinch = function (event) {

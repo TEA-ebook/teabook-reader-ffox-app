@@ -50,13 +50,15 @@ openEpub = function (data) {
  * @param event
  */
 handleMessage = function (event) {
-    if (event.data.action === "chapter") {
+    if (event.data.action === Teavents.Actions.OPEN_CHAPTER) {
         window.readium.reader.openContentUrl(event.data.content);
-    } else if (event.data.action === "font-size") {
+    } else if (event.data.action === Teavents.Actions.OPEN_PAGE) {
+        window.readium.reader.openPageIndex(event.data.content);
+    } else if (event.data.action === Teavents.Actions.SET_FONT_SIZE) {
         window.readium.reader.updateSettings({
             fontSize: event.data.content
         });
-    } else if (event.data.action === "theme") {
+    } else if (event.data.action === Teavents.Actions.SET_THEME) {
         var bookStyle, bookStyles;
         bookStyle = themes[event.data.content];
         if (bookStyle) {
@@ -70,7 +72,7 @@ handleMessage = function (event) {
             window.readium.reader.setBookStyles(bookStyles);
             $('#epub-reader-frame').css(bookStyles[0].declarations);
         }
-    } else if (event.data.action === "epub") {
+    } else if (event.data.action === Teavents.Actions.OPEN_EPUB) {
         openEpub(event.data);
     }
 };

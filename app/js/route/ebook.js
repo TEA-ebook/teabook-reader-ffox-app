@@ -14,7 +14,7 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
             }
 
             if (contentEl.find("iframe").length > 0) {
-                Backbone.trigger(Teavents.EBOOK_CHAPTER, chapter);
+                Backbone.trigger(Teavents.Actions.OPEN_CHAPTER, chapter);
             } else {
                 ebook = new EbookModel({
                     id: 0,
