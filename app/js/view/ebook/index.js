@@ -22,8 +22,7 @@ define('view/ebook/index',
                 "click button.back": "backToBookshelf",
                 "click button.bookshelf": "backToBookshelf",
                 "click button.table-of-contents": "showToc",
-                "click button.options": "showOptions",
-                "click .ebook-pagination-chapters": "showToc"
+                "click button.options": "showOptions"
             },
 
             autoHideTime: 5000,

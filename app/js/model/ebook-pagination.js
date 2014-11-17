@@ -20,6 +20,9 @@ define("model/ebook-pagination", ["backbone"], function (Backbone) {
 
         computeProperties: function () {
             this.set({ 'monoPage': (this.get('pageTotal') <= 1) }, { silent: true });
+            this.set({ 'pageLeft': (this.get('pageTotal') - this.get('pageCurrent')) }, { silent: true });
+            this.set({ 'onePageLeft': (this.get('pageLeft') === 1) }, { silent: true });
+            this.set({ 'lastPage': (this.get('pageLeft') === 0) }, { silent: true });
         }
     });
 

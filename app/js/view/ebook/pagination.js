@@ -53,13 +53,20 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             },
 
             displayPageDestination: function (event) {
-                var pageValue, pageTotal;
+                var pageValue, pageTotal, percentage;
                 pageTotal = this.model.get('pageTotal');
                 pageValue = this.computePageValue(event.originalEvent.changedTouches[0], event);
+                percentage = Math.round(100 * pageValue / pageTotal);
 
                 // A faire : i18n this !
                 this.pageInfoEl.html("Page " + pageValue + " sur " + pageTotal);
-                this.pageInfoEl.css('right', (52 - Math.round(50 * pageValue / pageTotal)) + '%');
+                if (percentage > 50) {
+                    this.pageInfoEl.css('left', 'inherit');
+                    this.pageInfoEl.css('right', (65 - Math.round(60 * pageValue / pageTotal)) + '%');
+                } else {
+                    this.pageInfoEl.css('right', 'inherit');
+                    this.pageInfoEl.css('left', Math.round(60 * pageValue / pageTotal) + '%');
+                }
                 this.pageInfoEl.show();
 
                 this.updateValue(pageValue);
@@ -99,22 +106,22 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             },
 
             toggle: function () {
-                if (this.$el[0].classList.contains("hidden")) {
-                    this.show();
-                } else {
+                if (this.$el[0].classList.contains("expanded")) {
                     this.hide();
+                } else {
+                    this.show();
                 }
             },
 
             show: function () {
-                this.$el[0].classList.remove("hidden");
+                this.$el[0].classList.add("expanded");
                 this.cancelAutoHide();
                 return true;
             },
 
             hide: function () {
                 if (!this.lastTouch || (Date.now() - this.lastTouch > this.autoHideTimeout)) {
-                    this.$el[0].classList.add("hidden");
+                    this.$el[0].classList.remove("expanded");
                     return false;
                 }
                 this.autoHide();

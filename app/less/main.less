@@ -148,45 +148,46 @@ button {
 
 /** ebook Pagination **/
 .ebook-pagination {
-  align-items: baseline;
-  background-color: @toolbar-color;
   bottom: 0;
-  color: #ffffff;
+  color: @pagination-text-color;
   display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  font-style: italic;
   height: @pagination-bar-height;
-  justify-content: space-around;
   position: absolute;
   width: 100%;
   will-change: height;
   transition: height 0.5s ease;
 }
 
-.ebook-pagination.hidden {
-  height: 0px;
-  overflow: hidden;
+.ebook-pagination.expanded {
+  height: @pagination-bar-expanded-height;
   transition: height 0.5s ease;
 }
 
 .ebook-pagination-chapters {
   text-align: center;
-  width: 25%;
-}
-
-.ebook-pagination-chapters > * {
-  padding: 4px;
+  width: 100%;
 }
 
 .ebook-pagination-pages {
   text-align: center;
-  width: 75%;
+  width: 100%;
 }
 
-.ebook-pagination-pages > progress {
+.ebook-pagination .ebook-pagination-pages > progress {
   background-color: @progress-bar-background;
   border: none;
-  height: 1rem;
-  width: 90%;
+  height: 0.4rem;
+  width: 100%;
   -webkit-appearance: none;
+  transition: height 0.5s ease;
+}
+
+.ebook-pagination.expanded .ebook-pagination-pages > progress {
+  height: 1.1rem;
+  transition: height 0.5s ease;
 }
 
 .ebook-pagination-pages > progress::-moz-progress-bar {

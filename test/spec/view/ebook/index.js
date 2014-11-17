@@ -149,7 +149,7 @@
                     Backbone.trigger(Teavents.MESSAGE, { type: Teavents.SEND_RESOURCES });
 
                     // It should transfer the resources
-                    EbookView.prototype.transferFile.should.have.been.calledTwice;
+                    EbookView.prototype.transferFile.should.have.been.calledOnce;
 
                     ebookView.close();
                     done();
