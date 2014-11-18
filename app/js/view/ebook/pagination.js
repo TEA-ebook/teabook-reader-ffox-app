@@ -75,7 +75,10 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             slideToPage: function (event) {
                 var pageValue = this.computePageValue(event.originalEvent.changedTouches[0], event);
                 this.pageInfoEl.hide();
-                this.updateValue(pageValue, true);
+                Backbone.trigger(Teavents.WORKING);
+                setTimeout(function () {
+                    this.updateValue(pageValue, true);
+                }.bind(this), 50);
             },
 
             computePageValue: function (touch, event) {
