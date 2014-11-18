@@ -32,6 +32,9 @@ define('view/ebook/index',
                 Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
                 Backbone.on(Teavents.OPTIONS_CLOSED, this.hideUi.bind(this));
 
+                Backbone.on(Teavents.WORKING, this.isWorking.bind(this));
+                Backbone.on(Teavents.NOT_WORKING, this.notWorking.bind(this));
+
                 Backbone.on(Teavents.Actions.OPEN_CHAPTER, this.openChapter.bind(this));
                 Backbone.on(Teavents.Actions.OPEN_PAGE, this.openPage.bind(this));
                 Backbone.on(Teavents.Actions.SET_FONT_SIZE, this.changeFontSize.bind(this));
@@ -113,12 +116,13 @@ define('view/ebook/index',
                 var readiumEvent = event.type.match(/^Readium:(\w*)/)[1];
                 if (readiumEvent === Teavents.Readium.PAGINATION_CHANGED) {
                     this.stopSpin();
+                    this.notWorking();
                 } else if (readiumEvent === Teavents.Readium.CONTENT_LOAD_START) {
                     this.spin();
                 } else if (readiumEvent === Teavents.Readium.CONTENT_LOADED) {
                     this.stopSpin();
                 } else if (readiumEvent === Teavents.Readium.SETTINGS_APPLIED) {
-                    this.$el.find(".waiting").remove();
+                    this.notWorking();
                 } else if (readiumEvent === Teavents.Readium.GESTURE_TAP) {
                     if (this.toolbarView.toggle()) {
                         this.paginationView.show();
@@ -128,7 +132,7 @@ define('view/ebook/index',
                         this.clearUiTempo();
                     }
                 } else if (readiumEvent === Teavents.Readium.GESTURE_PINCH) {
-                    this.$el.append(this.waitingEl);
+                    this.isWorking();
                 }
             },
 
@@ -294,6 +298,14 @@ define('view/ebook/index',
                     window.clearTimeout(this.uiTempo);
                     this.uiTempo = null;
                 }
+            },
+
+            isWorking: function () {
+                this.$el.append(this.waitingEl);
+            },
+
+            notWorking: function () {
+                this.$el.find(".waiting").remove();
             },
 
             requestFullScreen: function () {

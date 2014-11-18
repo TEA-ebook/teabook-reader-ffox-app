@@ -11,6 +11,8 @@ window.Teavents = {
     READY_TO_READ: "readyToRead",
     SEND_RESOURCES: "sendResources",
     TOC: "toc",
+    WORKING: "working",
+    NOT_WORKING: "not_working",
 
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",
