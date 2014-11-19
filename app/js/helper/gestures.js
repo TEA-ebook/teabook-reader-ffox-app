@@ -1,4 +1,5 @@
 /*global define: true, ReadiumSDK: true, window: true*/
+/*jslint nomen: true*/
 
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
 //
@@ -13,10 +14,10 @@
 //  used to endorse or promote products derived from this software without specific
 //  prior written permission.
 
-define('gestures', ['jquery', 'hammer'], function ($, Hammer) {
+define('gestures', ['jquery', 'hammer', 'underscore'], function ($, Hammer, _) {
     "use strict";
 
-    var gesturesHandler, onSwipe, onPinch, onTap, isGestureHandled, setupHammer;
+    var gesturesHandler, onSwipe, onPinch, onPinchMove, onTap, computeFontSize, isGestureHandled, setupHammer;
 
     gesturesHandler = function (reader, viewport) {
 
@@ -34,33 +35,47 @@ define('gestures', ['jquery', 'hammer'], function ($, Hammer) {
             reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
         };
 
+        onPinchMove = _.throttle(function (event) {
+            reader.trigger(ReadiumSDK.Events.GESTURE_PINCH_MOVE, {
+                "fontSize": computeFontSize(event.scale),
+                "center": event.center,
+                "timestamp": Date.now().toString()
+            });
+        }, 200);
+
         onPinch = function (event) {
             if (event.eventType === Hammer.INPUT_END) {
                 reader.trigger(ReadiumSDK.Events.GESTURE_PINCH);
 
-                var scale, fontSize;
-
-                scale = isNaN(parseInt(event.scale, 10)) ? 1 : event.scale;
-                fontSize = reader.viewerSettings().fontSize;
-
-                if (scale < 1) {
-                    fontSize -= Math.round(20 / scale);
-                } else {
-                    fontSize += Math.round(10 * scale);
-                }
-
-                if (fontSize < 50) {
-                    fontSize = 50;
-                } else if (fontSize > 250) {
-                    fontSize = 250;
-                }
-
                 setTimeout(function () {
                     reader.updateSettings({
-                        fontSize: fontSize
+                        fontSize: computeFontSize(event.scale)
                     });
                 }, 50);
+            } else if (event.eventType === Hammer.INPUT_MOVE) {
+                onPinchMove(event);
             }
+        };
+
+        computeFontSize = function (eventScale) {
+            var scale, fontSize;
+
+            scale = isNaN(parseInt(eventScale, 10)) ? 1 : eventScale;
+            fontSize = reader.viewerSettings().fontSize;
+
+            if (scale < 1) {
+                fontSize -= Math.round(30 / scale);
+            } else {
+                fontSize += Math.round(20 * scale);
+            }
+
+            if (fontSize < 50) {
+                fontSize = 50;
+            } else if (fontSize > 250) {
+                fontSize = 250;
+            }
+
+            return fontSize;
         };
 
         isGestureHandled = function () {
@@ -107,3 +122,4 @@ define('gestures', ['jquery', 'hammer'], function ($, Hammer) {
     };
     return gesturesHandler;
 });
+/*jslint nomen: false*/

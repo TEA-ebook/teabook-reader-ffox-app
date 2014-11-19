@@ -24,6 +24,8 @@ var paths = {
     images: ['./app/images/*'],
     html: ['./app/*.html'],
     manifest: ['./app/manifest.*'],
+    locales: ['./app/locales/*'],
+    l20n: ['./app/vendor/l20n/l20n.js'],
     epubs: ['./epubs/*'],
     templates: ['./app/template/**/*.hbs'],
     readium: './readium-js',
@@ -41,7 +43,8 @@ var paths = {
         templates: './app/js/template/',
         images: './dist/images/',
         html: './dist/',
-        epubs: './dist/books/'
+        epubs: './dist/books/',
+        locales: './dist/locales'
     },
     curl: [
         './app/polyfill/*.js',
@@ -186,6 +189,17 @@ gulp.task('copy-manifest', function () {
         .pipe(plugins.connect.reload());
 });
 
+gulp.task('copy-locales', function () {
+    return gulp.src(paths.locales)
+        .pipe(gulp.dest(paths.dist.locales))
+        .pipe(plugins.connect.reload());
+});
+
+gulp.task('copy-l20n', function () {
+    return gulp.src(paths.l20n)
+        .pipe(gulp.dest(paths.dist.js));
+});
+
 gulp.task('copy-epubs', function () {
     if (debug) {
         return gulp.src(paths.epubs)
@@ -206,7 +220,7 @@ gulp.task("open-browser", function () {
         .pipe(gulpif(openBrowser, plugins.open("", { url: "http://localhost:8080/" })));
 });
 
-gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
+gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-l20n', 'copy-locales', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
 
 gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
@@ -215,6 +229,7 @@ gulp.task('watch-codebase', ['build'], function () {
         gulp.watch(paths.js, ['compile-scripts', 'copy-readium']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
+        gulp.watch(paths.locales, ['copy-locales']);
         gulp.watch(paths.html, ['process-html']);
     }
 });
@@ -257,7 +272,7 @@ gulp.task('check-code', ['jslint']);
 /******************* *****************/
 
 gulp.task('tests', function () {
-    runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'mocha');
+    runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'copy-l20n', 'copy-locales', 'mocha');
 });
 
 gulp.task('watch-tests', function () {

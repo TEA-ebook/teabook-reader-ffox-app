@@ -1,4 +1,5 @@
 /*global define: true, Teavents: true, window: true*/
+/*jslint stupid: true*/
 define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
     function (Backbone, template) {
         "use strict";
@@ -30,13 +31,13 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
                             pageTotal: event.data.pageInfo.spineItemPageCount
                         });
                     }
-                } else if (event.type === "chapters") {
-                    this.model.set("chapterTotal", event.data);
                 }
             },
 
             render: function () {
                 this.$el.html(template(this.model.attributes));
+                window.document.l10n.updateData({ "pageLeft": this.model.get('pageLeft') });
+                window.document.l10n.localizeNode(this.el);
                 this.pageInfoEl = this.$el.find(".ebook-pagination-page-destination");
                 return this;
             },
@@ -58,8 +59,8 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
                 pageValue = this.computePageValue(event.originalEvent.changedTouches[0], event);
                 percentage = Math.round(100 * pageValue / pageTotal);
 
-                // A faire : i18n this !
-                this.pageInfoEl.html("Page " + pageValue + " sur " + pageTotal);
+                window.document.l10n.updateData({ "pageCurrent": pageValue, "pageTotal": pageTotal });
+                this.pageInfoEl.html(window.document.l10n.getSync('pageNofTotal'));
                 if (percentage > 50) {
                     this.pageInfoEl.css('left', 'inherit');
                     this.pageInfoEl.css('right', (65 - Math.round(60 * pageValue / pageTotal)) + '%');

@@ -1,4 +1,4 @@
-/*global define: true, Teavents: true*/
+/*global define: true, window: true, Teavents: true*/
 define('view/ebook/options', ['backbone', 'template/ebook/options'],
     function (Backbone, template) {
         "use strict";
@@ -23,6 +23,8 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
                 this.$el.html(template({
                     fontSize: this.fontSize
                 }));
+                console.log("render options");
+                window.document.l10n.localizeNode(this.el);
                 return this;
             },
 

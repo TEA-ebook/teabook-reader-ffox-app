@@ -20,6 +20,7 @@ window.Teavents = {
         CONTENT_LOADED: "ContentDocumentLoaded",
         SETTINGS_APPLIED: "SettingsApplied",
         GESTURE_TAP: "GestureTap",
+        GESTURE_PINCH_MOVE: "GesturePinchMove",
         GESTURE_PINCH: "GesturePinch"
     },
 

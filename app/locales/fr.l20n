@@ -1,0 +1,18 @@
+<plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
+
+<toc "Sommaire">
+<chapter "Chapitre">
+<pagesLeft[plural($pageLeft)] {
+  zero: "dernière page",
+  one: "il reste 1 page",
+  many: "il reste {{ $pageLeft }} pages"
+}>
+
+<pageNofTotal "Page {{ $pageCurrent }} sur {{ $pageTotal }}">
+
+<textSize "Taille du texte">
+<textAndBackgroundColor "Couleur du texte et du fond">
+
+<bookTheme "Thème du livre">
+<nightTheme "Nuit">
+<grayTheme "Gris">

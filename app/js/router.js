@@ -7,7 +7,11 @@ define('router', ['backbone', 'helper/dom-events', 'route/bookshelf', 'route/ebo
 
             initialize: function () {
                 DomEvents.initialize();
-                Backbone.history.start({ pushState: false, root: "/" });
+
+                // Wait for l20n initialization before any templating
+                window.document.l10n.ready(function () {
+                    Backbone.history.start({ pushState: false, root: "/" });
+                });
             },
 
             routes: {
