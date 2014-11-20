@@ -142,7 +142,7 @@ define('view/ebook/index',
                     this.fontSample.hide();
                     this.isWorking();
                 } else if (readiumEvent === Teavents.Readium.GESTURE_PINCH_MOVE) {
-                    if (Date.now() - this.lastPinchAck > 500) {
+                    if (Date.now() - this.lastPinchAck > 50) {
                         cssValues = {
                             "font-size": event.data.fontSize + "%"
                         };
