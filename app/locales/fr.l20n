@@ -1,6 +1,6 @@
 <plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
 
-<toc "Sommaire">
+<toc "Table des matières">
 <chapter "Chapitre">
 <pagesLeft[plural($pageLeft)] {
   zero: "dernière page",

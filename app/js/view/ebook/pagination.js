@@ -25,8 +25,15 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             readiumEvent: function (event) {
                 if (event.type === "Readium:" + Teavents.Readium.PAGINATION_CHANGED) {
                     if (event.data) {
+                        var item = false;
+                        if (this.toc) {
+                            item = this.toc.getItem(event.data.spineHref);
+                            if (item) {
+                                this.toc.setCurrentItem(item);
+                            }
+                        }
                         this.model.set({
-                            chapterCurrent: (this.toc ? this.toc.getItemPosition(event.data.spineHref) : event.data.pageInfo.spineItemIndex + 1),
+                            chapterCurrent: (item ? item.get("position") : event.data.pageInfo.spineItemIndex + 1),
                             pageCurrent: event.data.pageInfo.spineItemPageIndex + 1,
                             pageTotal: event.data.pageInfo.spineItemPageCount
                         });
@@ -56,21 +63,24 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
             displayPageDestination: function (event) {
                 var pageValue, pageTotal, percentage;
                 pageTotal = this.model.get('pageTotal');
-                pageValue = this.computePageValue(event.originalEvent.changedTouches[0], event);
-                percentage = Math.round(100 * pageValue / pageTotal);
 
-                window.document.l10n.updateData({ "pageCurrent": pageValue, "pageTotal": pageTotal });
-                this.pageInfoEl.html(window.document.l10n.getSync('pageNofTotal'));
-                if (percentage > 50) {
-                    this.pageInfoEl.css('left', 'inherit');
-                    this.pageInfoEl.css('right', (67 - Math.round(65 * pageValue / pageTotal)) + '%');
-                } else {
-                    this.pageInfoEl.css('right', 'inherit');
-                    this.pageInfoEl.css('left', Math.round(64 * pageValue / pageTotal) + '%');
+                if (pageTotal > 1) {
+                    pageValue = this.computePageValue(event.originalEvent.changedTouches[0], event);
+                    percentage = Math.round(100 * pageValue / pageTotal);
+
+                    window.document.l10n.updateData({ "pageCurrent": pageValue, "pageTotal": pageTotal });
+                    this.pageInfoEl.html(window.document.l10n.getSync('pageNofTotal'));
+                    if (percentage > 50) {
+                        this.pageInfoEl.css('left', 'inherit');
+                        this.pageInfoEl.css('right', (67 - Math.round(65 * pageValue / pageTotal)) + '%');
+                    } else {
+                        this.pageInfoEl.css('right', 'inherit');
+                        this.pageInfoEl.css('left', Math.round(64 * pageValue / pageTotal) + '%');
+                    }
+                    this.pageInfoEl.show();
+
+                    this.updateValue(pageValue);
                 }
-                this.pageInfoEl.show();
-
-                this.updateValue(pageValue);
             },
 
             slideToPage: function (event) {

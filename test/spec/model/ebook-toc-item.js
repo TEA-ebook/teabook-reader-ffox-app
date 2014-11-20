@@ -51,10 +51,10 @@
                     tocItem.addItem(new EbookTocItemModel({ label: "child3", href: "child3.html", position: 3 }));
 
                     // When we search for child2.html href
-                    var position = tocItem.getItemPosition("child2.html");
+                    var item = tocItem.getItem("child2.html");
 
                     // It should be an endpoint
-                    position.should.be.equal(2);
+                    item.get("position").should.be.equal(2);
 
                     done();
                 });

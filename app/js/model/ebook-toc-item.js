@@ -8,7 +8,9 @@ define("model/ebook-toc-item", ["backbone"], function (Backbone) {
             label: "",
             href: "",
             items: [],
-            endPoint: true
+            level: 1,
+            endPoint: true,
+            current: false
         },
 
         initialize: function () {
@@ -35,20 +37,17 @@ define("model/ebook-toc-item", ["backbone"], function (Backbone) {
             return 1;
         },
 
-        getItemPosition: function (href) {
-            if (this.get('endPoint')) {
-                if (this.get('href').startsWith(href)) {
-                    return this.get('position');
-                }
-                return false;
+        getItem: function (href) {
+            if (this.get('href').startsWith(href)) {
+                return this;
             }
 
-            var i, items, position;
+            var i, items, item;
             items = this.get('items');
             for (i = 0; i < items.length; i += 1) {
-                position = items[i].getItemPosition(href);
-                if (position) {
-                    return position;
+                item = items[i].getItem(href);
+                if (item) {
+                    return item;
                 }
             }
             return false;

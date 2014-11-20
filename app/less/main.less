@@ -149,29 +149,42 @@ button {
   margin-bottom: @toolbar-height + 2rem;
 }
 
-.ebook-toc li {
-  padding: 0.4rem 0;
-}
-
 .ebook-toc a {
   color: @font-primary-color;
   display: block;
-  margin-bottom: 0.4rem;
+  margin-top: 0.6rem;
+  margin-bottom: 0.2rem;
   padding-left: 1rem;
   text-decoration: none;
   width: 90%;
 }
 
-.ebook-toc-item > ul {
+.ebook-toc a.level-2 {
+  padding-left: 2rem;
+}
+.ebook-toc a.level-3 {
+  padding-left: 3rem;
+}
+
+.ebook-toc-item ul {
   background-color: @toc-sub-entry-color;
+  background-origin: padding-box;
   border-width: 1px 0;
   border-style: solid;
   border-color: @toc-sub-entry-border-color;
-  padding-left: 1rem;
 }
 
-.ebook-toc-item > ul:empty {
+.ebook-toc-item ul:empty {
   border: none;
+}
+
+.ebook-toc-item-label {
+  padding: 0.1rem 0 0.3rem 0;
+}
+
+.ebook-toc-item.current {
+  background-color: #B2F2FF;
+  background-origin: padding-box;
 }
 
 /** ebook Pagination **/
@@ -196,7 +209,12 @@ button {
 
 .ebook-pagination-chapters {
   text-align: center;
+  visibility: hidden;
   width: 100%;
+}
+
+.expanded .ebook-pagination-chapters, .expanded .ebook-pagination-title {
+  visibility: visible;
 }
 
 .ebook-pagination-pages {
@@ -204,7 +222,7 @@ button {
   width: 100%;
 }
 
-.ebook-pagination .ebook-pagination-pages > progress {
+.ebook-pagination .ebook-pagination-pages progress {
   background-color: @progress-bar-background;
   border: none;
   height: 0.4rem;
@@ -213,19 +231,19 @@ button {
   transition: height 0.5s ease;
 }
 
-.ebook-pagination.expanded .ebook-pagination-pages > progress {
+.ebook-pagination.expanded .ebook-pagination-pages progress {
   height: 1.1rem;
   transition: height 0.5s ease;
 }
 
-.ebook-pagination-pages > progress::-moz-progress-bar {
+.ebook-pagination-pages progress::-moz-progress-bar {
   background-color: @progress-bar-color;
 }
 
-.ebook-pagination-pages > progress::-webkit-progress-bar {
+.ebook-pagination-pages progress::-webkit-progress-bar {
   background: @progress-bar-background;
 }
-.ebook-pagination-pages > progress::-webkit-progress-value {
+.ebook-pagination-pages progress::-webkit-progress-value {
   background: @progress-bar-color;
 }
 
@@ -236,6 +254,7 @@ button {
   padding: 0.2rem 0.5rem;
   text-align: center;
   text-overflow: ellipsis;
+  visibility: hidden;
   white-space: nowrap;
   width: 100%;
 }
