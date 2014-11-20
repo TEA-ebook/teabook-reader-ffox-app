@@ -136,14 +136,42 @@ button {
 }
 
 .ebook-toc > h3 {
-  padding-left: 3rem;
+  padding-left: 1rem;
+}
+
+.ebook-toc ul {
+  font-size: 1rem;
+  list-style: none;
+  padding: 0;
 }
 
 .ebook-toc > ul {
-  font-size: 1.2rem;
-  list-style: none;
   margin-bottom: @toolbar-height + 2rem;
-  padding-left: 3rem;
+}
+
+.ebook-toc li {
+  padding: 0.4rem 0;
+}
+
+.ebook-toc a {
+  color: @font-primary-color;
+  display: block;
+  margin-bottom: 0.4rem;
+  padding-left: 1rem;
+  text-decoration: none;
+  width: 90%;
+}
+
+.ebook-toc-item > ul {
+  background-color: @toc-sub-entry-color;
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: @toc-sub-entry-border-color;
+  padding-left: 1rem;
+}
+
+.ebook-toc-item > ul:empty {
+  border: none;
 }
 
 /** ebook Pagination **/
@@ -217,7 +245,7 @@ button {
   bottom: 1.5 * @pagination-bar-height;
   box-shadow: 2px 2px 8px 0 black;
   border-radius: 5px;
-  color: black;
+  color: @font-primary-color;
   display: none;
   padding: 1rem;
   position: absolute;
@@ -394,7 +422,7 @@ input[type=range]:focus::-webkit-slider-thumb {
 .author-theme {
   background-color: #ffffff;
   border-style: dashed !important;
-  color: #000000;
+  color: @font-primary-color;
   font-style: italic;
 }
 

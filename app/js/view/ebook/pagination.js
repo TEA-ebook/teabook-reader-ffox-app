@@ -62,10 +62,10 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
                 this.pageInfoEl.html("Page " + pageValue + " sur " + pageTotal);
                 if (percentage > 50) {
                     this.pageInfoEl.css('left', 'inherit');
-                    this.pageInfoEl.css('right', (65 - Math.round(60 * pageValue / pageTotal)) + '%');
+                    this.pageInfoEl.css('right', (67 - Math.round(65 * pageValue / pageTotal)) + '%');
                 } else {
                     this.pageInfoEl.css('right', 'inherit');
-                    this.pageInfoEl.css('left', Math.round(60 * pageValue / pageTotal) + '%');
+                    this.pageInfoEl.css('left', Math.round(64 * pageValue / pageTotal) + '%');
                 }
                 this.pageInfoEl.show();
 
