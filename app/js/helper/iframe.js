@@ -35,7 +35,6 @@ openEpub = function (data) {
     }
 
     window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-        window.parent.postMessage({ type: "chapters", data: packageDocument.spineLength() }, "*");
         window.parent.postMessage({ type: "title", data: options.metadata.title }, "*");
         packageDocument.getTocText(function (toc) {
             window.parent.postMessage({ type: "toc", data: toc }, "*");
@@ -114,6 +113,14 @@ isReadiumReady = function () {
                     data: {
                         fontSize: window.readium.reader.viewerSettings().fontSize
                     }
+                }, "*");
+            });
+
+            // transfer pinch move scale events
+            window.readium.reader.on(ReadiumSDK.Events.GESTURE_PINCH_MOVE, function (scale) {
+                window.parent.postMessage({
+                    type: "Readium:" + ReadiumSDK.Events.GESTURE_PINCH_MOVE,
+                    data: scale
                 }, "*");
             });
 

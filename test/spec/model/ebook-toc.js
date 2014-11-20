@@ -47,11 +47,11 @@
                     var ebookToc = new EbookTocModel();
                     ebookToc.load(xmlToc);
 
-                    // When we search for the book_0009.xhtml href
-                    var itemPosition = ebookToc.getItemPosition("book_0009.xhtml");
+                    // When we search for the book_0014.xhtml href
+                    var itemPosition = ebookToc.getItemPosition("book_0014.xhtml");
 
-                    // It should tell us it's the 7th item in the toc
-                    itemPosition.should.be.equal(7);
+                    // It should tell us it's the 11th item in the toc
+                    itemPosition.should.be.equal(11);
 
                     done();
                 });

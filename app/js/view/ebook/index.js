@@ -48,6 +48,8 @@ define('view/ebook/index',
 
                 this.waitingEl = waitingTemplate();
 
+                this.lastPinchAck = Date.now();
+
                 this.render();
             },
 
@@ -67,9 +69,7 @@ define('view/ebook/index',
                 this.$el.append(this.optionsView.el);
 
                 // render pagination
-                this.paginationView.render();
                 this.$el.append(this.paginationView.el);
-                this.paginationView.hide();
 
                 // spinning wheel : ebook is indeed long to load
                 this.spinner = new Spinner({
@@ -81,6 +81,9 @@ define('view/ebook/index',
                     width: 12
                 });
                 this.spin();
+
+                // font sample
+                this.fontSample = this.$el.find(".ebook-font-size-sample");
 
                 return this;
             },
@@ -113,7 +116,9 @@ define('view/ebook/index',
             },
 
             handleReadiumEvent: function (event) {
-                var readiumEvent = event.type.match(/^Readium:(\w*)/)[1];
+                var readiumEvent, cssValues;
+
+                readiumEvent = event.type.match(/^Readium:(\w*)/)[1];
                 if (readiumEvent === Teavents.Readium.PAGINATION_CHANGED) {
                     this.stopSpin();
                     this.notWorking();
@@ -122,6 +127,7 @@ define('view/ebook/index',
                 } else if (readiumEvent === Teavents.Readium.CONTENT_LOADED) {
                     this.stopSpin();
                 } else if (readiumEvent === Teavents.Readium.SETTINGS_APPLIED) {
+                    this.lastPinchAck = Date.now();
                     this.notWorking();
                 } else if (readiumEvent === Teavents.Readium.GESTURE_TAP) {
                     if (this.toolbarView.toggle()) {
@@ -132,7 +138,21 @@ define('view/ebook/index',
                         this.clearUiTempo();
                     }
                 } else if (readiumEvent === Teavents.Readium.GESTURE_PINCH) {
+                    this.lastPinchAck = Date.now();
+                    this.fontSample.hide();
                     this.isWorking();
+                } else if (readiumEvent === Teavents.Readium.GESTURE_PINCH_MOVE) {
+                    if (Date.now() - this.lastPinchAck > 500) {
+                        cssValues = {
+                            "font-size": event.data.fontSize + "%"
+                        };
+                        if (this.fontSample.css("display") === "none") {
+                            cssValues.top = (event.data.center.y - (this.fontSample.height() / 2)) + "px";
+                            cssValues.left = (event.data.center.x - (this.fontSample.width() / 2)) + "px";
+                            this.fontSample.show();
+                        }
+                        this.fontSample.css(cssValues);
+                    }
                 }
             },
 

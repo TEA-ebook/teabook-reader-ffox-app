@@ -14,6 +14,7 @@ define('view/ebook/toc', ['backbone', 'view/ebook/toc-item', 'template/ebook/toc
 
             render: function () {
                 this.$el.html(template());
+                window.document.l10n.localizeNode(this.el);
                 this.itemsEl = this.$el.find('ul');
                 this.model.get("items").forEach(this.renderItem.bind(this));
                 return this;

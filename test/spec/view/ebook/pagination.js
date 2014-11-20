@@ -23,7 +23,7 @@
         });
 
         describe('instance', function () {
-            it('should render the number of chapters and the number of pages left', function (done) {
+            it('should render the number of chapters', function (done) {
                 curl(['model/ebook-pagination', 'view/ebook/pagination'], function (EbookPaginationModel, EbookPaginationView) {
                     // Given an ebook with 20 chapters and a chapter with 36 pages
                     var pagination = new EbookPaginationModel(paginationInfo);
@@ -32,9 +32,9 @@
                     // When the pagination renders
                     ebookPaginationView.render();
 
-                    // It should render the current chapter number vs the total and the number of pages left
+                    // It should render the current chapter number vs the total
                     ebookPaginationView.$el.find(".ebook-pagination-chapters").text().trim().should.have.a.string(paginationInfo.chapterCurrent + "/" + paginationInfo.chapterTotal);
-                    ebookPaginationView.$el.find(".ebook-pagination-chapters").text().trim().should.have.a.string("24 pages");
+                    //ebookPaginationView.$el.find(".ebook-pagination-chapters").text().trim().should.have.a.string("24 pages");
 
                     ebookPaginationView.close();
                     done();

@@ -1,11 +1,7 @@
 {{#if chapterCurrent}}
 <span class="ebook-pagination-chapters">
-    Chapitre {{chapterCurrent}}/{{chapterTotal}} :
-    {{#if lastPage}}
-        dernière page
-    {{else}}
-        il reste {{pageLeft}} page{{#unless onePageLeft}}s{{/unless}}
-    {{/if}}
+    <span data-l10n-id="chapter">Chapter</span> {{chapterCurrent}}/{{chapterTotal}} :
+    <span data-l10n-id="pagesLeft">3 pages left</span>
 </span>
 <span class="ebook-pagination-pages">
 {{#unless monoPage}}

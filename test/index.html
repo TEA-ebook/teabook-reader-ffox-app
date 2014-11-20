@@ -63,6 +63,16 @@
     <script src="spec/router.js" type="text/javascript"></script>
 
     <script type="text/javascript">
+        window.document.l10n = {
+            localizeNode: function (node) {
+                /* bind is not supported by PhantomJS yet... */
+            },
+            updateData: function (data) { },
+            ready: function (callback) {
+                callback();
+            }
+        };
+
         curl(['backbone', 'jquery', 'sinon', 'sinon-chai'], function (Backbone, $, sinon, sinonChai) {
             chai.use(sinonChai);
             if (window.mochaPhantomJS) {
