@@ -17,8 +17,7 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
                 Backbone.trigger(Teavents.Actions.OPEN_CHAPTER, chapter);
             } else {
                 ebook = new EbookModel({
-                    id: 0,
-                    name: window.decodeURIComponent(uri),
+                    path: window.decodeURIComponent(uri),
                     chapter: chapter ? window.decodeURIComponent(chapter) : null
                 });
 

@@ -50,7 +50,9 @@ define('view/ebook/index',
 
                 this.lastPinchAck = Date.now();
 
-                this.render();
+                this.model.fetch({
+                    success: this.render.bind(this)
+                });
             },
 
             render: function () {
@@ -215,7 +217,7 @@ define('view/ebook/index',
 
             sendEpub: function () {
                 var sdcard = navigator.getDeviceStorage('sdcard'),
-                    request = sdcard.get(this.model.get('name')),
+                    request = sdcard.get(this.model.get('path')),
                     chapter = this.model.get("chapter"),
                     sandbox = this.getSandbox(),
                     epubData = {
