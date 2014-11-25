@@ -17,7 +17,7 @@ function getFile (path, format) {
 }
 
 function getBasePath (contentFilePath) {
-    var result = contentFilePath.match(/^(.*)\/.*\.opf$/);
+    var result = contentFilePath.match(/^(\w*)\/\w*\.opf$/);
     if (result) {
         return result[1] + '/';
     }

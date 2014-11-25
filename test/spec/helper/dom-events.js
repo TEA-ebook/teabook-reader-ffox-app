@@ -1,4 +1,4 @@
-/*global describe: true, should: true, it: true, curl: true, sinon: true, window: true, Teavents: true*/
+/*global describe, beforeEach, afterEach, should, it, curl, sinon, window, Teavents*/
 
 function fireEvent(element, event) {
     "use strict";

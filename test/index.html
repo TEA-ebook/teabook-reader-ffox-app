@@ -59,6 +59,7 @@
     <script src="spec/view/ebook/toc.js" type="text/javascript"></script>
     <script src="spec/view/ebook/toc-item.js" type="text/javascript"></script>
     <script src="spec/view/ebook/toolbar.js" type="text/javascript"></script>
+    <script src="spec/helper/device.js" type="text/javascript"></script>
     <script src="spec/helper/dom-events.js" type="text/javascript"></script>
     <script src="spec/router.js" type="text/javascript"></script>
 
@@ -74,7 +75,7 @@
             }
         };
 
-        // not supported by phantomJS (the 2.x version probably will)
+        // indexedDB not supported by phantomJS (the 2.x version probably will)
         window.indexedDB = false;
 
         curl(['backbone', 'jquery', 'sinon', 'sinon-chai', 'indexeddb'], function (Backbone, $, sinon, sinonChai) {

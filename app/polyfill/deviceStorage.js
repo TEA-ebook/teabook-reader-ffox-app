@@ -1,6 +1,6 @@
-/*global navigator: true, File: true*/
+/*global navigator, File, XMLHttpRequest*/
 
-// DeviceStorage polyfill by Johan Poirier
+// DeviceStorage polyfill
 
 if (!navigator.getDeviceStorage) {
 
