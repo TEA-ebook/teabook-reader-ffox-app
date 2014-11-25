@@ -1,14 +1,14 @@
 {
   "version": "0.1",
   "name": "TeaBook Reader",
-  "description": "",
+  "description": "epub reader",
   "icons": {
     "60": "/images/app-icon-60.png",
     "128": "/images/app-icon-128.png"
   },
   "developer": {
-    "name": "johanpoirier",
-    "url": ""
+    "name": "TEA - the ebook alternative",
+    "url": "http://www.tea-ebook.com/"
   },
   "origin": "app://teabook-reader.tea-ebook.com",
   "type": "privileged",
@@ -21,6 +21,8 @@
   "precompile": [
      "js/readium.js",
      "js/curl.js",
-     "js/app.js"
+     "js/l20n.js",
+     "js/app.js",
+     "importBook.js"
   ]
 }
