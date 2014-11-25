@@ -3,7 +3,7 @@
 
 html {
   box-sizing: border-box;
-  font-family: "Fira Sans Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 *, *:before, *:after {
@@ -58,6 +58,7 @@ button {
   text-align: center;
   width: 60px;
 }
+
 .shelf .ebook img {
   height: 100%;
   width: 100%;
@@ -84,7 +85,6 @@ button {
   background-color: @toolbar-color;
   color: @app-background-color;
 }
-
 
 /** ebook Toolbar **/
 .ebook-toolbar {
@@ -184,6 +184,7 @@ button {
 .ebook-toc a.level-2 {
   padding-left: 2rem;
 }
+
 .ebook-toc a.level-3 {
   padding-left: 3rem;
 }
@@ -265,6 +266,7 @@ button {
 .ebook-pagination-pages progress::-webkit-progress-bar {
   background: @progress-bar-background;
 }
+
 .ebook-pagination-pages progress::-webkit-progress-value {
   background: @progress-bar-color;
 }
@@ -292,7 +294,6 @@ button {
   position: absolute;
   z-index: 5000;
 }
-
 
 /** ebook Options **/
 .ebook-options {
@@ -355,7 +356,7 @@ button {
 }
 
 .ebook-option-title {
-  font-family: "Fira Sans Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   text-transform: uppercase;
   margin: 0;
@@ -480,12 +481,29 @@ input[type=range]:focus::-webkit-slider-thumb {
 
 /** ebook misc **/
 .ebook-font-size-sample {
-  background-color: #FFFFFF;
-  box-shadow: 2px 2px 8px 0 black;
-  border-radius: 5px;
-  color: black;
   display: none;
-  padding: 0.5rem;
   position: absolute;
-  z-index: 5000;
+  width: auto;
+}
+
+.ebook-font-size-sample:after {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  box-shadow: 2px 2px 8px 0 black;
+  content: "";
+  display: block;
+  height: 0;
+  padding-bottom: 100%;
+  width: 100%;
+  z-index: 555;
+}
+
+.ebook-font-size-sample div {
+  color: black;
+  float: left;
+  line-height: 1em;
+  margin-top: -0.5em;
+  padding: 50% 0.5rem;
+  text-align: center;
+  width: 100%;
 }
