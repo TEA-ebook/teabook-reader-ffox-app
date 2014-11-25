@@ -1,4 +1,4 @@
-/*global curl: true, window: true*/
+/*global curl*/
 (function () {
     'use strict';
 

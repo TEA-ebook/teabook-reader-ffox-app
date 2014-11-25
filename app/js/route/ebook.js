@@ -1,4 +1,4 @@
-/*global define: true, window: true, Teavents: true*/
+/*global define, window, Teavents*/
 define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
     function ($, Backbone, EbookModel, EbookView) {
         "use strict";

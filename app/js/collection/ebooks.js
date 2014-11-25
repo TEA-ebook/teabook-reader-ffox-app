@@ -1,4 +1,4 @@
-/*global define: true, navigator: true*/
+/*global define*/
 define("collection/ebooks", ["backbone", "database", "model/ebook"], function (Backbone, database, EbookModel) {
     "use strict";
 

@@ -1,4 +1,4 @@
-/*global define: true, window: true, Uint8Array: true, Blob: true*/
+/*global define, window, Uint8Array, Blob*/
 define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
     function (Backbone, bookTemplate) {
         "use strict";

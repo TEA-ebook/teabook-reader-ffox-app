@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define*/
 define('view/ebook/toolbar', ['backbone', 'template/ebook/toolbar'],
     function (Backbone, template) {
         "use strict";

@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define*/
 define('route/bookshelf', ['jquery', 'collection/ebooks', 'view/bookshelf/index'],
     function ($, EbookCollection, BookshelfView) {
         "use strict";

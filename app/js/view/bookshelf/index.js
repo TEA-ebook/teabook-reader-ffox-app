@@ -1,4 +1,4 @@
-/*global define: true, window: true*/
+/*global define, window*/
 define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/book', 'template/bookshelf/index'],
     function (Backbone, DeviceHelper, ShelfBookView, bookshelfTemplate) {
         "use strict";

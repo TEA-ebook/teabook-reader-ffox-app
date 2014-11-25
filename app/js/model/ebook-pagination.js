@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define*/
 define("model/ebook-pagination", ["backbone"], function (Backbone) {
     "use strict";
 

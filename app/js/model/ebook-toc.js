@@ -1,4 +1,4 @@
-/*global define: true, DOMParser: true, window: true*/
+/*global define, DOMParser, window*/
 define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbone, TocItemModel) {
     "use strict";
 

@@ -1,4 +1,4 @@
-/*global define: true, ReadiumSDK: true, window: true*/
+/*global define, ReadiumSDK, window*/
 /*jslint nomen: true*/
 
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.

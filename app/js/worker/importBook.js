@@ -1,4 +1,4 @@
-/*global onmessage: true, self: true, JSZip: true, XmlDocument: true*/
+/*global onmessage, self, JSZip, XmlDocument*/
 "use strict";
 var zip;
 

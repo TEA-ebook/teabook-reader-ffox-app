@@ -1,4 +1,4 @@
-/*global define: true, window: true, Teavents: true*/
+/*global define, window, Teavents*/
 define('view/ebook/options', ['backbone', 'template/ebook/options'],
     function (Backbone, template) {
         "use strict";

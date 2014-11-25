@@ -1,4 +1,4 @@
-/*global define: true, Blob: true, FileReader: true, Worker: true, navigator: true*/
+/*global define, Blob, FileReader, Worker, navigator*/
 define('helper/device', ['model/ebook'], function (EbookModel) {
     "use strict";
 

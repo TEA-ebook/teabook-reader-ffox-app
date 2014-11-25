@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define*/
 define("model/ebook", ["backbone", "database"], function (Backbone, database) {
     "use strict";
 

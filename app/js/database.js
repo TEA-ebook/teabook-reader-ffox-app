@@ -1,4 +1,4 @@
-/*global define: true*/
+/*global define*/
 define('database', function () {
     "use strict";
 

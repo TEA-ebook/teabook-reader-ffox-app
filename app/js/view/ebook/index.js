@@ -1,4 +1,4 @@
-/*global define: true, navigator: true, FileReader: true, window: true, Teavents: true*/
+/*global define, navigator, FileReader, window, Teavents*/
 define('view/ebook/index',
     ['backbone',
         'helper/blobber',
