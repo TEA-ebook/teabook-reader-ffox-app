@@ -26,7 +26,9 @@
 
         describe('is', function () {
             it('a Function', function (done) {
-                curl(['route/bookshelf'], function (bookshelfRouteHandler) {
+                curl(['route/bookshelf', 'view/bookshelf/index'], function (bookshelfRouteHandler, BookshelfView) {
+                    sandbox.stub(BookshelfView.prototype);
+
                     bookshelfRouteHandler.should.be.an.instanceof(Function);
 
                     bookshelfRouteHandler();

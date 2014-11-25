@@ -31,10 +31,10 @@ var paths = {
     readium: './readium-js',
     readiumEmbedded: [
         './app/js/events.js',
-        './app/js/helper/iframe.js',
+        './app/js/reader/iframe.js',
         './app/vendor/requirejs/require.js',
         './readium-js/out/Readium.embedded.js',
-        './app/js/helper/gestures.js'
+        './app/js/reader/gestures.js'
     ],
     workers: [
         './app/polyfill/*.js',

@@ -1,3 +1,6 @@
+<scanSdCard "Chercher des livres sur mon téléphone">
+<emptyShelf "Vider la bibliothèque">
+
 <plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
 
 <toc "Table des matières">

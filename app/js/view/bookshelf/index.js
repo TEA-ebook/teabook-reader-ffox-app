@@ -1,6 +1,6 @@
-/*global define: true, navigator: true, Worker: true, FileReader: true, window: true*/
-define('view/bookshelf/index', ['backbone', 'model/ebook', 'view/bookshelf/book', 'template/bookshelf/index'],
-    function (Backbone, EbookModel, ShelfBookView, bookshelfTemplate) {
+/*global define: true, window: true*/
+define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/book', 'template/bookshelf/index'],
+    function (Backbone, DeviceHelper, ShelfBookView, bookshelfTemplate) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -10,7 +10,7 @@ define('view/bookshelf/index', ['backbone', 'model/ebook', 'view/bookshelf/book'
 
             events: {
                 "click .shelf-scan": "scanSdCard",
-                "click .shelf-reset": "resetDb"
+                "click .shelf-reset": "resetShelf"
             },
 
             initialize: function () {
@@ -38,6 +38,7 @@ define('view/bookshelf/index', ['backbone', 'model/ebook', 'view/bookshelf/book'
                 this.$el.html(bookshelfTemplate({
                     shelves: this.shelves
                 }));
+                window.document.l10n.localizeNode(this.el);
                 return this;
             },
 
@@ -71,67 +72,10 @@ define('view/bookshelf/index', ['backbone', 'model/ebook', 'view/bookshelf/book'
             },
 
             scanSdCard: function () {
-                var ebook, cursor, indexView, sdcard;
-
-                if (navigator && navigator.getDeviceStorage) {
-                    sdcard = navigator.getDeviceStorage('sdcard');
-
-                    // Let's browse all the ebooks available
-                    indexView = this;
-                    cursor = sdcard.enumerate("books");
-                    cursor.onsuccess = function () {
-                        if (!this.done) {
-                            var file = this.result;
-                            if (file) {
-                                ebook = new EbookModel();
-                                ebook.save({
-                                    title: file.name,
-                                    path: file.name,
-                                    size: file.size
-                                }, {
-                                    success: function () {
-                                        indexView.collection.add(ebook);
-                                        indexView.scanFile(file, ebook, function () {
-                                            this.continue();
-                                        }.bind(this));
-                                    }.bind(this),
-                                    error: function (model, error) {
-                                        console.error(model, error);
-                                    }
-                                });
-                            }
-                        }
-                    };
-
-                    cursor.onerror = function () {
-                        console.warn("No ebook file found: " + this.error);
-                    };
-                } else {
-                    console.warn("You have no SD card access");
-                }
+                DeviceHelper.scanSdCard(this.collection);
             },
 
-            scanFile: function (file, ebook, callback) {
-                var reader, importBookWorker;
-
-                reader = new FileReader();
-                reader.onload = function (e) {
-                    importBookWorker = new Worker("importBook.js");
-                    importBookWorker.postMessage(e.target.result);
-                    importBookWorker.onmessage = function (event) {
-                        console.dir(event.data);
-                        ebook.set({
-                            title: event.data.title,
-                            cover: event.data.cover,
-                            author: event.data.author
-                        });
-                        ebook.save(null, { success: callback });
-                    };
-                };
-                reader.readAsArrayBuffer(file);
-            },
-
-            resetDb: function () {
+            resetShelf: function () {
                 Backbone.sync("delete", this.collection, {
                     success: function () {
                         this.initShelves();

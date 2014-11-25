@@ -1,4 +1,4 @@
-/*global define: true, DOMParser: true*/
+/*global define, DOMParser*/
 define("model/ebook-toc-item", ["backbone"], function (Backbone) {
     "use strict";
 

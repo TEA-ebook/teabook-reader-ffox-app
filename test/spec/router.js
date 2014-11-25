@@ -1,18 +1,16 @@
-/*global describe: true, should: true, it: true, curl: true, sinon: true */
+/*global describe, beforeEach, afterEach, should, it, curl, sinon, Backbone*/
 (function() {
     "use strict";
     describe('Router', function () {
 
-        var sandbox, server;
+        var sandbox;
 
         beforeEach(function () {
             // create a sandbox
             sandbox = sinon.sandbox.create();
 
-            // fake server
-            server = sinon.fakeServer.create();
-            server.autoRespond = true;
-            server.respondWith("GET", "books/list", [200, { "Content-Type": "text/plain" }, 'myepub1.epub\nmyepub2.epub']);
+            // stub fetch
+            sandbox.stub(Backbone.Collection.prototype, "fetch");
 
             // mute console
             sandbox.stub(console, "info");
@@ -20,7 +18,6 @@
 
         afterEach(function () {
             // restore the environment as it was before
-            server.restore();
             sandbox.restore();
         });
 

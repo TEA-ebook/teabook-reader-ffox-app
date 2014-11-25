@@ -21,7 +21,9 @@
 
         describe('route', function () {
             it('is called with a URI', function (done) {
-                curl(['route/ebook'], function (ebookRouteHandler) {
+                curl(['route/ebook', 'view/ebook/index'], function (ebookRouteHandler, EbookView) {
+                    sandbox.stub(EbookView.prototype);
+
                     ebookRouteHandler.should.be.an.instanceof(Function);
 
                     ebookRouteHandler("/books/myfile.epub");
@@ -32,9 +34,12 @@
             });
 
             it('should open a chapter in the book', function (done) {
-                curl(['route/ebook'], function (ebookRouteHandler) {
+                curl(['route/ebook', 'view/ebook/index'], function (ebookRouteHandler, EbookView) {
+                    sandbox.stub(EbookView.prototype);
+
                     ebookRouteHandler("/books/myfile.epub", "this-is-a-chapter.html");
                     console.info.should.have.been.calledTwice;
+
                     done();
                 });
             });

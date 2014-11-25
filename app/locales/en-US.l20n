@@ -1,3 +1,6 @@
+<scanSdCard "Scan SD Card">
+<emptyShelf "Empty shelf">
+
 <plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
 
 <toc "Table of contents">
