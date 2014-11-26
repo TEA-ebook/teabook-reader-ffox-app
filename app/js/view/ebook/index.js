@@ -263,7 +263,7 @@ define('view/ebook/index',
                 var toc = new EbookTocModel();
                 toc.load(tocXml);
 
-                this.tocView = new TocView({ model: toc, uri: this.model.get("name") });
+                this.tocView = new TocView({ model: toc, uri: this.model.get("path") });
                 this.tocView.render();
 
                 this.paginationView.setToc(toc);

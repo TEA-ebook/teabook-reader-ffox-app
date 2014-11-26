@@ -1,5 +1,6 @@
-<scanSdCard "Scan SD Card">
+<scanSdCard "Look for books in my phone">
 <emptyShelf "Empty shelf">
+<uploadFile "Pick a book from my phone">
 
 <plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
 

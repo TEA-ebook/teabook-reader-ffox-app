@@ -17,6 +17,8 @@ if (!navigator.getDeviceStorage) {
 
         self = this;
 
+        path = path || "books";
+
         request = {
             onsuccess: false,
             onerror: function (err) {

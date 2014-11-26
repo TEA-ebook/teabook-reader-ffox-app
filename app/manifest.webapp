@@ -15,14 +15,24 @@
   "launch_path": "/index.html",
   "installs_allowed_from": ["https://marketplace.firefox.com", "*"],
   "permissions": {
-    "device-storage:sdcard":{ "access": "readonly" },
-    "browser": {}
+      "device-storage:sdcard":{ "access": "readonly" },
+      "browser": {}
   },
   "precompile": [
-     "js/readium.js",
-     "js/curl.js",
-     "js/l20n.js",
-     "js/app.js",
-     "importBook.js"
-  ]
+    "js/readium.js",
+    "js/curl.js",
+    "js/l20n.js",
+    "js/app.js",
+    "importBook.js"
+  ],
+  "activities": {
+    "pick": {
+      "href": "./picker.html",
+      "disposition": "inline",
+      "filters": {
+          "type": ["application/epub+zip"]
+      },
+      "returnValue": true
+    }
+  }
 }

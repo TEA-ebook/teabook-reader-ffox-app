@@ -1,0 +1,46 @@
+@import "variables.less";
+
+.picker, .picker body {
+  background-color: @picker-background-color;
+}
+
+.picker header {
+  background-color: @gray-blue;
+  color: @font-secondary-color;
+  display: flex;
+  font-family: Fira Sans Regular;
+  height: @header-height;
+  justify-content: flex-start;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.picker header .picker-title {
+  font-size: 1.4rem;
+  font-style: italic;
+  line-height: @header-height;
+  text-align: center;
+  width: 100%;
+}
+
+.picker .picker-list {
+  color: @ivory;
+  margin-top: @header-height;
+}
+
+.picker-list-files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.picker-list-files li {
+  border-bottom: 1px dashed @gray;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.4rem 0.3rem;
+  white-space: nowrap;
+}

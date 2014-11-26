@@ -10,7 +10,8 @@ define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/boo
 
             events: {
                 "click .shelf-scan": "scanSdCard",
-                "click .shelf-reset": "resetShelf"
+                "click .shelf-reset": "resetShelf",
+                "change input#ebook-upload": "handleFile"
             },
 
             initialize: function () {
@@ -29,7 +30,7 @@ define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/boo
                 this.shelves = [];
 
                 var i = 0;
-                for (i; i < 5; i += 1) {
+                for (i; i < 10; i += 1) {
                     this.generateNewShelf(3);
                 }
             },
@@ -69,6 +70,17 @@ define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/boo
                     return freeShelves[0];
                 }
                 return false;
+            },
+
+            handleFile: function (event) {
+                var files = event.target.files, file;
+                if (files && files.length > 0) {
+                    file = files[0];
+                    DeviceHelper.addEbook(file, this.collection, function (path) {
+                        console.info(path + " was successfully uploaded");
+                        this.$el.find("input#ebook-upload").val("");
+                    }.bind(this));
+                }
             },
 
             scanSdCard: function () {
