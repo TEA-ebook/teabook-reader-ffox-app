@@ -1,4 +1,4 @@
-/*global define: true, Teavents: true, window: true*/
+/*global define, Teavents, window*/
 /*jslint stupid: true*/
 define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
     function (Backbone, template) {

@@ -1,4 +1,4 @@
-/*global describe: true, should: true, it: true, curl: true, sinon: true, $: true, Backbone: true, Teavents: true*/
+/*global describe, beforeEach, afterEach, should, it, curl, sinon, $, Backbone, Teavents*/
 (function () {
     "use strict";
     describe('Ebook view', function () {
@@ -8,6 +8,13 @@
         beforeEach(function () {
             // create a sandbox
             sandbox = sinon.sandbox.create();
+
+            // stub fetch
+            sandbox.stub(Backbone.Model.prototype, "fetch", function (options) {
+                if (options && options.success) {
+                    options.success();
+                }
+            });
         });
 
         afterEach(function () {

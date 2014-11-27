@@ -1,37 +1,50 @@
-/*global navigator: true, File: true*/
+/*global navigator, File, XMLHttpRequest*/
 
-// DeviceStorage polyfill by Johan Poirier
+// DeviceStorage polyfill
 
-if(!navigator.getDeviceStorage) {
+if (!navigator.getDeviceStorage) {
 
     var storageTypes = ["sdcard", "pictures", "videos", "music"];
 
-    var DeviceStorage = function(storageName) {
+    var DeviceStorage = function (storageName) {
         "use strict";
         this.storageName = storageName;
     };
 
-    DeviceStorage.prototype.enumerate = function(path) {
+    DeviceStorage.prototype.enumerate = function (path) {
         "use strict";
-        var request = {
+        var request, xhr, self;
+
+        self = this;
+
+        path = path || "books";
+
+        request = {
             onsuccess: false,
-            onerror: function(err) { console.error(err); }
+            onerror: function (err) {
+                console.error(err);
+            }
         };
 
-        var xhr = new XMLHttpRequest();
+        xhr = new XMLHttpRequest();
         xhr.open('GET', path + "/list", true);
 
         xhr.onload = function () {
-            var fileNames = xhr.responseText.split("\n").filter(function(item) { return item.length > 0; });
+            var fileNames = xhr.responseText.split("\n").filter(function (item) {
+                return item.length > 0;
+            });
 
             request.continue = function () {
-                request.result = {
-                    name: path + "/" + fileNames.pop()
-                };
-                if(fileNames.length === 0) {
-                    request.done = true;
-                }
-                if(request.onsuccess) {
+                request.done = (fileNames.length === 0);
+                if (!request.done) {
+                    var fileReq = self.get(path + "/" + fileNames.pop());
+                    fileReq.onsuccess = function () {
+                        request.result = this.result;
+                        if (request.onsuccess) {
+                            request.onsuccess();
+                        }
+                    };
+                } else if (request.onsuccess) {
                     request.onsuccess();
                 }
             };
@@ -39,7 +52,7 @@ if(!navigator.getDeviceStorage) {
             request.continue();
         };
 
-        xhr.onerror = function(e) {
+        xhr.onerror = function (e) {
             request.onerror(e);
         };
 
@@ -48,11 +61,13 @@ if(!navigator.getDeviceStorage) {
         return request;
     };
 
-    DeviceStorage.prototype.get = function(fileName) {
+    DeviceStorage.prototype.get = function (fileName) {
         "use strict";
         var request = {
             onsuccess: false,
-            onerror: function(err) { console.error(err); }
+            onerror: function (err) {
+                console.error(err);
+            }
         };
 
         var xhr = new XMLHttpRequest();
@@ -61,12 +76,12 @@ if(!navigator.getDeviceStorage) {
 
         xhr.onload = function () {
             request.result = new File([xhr.response], fileName);
-            if(request.onsuccess) {
+            if (request.onsuccess) {
                 request.onsuccess();
             }
         };
 
-        xhr.onerror = function(e) {
+        xhr.onerror = function (e) {
             request.onerror(e);
         };
 
@@ -75,12 +90,12 @@ if(!navigator.getDeviceStorage) {
         return request;
     };
 
-    var getDeviceStorage = function(storageName) {
+    var getDeviceStorage = function (storageName) {
         "use strict";
 
         var storageInstance = null;
 
-        if(storageName && (storageTypes.indexOf(storageName) !== -1)) {
+        if (storageName && (storageTypes.indexOf(storageName) !== -1)) {
             storageInstance = new DeviceStorage(storageName);
         }
 

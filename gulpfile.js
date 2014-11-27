@@ -31,10 +31,21 @@ var paths = {
     readium: './readium-js',
     readiumEmbedded: [
         './app/js/events.js',
-        './app/js/helper/iframe.js',
+        './app/js/reader/iframe.js',
         './app/vendor/requirejs/require.js',
         './readium-js/out/Readium.embedded.js',
-        './app/js/helper/gestures.js'
+        './app/js/reader/gestures.js'
+    ],
+    workers: [
+        './app/polyfill/*.js',
+        './app/vendor/jszip/dist/jszip.js',
+        './app/js/worker/sax.js',
+        './app/js/worker/xmldoc.js',
+        './app/js/worker/importBook.js'
+    ],
+    picker: [
+        './app/polyfill/deviceStorage.js',
+        './app/js/picker.js'
     ],
     dist: {
         css: './dist/css/',
@@ -166,7 +177,8 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
                 "jquery": "../vendor/jquery/dist/jquery",
                 "underscore": "../vendor/underscore/underscore",
                 "handlebars": "../vendor/handlebars/handlebars.amd",
-                "spin": "../vendor/spin.js/spin"
+                "spin": "../vendor/spin.js/spin",
+                "indexeddb": "../vendor/indexeddb-backbonejs-adapter/backbone-indexeddb"
             }
         }))
         .pipe(addsrc('app/js/events.js'))
@@ -179,6 +191,20 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
 gulp.task('copy-readium', function () {
     return gulp.src(paths.readiumEmbedded)
         .pipe(plugins.concat("readium.js"))
+        .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(gulp.dest(paths.dist.js));
+});
+
+gulp.task('copy-workers', function () {
+    return gulp.src(paths.workers)
+        .pipe(plugins.concat('importBook.js'))
+        .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(gulp.dest(paths.dist.html));
+});
+
+gulp.task('copy-picker', function () {
+    return gulp.src(paths.picker)
+        .pipe(plugins.concat('picker.js'))
         .pipe(gulpif(!debug, plugins.uglify()))
         .pipe(gulp.dest(paths.dist.js));
 });
@@ -220,13 +246,14 @@ gulp.task("open-browser", function () {
         .pipe(gulpif(openBrowser, plugins.open("", { url: "http://localhost:8080/" })));
 });
 
-gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-l20n', 'copy-locales', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
+gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-workers', 'copy-picker', 'copy-l20n', 'copy-locales', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
 
 gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
         gulp.watch(paths.less, ['compile-less']);
         gulp.watch(paths.templates, ['compile-scripts']);
-        gulp.watch(paths.js, ['compile-scripts', 'copy-readium']);
+        gulp.watch(paths.js, ['compile-scripts', 'copy-readium', 'copy-picker']);
+        gulp.watch(paths.workers, ['copy-workers']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
         gulp.watch(paths.locales, ['copy-locales']);
@@ -259,6 +286,7 @@ gulp.task('readium', ['clean-readium'], function () {
 gulp.task('jslint', function () {
     return gulp.src(paths.js)
         .pipe(plugins.ignore.exclude(/template\/.*/))
+        .pipe(plugins.ignore.exclude(/js\/worker\/.*/))
         .pipe(plugins.jslint({
             node: true
         }));
@@ -272,7 +300,7 @@ gulp.task('check-code', ['jslint']);
 /******************* *****************/
 
 gulp.task('tests', function () {
-    runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'copy-l20n', 'copy-locales', 'mocha');
+    runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'copy-workers', 'copy-l20n', 'copy-locales', 'mocha');
 });
 
 gulp.task('watch-tests', function () {

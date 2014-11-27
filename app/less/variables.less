@@ -1,31 +1,57 @@
-/******* colors *******/
-@app-background-color: #ececec;
+/*** firefox palette ***/
+@orange: #FF4E00;
+@brick: #CD6723;
+@red: #B90000;
+@green: #5F9B0A;
+@black: #000000;
+@warm-gray: #333333;
+@gray: #2C393B;
+@light-gray: #F4F4F4;
+@ivory: #EAEAE7;
+@blue-pastel: #00CAF2;
+@gray-p1: #5F5F5F;
+@gray-m1: #858585;
+@gray-m2: #A6A6A6;
+@gray-blue: #2C393B;
+@white: #FFFFFF;
 
-@font-primary-color: #000000;
 
-@toolbar-color: #cd6623;
-
-@options-panel-color: #E7E7E7;
-@options-panel-footer-color: #C7C7C7;
-
+/*** Global properties ****/
+@app-background-color: @ivory;
+@font-primary-color: @black;
+@font-secondary-color: @white;
 @waiting-background-color: rgba(199, 199, 199, 0.8);
+@header-height: 3rem;
 
+
+/******** Bookshelf *******/
 @shelf-gradient-start: #ececec;
 @shelf-gradient-end: #c8c8c8;
 
-@slider-color: #00CAF2;
 
-@pagination-text-color: #747474;
-@progress-bar-color: #cd6623;
-@progress-bar-background: #ededed;
-
-@toc-sub-entry-color: #F9F9F9;
-@toc-sub-entry-border-color: #EDEDED;
-
-/*** ebook Toolbar ***/
-@toolbar-height: 3rem;
+/***** Options panel *****/
+@options-panel-color: @ivory;
+@options-panel-footer-color: @gray-m2;
 
 
-/*** ebook Pagination ***/
+/*** Table Of Contents ***/
+@toc-sub-entry-color: @light-gray;
+@toc-sub-entry-border-color: @ivory;
+
+
+/******** Toolbar ********/
+@toolbar-color: @brick;
+@toolbar-height: @header-height;
+
+
+/******* Pagination ******/
+@pagination-text-color: @gray-m1;
 @pagination-bar-height: 1.4rem;
 @pagination-bar-expanded-height: 2rem;
+@slider-color: @blue-pastel;
+@progress-bar-color: @brick;
+@progress-bar-background: @ivory;
+
+
+/*** Picker activity ****/
+@picker-background-color: @black;

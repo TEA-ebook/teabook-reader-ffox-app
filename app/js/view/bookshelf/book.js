@@ -1,4 +1,4 @@
-/*global define: true, window: true*/
+/*global define, window, Uint8Array, Blob*/
 define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
     function (Backbone, bookTemplate) {
         "use strict";
@@ -13,21 +13,37 @@ define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
             },
 
             initialize: function () {
-                this.listenTo(Backbone, 'destroy', this.remove.bind(this));
+                this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
+                this.model.on('change', this.render, this);
                 this.render();
                 this.ell = this.$el[0];
             },
 
             render: function () {
-                this.$el.html(bookTemplate(this.model.attributes));
-                return this;
+                var blob, attributes;
+
+                attributes = this.model.attributes;
+
+                if (this.model.has('cover')) {
+                    if (!this.coverUrl) {
+                        blob = new Blob([new Uint8Array(this.model.get("cover"))], { type: "image/jpeg" });
+                        this.coverUrl = window.URL.createObjectURL(blob);
+                    }
+                    attributes.coverUrl = this.coverUrl;
+                }
+
+                this.$el.html(bookTemplate(attributes));
             },
 
             open: function () {
                 this.ell.classList.add("open");
                 setTimeout(function () {
-                    Backbone.history.navigate("ebook/" + window.encodeURIComponent(this.model.get("name")), true);
-                }.bind(this), 300);
+                    Backbone.history.navigate("ebook/" + window.encodeURIComponent(this.model.get("path")), true);
+                }.bind(this), 200);
+            },
+
+            close: function () {
+                this.remove();
             }
         });
 

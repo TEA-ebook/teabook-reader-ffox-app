@@ -1,4 +1,4 @@
-/*global window: true*/
+/*global window*/
 window.Teavents = {
     MESSAGE: "message",
     VISIBILITY_HIDDEN: "visibility:hidden",

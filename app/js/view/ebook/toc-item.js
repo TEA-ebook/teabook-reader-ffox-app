@@ -1,4 +1,4 @@
-/*global define: true, window: true*/
+/*global define, window*/
 /*jslint unparam: true*/
 define('view/ebook/toc-item', ['backbone', 'template/ebook/toc-item'],
     function (Backbone, template) {

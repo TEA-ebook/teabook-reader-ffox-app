@@ -1,4 +1,4 @@
-/*global define: true, window: true*/
+/*global define, window*/
 define('view/ebook/toc', ['backbone', 'view/ebook/toc-item', 'template/ebook/toc'],
     function (Backbone, TocItemView, template) {
         "use strict";

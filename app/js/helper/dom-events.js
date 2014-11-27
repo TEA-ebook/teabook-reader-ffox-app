@@ -1,4 +1,4 @@
-/*global define: true, window: true, Teavents: true*/
+/*global define, window, Teavents*/
 /*jslint nomen: true*/
 define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Backbone, _, $) {
     "use strict";

@@ -1,3 +1,9 @@
+<scanSdCard "Chercher des livres sur mon téléphone">
+<emptyShelf "Vider la bibliothèque">
+<uploadFile "Ouvrir un livre depuis mon téléphone">
+
+<selectEpub "Sélectionner un livre">
+
 <plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
 
 <toc "Table des matières">

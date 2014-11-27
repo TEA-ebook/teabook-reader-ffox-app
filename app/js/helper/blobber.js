@@ -1,4 +1,4 @@
-/*global define: true, Blob: true, window: true, XMLHttpRequest: true*/
+/*global define, Blob, window, XMLHttpRequest*/
 define('helper/blobber', function () {
     "use strict";
 

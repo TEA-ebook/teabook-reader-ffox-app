@@ -1,4 +1,4 @@
-/*global window: true, Teavents: true, Blob: true, ReadiumSDK: true, readiumReady: true, $: true*/
+/*global window, Teavents, Blob, ReadiumSDK, readiumReady, $*/
 "use strict";
 
 var readiumReadyTest, isReadiumReady, handleMessage, openEpub, bookmarkPage, themes;

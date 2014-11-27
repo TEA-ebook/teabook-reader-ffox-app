@@ -1,4 +1,4 @@
-/*global define: true, navigator: true, FileReader: true, window: true, Teavents: true*/
+/*global define, navigator, FileReader, window, Teavents*/
 define('view/ebook/index',
     ['backbone',
         'helper/blobber',
@@ -51,7 +51,9 @@ define('view/ebook/index',
 
                 this.lastPinchAck = Date.now();
 
-                this.render();
+                this.model.fetch({
+                    success: this.render.bind(this)
+                });
             },
 
             render: function () {
@@ -218,7 +220,7 @@ define('view/ebook/index',
 
             sendEpub: function () {
                 var sdcard = navigator.getDeviceStorage('sdcard'),
-                    request = sdcard.get(this.model.get('name')),
+                    request = sdcard.get(this.model.get('path')),
                     chapter = this.model.get("chapter"),
                     sandbox = this.getSandbox(),
                     epubData = {
@@ -264,7 +266,7 @@ define('view/ebook/index',
                 var toc = new EbookTocModel();
                 toc.load(tocXml);
 
-                this.tocView = new TocView({ model: toc, uri: this.model.get("name") });
+                this.tocView = new TocView({ model: toc, uri: this.model.get("path") });
                 this.tocView.render();
 
                 this.paginationView.setToc(toc);

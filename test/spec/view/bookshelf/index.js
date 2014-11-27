@@ -1,22 +1,19 @@
-/*global describe: true, should: true, it: true, curl: true, sinon: true, $: true, Backbone: true*/
+/*global describe, beforeEach, afterEach, should, it, curl, sinon, $, Backbone*/
 (function() {
     "use strict";
     describe('Bookshelf view', function () {
-        var sandbox, server;
+        var sandbox;
 
         beforeEach(function () {
             // create a sandbox
             sandbox = sinon.sandbox.create();
 
-            // fake server
-            server = sinon.fakeServer.create();
-            server.autoRespond = true;
-            server.respondWith("GET", "books/list", [200, { "Content-Type": "text/plain" }, 'myepub1.epub\nmyepub2.epub']);
+            // fake db
+            sandbox.stub(Backbone.Collection.prototype, "fetch");
         });
 
         afterEach(function () {
             // restore the environment as it was before
-            server.restore();
             sandbox.restore();
         });
 
@@ -34,7 +31,7 @@
                     bookshelfView.close();
 
                     // The view should be rendered
-                    BookshelfView.prototype.render.should.have.been.calledOnce;
+                    BookshelfView.prototype.render.should.have.been.calledTwice;
                     bookshelfView.$el.find(".shelf-tab").should.have.length.above(1);
 
                     done();
@@ -45,14 +42,13 @@
                 curl(['collection/ebooks', 'model/ebook', 'view/bookshelf/index'], function (EbookCollection, EbookModel, BookshelfView) {
                     sandbox.spy(BookshelfView.prototype, "renderEbook");
 
-                    // Given a bookshelf view with 2 ebooks in the collection
+                    // Given a bookshelf view with an ebook collection
                     var ebooks = new EbookCollection();
-                    ebooks.add(new EbookModel());
-                    ebooks.add(new EbookModel());
                     var bookshelfView = new BookshelfView({ collection: ebooks });
 
-                    // When the ebook collection is loaded
-                    ebooks.trigger('reset');
+                    // When we add 2 books to the collection
+                    ebooks.add(new EbookModel());
+                    ebooks.add(new EbookModel());
                     bookshelfView.close();
 
                     // 2 books should be visible

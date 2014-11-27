@@ -1,4 +1,4 @@
-/*global define: true, window: true, Teavents: true*/
+/*global define, window, Teavents*/
 define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
     function ($, Backbone, EbookModel, EbookView) {
         "use strict";
@@ -17,8 +17,7 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
                 Backbone.trigger(Teavents.Actions.OPEN_CHAPTER, chapter);
             } else {
                 ebook = new EbookModel({
-                    id: 0,
-                    name: window.decodeURIComponent(uri),
+                    path: window.decodeURIComponent(uri),
                     chapter: chapter ? window.decodeURIComponent(chapter) : null
                 });
 

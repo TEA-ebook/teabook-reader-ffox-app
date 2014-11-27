@@ -1,1 +1,5 @@
-{{this.name}}
+{{#if coverUrl}}
+    <img src="{{coverUrl}}" alt="{{title}}" />
+{{else}}
+    <i class="fa fa-book fa-2x"></i>
+{{/if}}
