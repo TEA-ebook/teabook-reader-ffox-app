@@ -12,7 +12,8 @@ window.Teavents = {
     SEND_RESOURCES: "sendResources",
     TOC: "toc",
     WORKING: "working",
-    NOT_WORKING: "not_working",
+    NOT_WORKING: "not-working",
+    PAGE_BOOKMARKED: "page-bookmarked",
 
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",
@@ -25,6 +26,7 @@ window.Teavents = {
     },
 
     Actions: {
+        BOOKMARK_PAGE: "bookmark-page",
         OPEN_EPUB: "open-epub",
         OPEN_CHAPTER: "open-chapter",
         OPEN_PAGE: "open-page",

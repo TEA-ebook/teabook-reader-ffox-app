@@ -1,7 +1,7 @@
 /*global window: true, Teavents: true, Blob: true, ReadiumSDK: true, readiumReady: true, $: true*/
 "use strict";
 
-var readiumReadyTest, isReadiumReady, handleMessage, openEpub, themes;
+var readiumReadyTest, isReadiumReady, handleMessage, openEpub, bookmarkPage, themes;
 
 themes = {
     author: {
@@ -34,13 +34,21 @@ openEpub = function (data) {
         };
     }
 
-    window.readium.openPackageDocument(epubFile, function (packageDocument, options) {
-        window.parent.postMessage({ type: "title", data: options.metadata.title }, "*");
+    window.readium.openPackageDocument(epubFile, function (packageDocument) {
         packageDocument.getTocText(function (toc) {
-            window.parent.postMessage({ type: "toc", data: toc }, "*");
+            window.parent.postMessage({ type: Teavents.TOC, data: toc }, "*");
             window.parent.postMessage({ type: Teavents.READY_TO_READ }, "*");
         });
     }, openPageRequest);
+};
+
+
+bookmarkPage = function () {
+    var bookmarkInfo = window.readium.reader.bookmarkCurrentPage();
+    window.parent.postMessage({
+        type: Teavents.PAGE_BOOKMARKED,
+        data: JSON.parse(bookmarkInfo)
+    }, "*");
 };
 
 /**
@@ -73,6 +81,8 @@ handleMessage = function (event) {
         }
     } else if (event.data.action === Teavents.Actions.OPEN_EPUB) {
         openEpub(event.data);
+    } else if (event.data.action === Teavents.Actions.BOOKMARK_PAGE) {
+        bookmarkPage();
     }
 };
 

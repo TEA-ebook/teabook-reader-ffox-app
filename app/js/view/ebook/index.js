@@ -39,6 +39,7 @@ define('view/ebook/index',
                 Backbone.on(Teavents.Actions.OPEN_PAGE, this.openPage.bind(this));
                 Backbone.on(Teavents.Actions.SET_FONT_SIZE, this.changeFontSize.bind(this));
                 Backbone.on(Teavents.Actions.SET_THEME, this.changeTheme.bind(this));
+                Backbone.on(Teavents.Actions.BOOKMARK_PAGE, this.bookmarkPage.bind(this));
 
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
 
@@ -103,10 +104,10 @@ define('view/ebook/index',
                         this.toolbarView.hide();
                         this.optionsView.hide();
                         this.paginationView.hide();
-                    } else if (event.type === "toc") {
+                    } else if (event.type === Teavents.TOC) {
                         this.generateToc(event.data);
-                    } else if (event.type === "title") {
-                        this.setEbookTitle(event.data);
+                    } else if (event.type === Teavents.PAGE_BOOKMARKED) {
+                        console.dir(event.data);
                     } else if (/^Readium:/.test(event.type)) {
                         this.handleReadiumEvent(event);
                     }
@@ -157,44 +158,46 @@ define('view/ebook/index',
             },
 
             openChapter: function (chapter) {
-                var sandbox = this.getSandbox();
-                if (sandbox !== null) {
-                    sandbox.postMessage({
-                        action: Teavents.Actions.OPEN_CHAPTER,
-                        content: chapter
-                    }, "*");
-                    this.hideToc();
-                }
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.OPEN_CHAPTER,
+                    content: chapter
+                });
+                this.hideToc();
             },
 
             openPage: function (percentage) {
-                var sandbox = this.getSandbox();
-                if (sandbox !== null) {
-                    sandbox.postMessage({
-                        action: Teavents.Actions.OPEN_PAGE,
-                        content: percentage
-                    }, "*");
-                    this.hideToc();
-                }
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.OPEN_PAGE,
+                    content: percentage
+                });
+                this.hideToc();
+            },
+
+            bookmarkPage: function () {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.BOOKMARK_PAGE
+                });
+                this.hideUi();
             },
 
             changeFontSize: function (fontSize) {
-                var sandbox = this.getSandbox();
-                if (sandbox !== null) {
-                    sandbox.postMessage({
-                        action: Teavents.Actions.SET_FONT_SIZE,
-                        content: fontSize
-                    }, "*");
-                }
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.SET_FONT_SIZE,
+                    content: fontSize
+                });
             },
 
             changeTheme: function (theme) {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.SET_THEME,
+                    content: theme
+                });
+            },
+
+            sendMessageToSandbox: function (message) {
                 var sandbox = this.getSandbox();
                 if (sandbox !== null) {
-                    sandbox.postMessage({
-                        action: Teavents.Actions.SET_THEME,
-                        content: theme
-                    }, "*");
+                    sandbox.postMessage(message, "*");
                 }
             },
 
