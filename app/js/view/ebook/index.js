@@ -249,8 +249,10 @@ define('view/ebook/index',
                 this.bookmarksView.saveBookmark({
                     path: this.model.get('path'),
                     cfi: bookmarkInfo.contentCFI,
-                    idref: bookmarkInfo.idref
+                    idref: bookmarkInfo.idref,
+                    label: "Chapter " + this.paginationView.model.get("chapterCurrent") + ", page " + this.paginationView.model.get("pageCurrent")
                 });
+
                 this.hideBookmarks();
             },
 

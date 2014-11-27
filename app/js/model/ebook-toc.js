@@ -18,6 +18,8 @@ define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbo
             tocDom = (new DOMParser()).parseFromString(xml, "text/xml");
             items = this.parseNavPoint(tocDom.querySelector("navPoint"), []);
 
+            console.debug(xml);
+
             this.setPositions(items, 1, 0);
             this.set("items", items);
         },

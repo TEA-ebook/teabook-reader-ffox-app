@@ -33,8 +33,9 @@ define('view/ebook/pagination', ['backbone', 'template/ebook/pagination'],
                                 position = item.get("position");
                             }
                         }
+
                         this.model.set({
-                            chapterCurrent: position || (event.data.pageInfo.spineItemIndex + 1),
+                            chapterCurrent: position || (event.data.pageInfo.spineItemIndex),
                             pageCurrent: event.data.pageInfo.spineItemPageIndex + 1,
                             pageTotal: event.data.pageInfo.spineItemPageCount
                         });
