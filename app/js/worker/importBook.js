@@ -34,18 +34,24 @@ function getOpfFilePath(container) {
 }
 
 function getMetadata(opf) {
-    var metadata, metadataNode, document, descriptionNode;
+    var metadata, metadataNode, document, descriptionNode, publisherNode;
 
     metadata = {};
     document = new XmlDocument(opf);
     metadataNode = document.childNamed("metadata");
 
     metadata.title = metadataNode.childNamed("dc:title").val;
-    metadata.publisher = metadataNode.childNamed("dc:publisher").val;
+
+    publisherNode = metadataNode.childNamed("dc:publisher");
+    metadata.publisher = publisherNode ? publisherNode.val : "";
+
     descriptionNode = metadataNode.childNamed("dc:description");
-    metadata.description = descriptionNode ? descriptionNode.val: "";
+    metadata.description = descriptionNode ? descriptionNode.val : "";
+
     metadata.identifier = metadataNode.childNamed("dc:identifier").val;
+
     metadata.language = metadataNode.childNamed("dc:language").val;
+
     metadata.authors = [];
     metadataNode.childrenNamed("dc:creator").forEach(function (authorNode) {
         var author = authorNode.val;

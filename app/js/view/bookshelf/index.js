@@ -79,6 +79,7 @@ define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/boo
                     DeviceHelper.addEbook(file, this.collection, function (path) {
                         console.info(path + " was successfully uploaded");
                         this.$el.find("input#ebook-upload").val("");
+                        Backbone.history.navigate("ebook/" + window.encodeURIComponent(path), true);
                     }.bind(this));
                 }
             },

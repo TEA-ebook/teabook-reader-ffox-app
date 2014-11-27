@@ -25,8 +25,11 @@ define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
                 attributes = this.model.attributes;
 
                 if (this.model.has('cover')) {
-                    blob = new Blob([new Uint8Array(this.model.get("cover"))], { type: "image/jpeg" });
-                    attributes.coverUrl = window.URL.createObjectURL(blob);
+                    if (!this.coverUrl) {
+                        blob = new Blob([new Uint8Array(this.model.get("cover"))], { type: "image/jpeg" });
+                        this.coverUrl = window.URL.createObjectURL(blob);
+                    }
+                    attributes.coverUrl = this.coverUrl;
                 }
 
                 this.$el.html(bookTemplate(attributes));

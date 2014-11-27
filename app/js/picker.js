@@ -86,13 +86,18 @@ function cancelActivity() {
 
 (function () {
     "use strict";
-    if (navigator.mozSetMessageHandler) {
-        navigator.mozSetMessageHandler('activity', function (activityReq) {
-            activityRequest = activityReq;
-        });
-    }
-
-    document.querySelector("button.back").addEventListener("click", cancelActivity);
 
     listDir(currentDirectory, displayFiles);
+
+    window.document.l10n.ready(function () {
+        document.l10n.localizeNode(document.querySelector('body'));
+
+        if (navigator.mozSetMessageHandler) {
+            navigator.mozSetMessageHandler('activity', function (activityReq) {
+                activityRequest = activityReq;
+            });
+        }
+
+        document.querySelector("button.back").addEventListener("click", cancelActivity);
+    });
 }());
