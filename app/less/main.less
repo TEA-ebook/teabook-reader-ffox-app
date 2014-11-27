@@ -175,7 +175,7 @@ input#ebook-upload {
 }
 
 /** ebook Table Of Contents **/
-.ebook-toc {
+.ebook-toc, .ebook-bookmarks {
   background-color: #ffffff;
   bottom: -@toolbar-height;
   height: 100%;
@@ -185,26 +185,26 @@ input#ebook-upload {
   transition: bottom 0.5s ease;
 }
 
-.ebook-toc.hidden {
+.ebook-toc.hidden, .ebook-bookmarks.hidden {
   bottom: -100%;
   transition: bottom 0.5s ease;
 }
 
-.ebook-toc > h3 {
+.ebook-toc > h3, .ebook-bookmarks > h3 {
   padding-left: 1rem;
 }
 
-.ebook-toc ul {
+.ebook-toc ul, .ebook-bookmarks ul {
   font-size: 1rem;
   list-style: none;
   padding: 0;
 }
 
-.ebook-toc > ul {
+.ebook-toc > ul, .ebook-bookmarks > ul {
   margin-bottom: @toolbar-height + 2rem;
 }
 
-.ebook-toc a {
+.ebook-toc a, .ebook-bookmarks a {
   color: @font-primary-color;
   display: block;
   margin-top: 0.6rem;
@@ -242,6 +242,18 @@ input#ebook-upload {
   background-color: #B2F2FF;
   background-origin: padding-box;
 }
+
+
+/** ebook Table Of Contents **/
+button.ebook-bookmark-add {
+  background-color: @brick;
+  color: @white;
+  float: right;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
 
 /** ebook Pagination **/
 .ebook-pagination {

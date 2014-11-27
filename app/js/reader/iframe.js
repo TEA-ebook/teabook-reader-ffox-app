@@ -1,7 +1,7 @@
 /*global window, Teavents, Blob, ReadiumSDK, readiumReady, $*/
 "use strict";
 
-var readiumReadyTest, isReadiumReady, handleMessage, openEpub, bookmarkPage, themes;
+var readiumReadyTest, isReadiumReady, handleMessage, openEpub, sendCurrentPageInfo, themes;
 
 themes = {
     author: {
@@ -32,6 +32,11 @@ openEpub = function (data) {
             contentRefUrl: data.chapter,
             sourceFileHref: "."
         };
+    } else if (data.position) {
+        openPageRequest = {
+            idref: data.position.idref,
+            elementCfi: data.position.contentCFI
+        };
     }
 
     window.readium.openPackageDocument(epubFile, function (packageDocument) {
@@ -43,10 +48,10 @@ openEpub = function (data) {
 };
 
 
-bookmarkPage = function () {
+sendCurrentPageInfo = function (bookmark) {
     var bookmarkInfo = window.readium.reader.bookmarkCurrentPage();
     window.parent.postMessage({
-        type: Teavents.PAGE_BOOKMARKED,
+        type: bookmark ? Teavents.PAGE_BOOKMARKED : Teavents.CURRENT_POSITION,
         data: JSON.parse(bookmarkInfo)
     }, "*");
 };
@@ -61,6 +66,8 @@ handleMessage = function (event) {
         window.readium.reader.openContentUrl(event.data.content);
     } else if (event.data.action === Teavents.Actions.OPEN_PAGE) {
         window.readium.reader.openPageIndex(event.data.content);
+    } else if (event.data.action === Teavents.Actions.OPEN_POSITION) {
+        window.readium.reader.openSpineItemElementCfi(event.data.content.idref, event.data.content.cfi, null);
     } else if (event.data.action === Teavents.Actions.SET_FONT_SIZE) {
         window.readium.reader.updateSettings({
             fontSize: event.data.content
@@ -82,7 +89,9 @@ handleMessage = function (event) {
     } else if (event.data.action === Teavents.Actions.OPEN_EPUB) {
         openEpub(event.data);
     } else if (event.data.action === Teavents.Actions.BOOKMARK_PAGE) {
-        bookmarkPage();
+        sendCurrentPageInfo(true);
+    } else if (event.data.action === Teavents.Actions.GET_POSITION) {
+        sendCurrentPageInfo();
     }
 };
 

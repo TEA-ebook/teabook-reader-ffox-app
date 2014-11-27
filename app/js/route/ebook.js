@@ -3,7 +3,7 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
     function ($, Backbone, EbookModel, EbookView) {
         "use strict";
 
-        return function (uri, chapter) {
+        return function (uri, chapter, cfi) {
             var contentEl = $("#content"),
                 ebook,
                 view;
@@ -11,10 +11,17 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
             console.info("route to ebook " + window.decodeURIComponent(uri));
             if (chapter) {
                 console.info("and chapter " + window.decodeURIComponent(chapter));
+                if (cfi) {
+                    console.info("and CFI " + window.decodeURIComponent(cfi));
+                }
             }
 
             if (contentEl.find("iframe").length > 0) {
-                Backbone.trigger(Teavents.Actions.OPEN_CHAPTER, chapter);
+                if (cfi) {
+                    Backbone.trigger(Teavents.Actions.OPEN_POSITION, chapter, cfi);
+                } else {
+                    Backbone.trigger(Teavents.Actions.OPEN_CHAPTER, chapter);
+                }
             } else {
                 ebook = new EbookModel({
                     path: window.decodeURIComponent(uri),

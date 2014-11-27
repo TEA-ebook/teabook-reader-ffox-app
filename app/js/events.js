@@ -14,6 +14,7 @@ window.Teavents = {
     WORKING: "working",
     NOT_WORKING: "not-working",
     PAGE_BOOKMARKED: "page-bookmarked",
+    CURRENT_POSITION: "current-position",
 
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",
@@ -27,9 +28,11 @@ window.Teavents = {
 
     Actions: {
         BOOKMARK_PAGE: "bookmark-page",
+        GET_POSITION: "get-position",
         OPEN_EPUB: "open-epub",
         OPEN_CHAPTER: "open-chapter",
         OPEN_PAGE: "open-page",
+        OPEN_POSITION: "open-position",
         SET_FONT_SIZE: "font-size",
         SET_THEME: "set-theme"
     }

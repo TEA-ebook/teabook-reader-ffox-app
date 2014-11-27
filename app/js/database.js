@@ -13,6 +13,15 @@ define('database', function () {
                     ebooks.createIndex("path", "path", { unique: true });
                     next();
                 }
+            },
+            {
+                version: 2,
+                migrate: function (transaction, next) {
+                    var bookmarks = transaction.db.createObjectStore("bookmarks", { keyPath: 'id', autoIncrement: true });
+                    bookmarks.createIndex("path", "path");
+                    bookmarks.createIndex("path, cfi", ["path", "cfi"], { unique: true });
+                    next();
+                }
             }
         ]
     };

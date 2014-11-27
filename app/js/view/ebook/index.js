@@ -4,6 +4,7 @@ define('view/ebook/index',
         'helper/blobber',
         'model/ebook-toc',
         'model/ebook-pagination',
+        'view/ebook/bookmarks',
         'view/ebook/toolbar',
         'view/ebook/toc',
         'view/ebook/options',
@@ -11,7 +12,18 @@ define('view/ebook/index',
         'template/ebook/index',
         'template/waiting',
         'spin'],
-    function (Backbone, Blobber, EbookTocModel, EbookPaginationModel, ToolbarView, TocView, OptionsView, PaginationView, template, waitingTemplate, Spinner) {
+    function (Backbone,
+              Blobber,
+              EbookTocModel,
+              EbookPaginationModel,
+              BookmarksView,
+              ToolbarView,
+              TocView,
+              OptionsView,
+              PaginationView,
+              template,
+              waitingTemplate,
+              Spinner) {
         "use strict";
 
         var EbookView = Backbone.View.extend({
@@ -22,6 +34,7 @@ define('view/ebook/index',
                 "click button.back": "backToBookshelf",
                 "click button.bookshelf": "backToBookshelf",
                 "click button.table-of-contents": "showToc",
+                "click button.bookmark": "showBookmarks",
                 "click button.options": "showOptions"
             },
 
@@ -37,6 +50,7 @@ define('view/ebook/index',
 
                 Backbone.on(Teavents.Actions.OPEN_CHAPTER, this.openChapter.bind(this));
                 Backbone.on(Teavents.Actions.OPEN_PAGE, this.openPage.bind(this));
+                Backbone.on(Teavents.Actions.OPEN_POSITION, this.openPosition.bind(this));
                 Backbone.on(Teavents.Actions.SET_FONT_SIZE, this.changeFontSize.bind(this));
                 Backbone.on(Teavents.Actions.SET_THEME, this.changeTheme.bind(this));
                 Backbone.on(Teavents.Actions.BOOKMARK_PAGE, this.bookmarkPage.bind(this));
@@ -46,6 +60,7 @@ define('view/ebook/index',
                 this.paginationView = new PaginationView({ model: new EbookPaginationModel() });
                 this.toolbarView = new ToolbarView();
                 this.optionsView = new OptionsView();
+                this.bookmarksView = new BookmarksView({ path: this.model.get('path') });
 
                 this.waitingEl = waitingTemplate();
 
@@ -74,6 +89,9 @@ define('view/ebook/index',
                 // render pagination
                 this.$el.append(this.paginationView.el);
 
+                // render bookmarks
+                this.$el.append(this.bookmarksView.el);
+
                 // spinning wheel : ebook is indeed long to load
                 this.spinner = new Spinner({
                     hwaccel: true,
@@ -92,8 +110,14 @@ define('view/ebook/index',
             },
 
             backToBookshelf: function () {
-                this.close();
-                Backbone.history.navigate('/', true);
+                // saving position
+                this.getPosition(function (event) {
+                    if (event.type === Teavents.CURRENT_POSITION) {
+                        this.savePosition(event.data);
+                        this.close();
+                        Backbone.history.navigate('/', true);
+                    }
+                }.bind(this));
             },
 
             handleIframeMessage: function (event) {
@@ -109,7 +133,7 @@ define('view/ebook/index',
                     } else if (event.type === Teavents.TOC) {
                         this.generateToc(event.data);
                     } else if (event.type === Teavents.PAGE_BOOKMARKED) {
-                        console.dir(event.data);
+                        this.saveBookmark(event.data);
                     } else if (/^Readium:/.test(event.type)) {
                         this.handleReadiumEvent(event);
                     }
@@ -175,6 +199,24 @@ define('view/ebook/index',
                 this.hideToc();
             },
 
+            openPosition: function (idref, cfi) {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.OPEN_POSITION,
+                    content: {
+                        'idref': idref,
+                        'cfi': cfi
+                    }
+                });
+                this.hideBookmarks();
+            },
+
+            getPosition: function (callback) {
+                Backbone.on(Teavents.MESSAGE, callback);
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.GET_POSITION
+                });
+            },
+
             bookmarkPage: function () {
                 this.sendMessageToSandbox({
                     action: Teavents.Actions.BOOKMARK_PAGE
@@ -203,6 +245,15 @@ define('view/ebook/index',
                 }
             },
 
+            saveBookmark: function (bookmarkInfo) {
+                this.bookmarksView.saveBookmark({
+                    path: this.model.get('path'),
+                    cfi: bookmarkInfo.contentCFI,
+                    idref: bookmarkInfo.idref
+                });
+                this.hideBookmarks();
+            },
+
             spin: function () {
                 this.spinner.spin(this.$el[0]);
             },
@@ -222,6 +273,7 @@ define('view/ebook/index',
                 var sdcard = navigator.getDeviceStorage('sdcard'),
                     request = sdcard.get(this.model.get('path')),
                     chapter = this.model.get("chapter"),
+                    position = this.model.get("position"),
                     sandbox = this.getSandbox(),
                     epubData = {
                         action: Teavents.Actions.OPEN_EPUB,
@@ -237,6 +289,9 @@ define('view/ebook/index',
 
                         if (chapter) {
                             epubData.chapter = chapter;
+                        }
+                        if (position) {
+                            epubData.position = position;
                         }
 
                         sandbox.postMessage(epubData, "*");
@@ -281,6 +336,7 @@ define('view/ebook/index',
                 if (this.tocView.toggle()) {
                     this.toolbarView.show();
                     this.optionsView.hide();
+                    this.bookmarksView.hide();
                     this.paginationView.hide();
                 } else {
                     this.hideToc();
@@ -292,8 +348,32 @@ define('view/ebook/index',
                 this.toolbarView.hide();
             },
 
+            showBookmarks: function (event) {
+                event.stopImmediatePropagation();
+                this.clearUiTempo();
+
+                if (this.bookmarksView.toggle()) {
+                    this.toolbarView.show();
+                    this.optionsView.hide();
+                    this.tocView.hide();
+                    this.paginationView.hide();
+                } else {
+                    this.hideBookmarks();
+                }
+            },
+
+            hideBookmarks: function () {
+                this.bookmarksView.hide();
+                this.toolbarView.hide();
+            },
+
             setEbookTitle: function (title) {
                 this.paginationView.model.set('title', title);
+            },
+
+            savePosition: function (currentPositionInfo) {
+                this.model.set({ "position": currentPositionInfo }, { silent: true });
+                this.model.save();
             },
 
             showOptions: function (event) {
