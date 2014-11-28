@@ -284,7 +284,7 @@ define('view/ebook/index',
                 var sdcard = navigator.getDeviceStorage('sdcard'),
                     request = sdcard.get(this.model.get('path')),
                     chapter = this.chapterRequest,
-                    position = this.model.get("position"),
+                    attributes = this.model.attributes,
                     sandbox = this.getSandbox(),
                     epubData = {
                         action: Teavents.Actions.OPEN_EPUB,
@@ -300,14 +300,22 @@ define('view/ebook/index',
 
                         if (chapter) {
                             epubData.chapter = chapter;
-                        } else if (position) {
-                            epubData.position = position;
+                        } else if (attributes.position) {
+                            epubData.position = attributes.position;
                         }
+
+                        epubData.fontSize = attributes.fontSize;
+                        epubData.theme = attributes.theme;
 
                         sandbox.postMessage(epubData, "*");
                     }.bind(this);
                     reader.readAsArrayBuffer(this.result);
                 };
+
+                // set theme in options
+                if (attributes.theme) {
+                    this.optionsView.theme = attributes.theme;
+                }
 
                 // need to better handle that
                 request.onerror = function () {
@@ -382,7 +390,11 @@ define('view/ebook/index',
             },
 
             savePosition: function (currentPositionInfo) {
-                this.model.set({ "position": currentPositionInfo }, { silent: true });
+                this.model.set({
+                    "position": currentPositionInfo,
+                    "fontSize": this.optionsView.fontSize,
+                    "theme": this.optionsView.theme
+                }, { silent: true });
                 this.model.save();
             },
 

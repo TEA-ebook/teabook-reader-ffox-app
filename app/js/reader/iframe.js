@@ -1,7 +1,7 @@
 /*global window, Teavents, Blob, ReadiumSDK, readiumReady, $*/
 "use strict";
 
-var readiumReadyTest, isReadiumReady, handleMessage, openEpub, sendCurrentPageInfo, themes;
+var readiumReadyTest, isReadiumReady, handleMessage, openEpub, sendCurrentPageInfo, setFontSize, setTheme, themes;
 
 themes = {
     author: {
@@ -39,6 +39,14 @@ openEpub = function (data) {
         };
     }
 
+    if (data.fontSize) {
+        setFontSize(data.fontSize);
+    }
+
+    if (data.theme) {
+        setTheme(data.theme);
+    }
+
     window.readium.openPackageDocument(epubFile, function (packageDocument) {
         packageDocument.getTocText(function (toc) {
             window.parent.postMessage({ type: Teavents.TOC, data: toc }, "*");
@@ -47,7 +55,10 @@ openEpub = function (data) {
     }, openPageRequest);
 };
 
-
+/**
+ *
+ * @param bookmark
+ */
 sendCurrentPageInfo = function (bookmark) {
     var bookmarkInfo = window.readium.reader.bookmarkCurrentPage();
     window.parent.postMessage({
@@ -55,6 +66,39 @@ sendCurrentPageInfo = function (bookmark) {
         data: JSON.parse(bookmarkInfo)
     }, "*");
 };
+
+
+/**
+ *
+ * @param size
+ */
+setFontSize = function (size) {
+    window.readium.reader.updateSettings({
+        fontSize: size
+    });
+};
+
+
+/**
+ *
+ * @param theme
+ */
+setTheme = function (theme) {
+    var bookStyle, bookStyles;
+    bookStyle = themes[theme];
+    if (bookStyle) {
+        bookStyles = [{
+            selector: 'body',
+            declarations: {
+                backgroundColor: bookStyle.backgroundColor,
+                color: bookStyle.color
+            }
+        }];
+        window.readium.reader.setBookStyles(bookStyles);
+        $('#epub-reader-frame').css(bookStyles[0].declarations);
+    }
+};
+
 
 /**
  * Handle postMessage communication
@@ -69,23 +113,9 @@ handleMessage = function (event) {
     } else if (event.data.action === Teavents.Actions.OPEN_POSITION) {
         window.readium.reader.openSpineItemElementCfi(event.data.content.idref, event.data.content.cfi, null);
     } else if (event.data.action === Teavents.Actions.SET_FONT_SIZE) {
-        window.readium.reader.updateSettings({
-            fontSize: event.data.content
-        });
+        setFontSize(event.data.content);
     } else if (event.data.action === Teavents.Actions.SET_THEME) {
-        var bookStyle, bookStyles;
-        bookStyle = themes[event.data.content];
-        if (bookStyle) {
-            bookStyles = [{
-                selector: 'body',
-                declarations: {
-                    backgroundColor: bookStyle.backgroundColor,
-                    color: bookStyle.color
-                }
-            }];
-            window.readium.reader.setBookStyles(bookStyles);
-            $('#epub-reader-frame').css(bookStyles[0].declarations);
-        }
+        setTheme(event.data.content);
     } else if (event.data.action === Teavents.Actions.OPEN_EPUB) {
         openEpub(event.data);
     } else if (event.data.action === Teavents.Actions.BOOKMARK_PAGE) {

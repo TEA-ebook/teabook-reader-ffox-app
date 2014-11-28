@@ -4,7 +4,12 @@ define("model/ebook", ["backbone", "database"], function (Backbone, database) {
 
     var EbookModel = Backbone.Model.extend({
         database: database,
-        storeName: "ebooks"
+        storeName: "ebooks",
+
+        defaults: {
+            fontSize: 120,
+            theme: "author"
+        }
     });
 
     return EbookModel;

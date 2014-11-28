@@ -1,6 +1,6 @@
 /*global define, window, Teavents*/
-define('view/ebook/options', ['backbone', 'template/ebook/options'],
-    function (Backbone, template) {
+define('view/ebook/options', ['backbone', 'model/ebook', 'template/ebook/options'],
+    function (Backbone, EbookModel, template) {
         "use strict";
 
         var EbookOptionsView = Backbone.View.extend({
@@ -16,7 +16,7 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
 
             initialize: function () {
                 Backbone.on(Teavents.MESSAGE, this.readiumEvent.bind(this));
-                this.fontSize = 120;
+                this.fontSize = EbookModel.prototype.defaults.fontSize;
             },
 
             render: function () {
@@ -43,8 +43,8 @@ define('view/ebook/options', ['backbone', 'template/ebook/options'],
             },
 
             updateTheme: function (event) {
-                var theme = event.target.className.match(/^(\w*)-theme$/)[1];
-                Backbone.trigger(Teavents.Actions.SET_THEME, theme);
+                this.theme = event.target.className.match(/^(\w*)-theme$/)[1];
+                Backbone.trigger(Teavents.Actions.SET_THEME, this.theme);
             },
 
             toggle: function () {
