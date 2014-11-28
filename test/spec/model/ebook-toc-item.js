@@ -1,5 +1,5 @@
 /*global describe: true, should: true, it: true, curl: true, Backbone: true */
-(function() {
+(function () {
     "use strict";
     describe('Ebook.Toc.Item model', function () {
         describe('instance', function () {
@@ -18,7 +18,7 @@
                     var tocChildItem = new EbookTocItemModel({ label: "childTest" });
 
                     // When we add a child item
-                    tocItem.addItem(tocChildItem);
+                    tocItem.set('items', [ tocChildItem ]);
 
                     // It should not be an endpoint
                     tocItem.get('endPoint').should.be.false;
@@ -45,10 +45,11 @@
             it('should get the position of a child', function (done) {
                 curl(['model/ebook-toc-item'], function (EbookTocItemModel) {
                     // Given a toc item and 3 childs
-                    var tocItem = new EbookTocItemModel({ label: "test" });
-                    tocItem.addItem(new EbookTocItemModel({ label: "child1", href: "child1.html", position: 1 }));
-                    tocItem.addItem(new EbookTocItemModel({ label: "child2", href: "child2.html", position: 2 }));
-                    tocItem.addItem(new EbookTocItemModel({ label: "child3", href: "child3.html", position: 3 }));
+                    var childItems = [], tocItem = new EbookTocItemModel({ label: "test" });
+                    childItems.push(new EbookTocItemModel({ label: "child1", href: "child1.html", position: 1 }));
+                    childItems.push(new EbookTocItemModel({ label: "child2", href: "child2.html", position: 2 }));
+                    childItems.push(new EbookTocItemModel({ label: "child3", href: "child3.html", position: 3 }));
+                    tocItem.set("items", childItems);
 
                     // When we search for child2.html href
                     var item = tocItem.getItem("child2.html");

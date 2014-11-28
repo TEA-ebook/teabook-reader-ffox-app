@@ -1,4 +1,5 @@
 /*global define, navigator, FileReader, window, Teavents*/
+/*jslint stupid: true*/
 define('view/ebook/index',
     ['backbone',
         'helper/blobber',
@@ -40,7 +41,7 @@ define('view/ebook/index',
 
             autoHideTime: 5000,
 
-            initialize: function () {
+            initialize: function (options) {
                 Backbone.on(Teavents.MESSAGE, this.handleIframeMessage.bind(this));
                 Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
                 Backbone.on(Teavents.OPTIONS_CLOSED, this.hideUi.bind(this));
@@ -65,6 +66,8 @@ define('view/ebook/index',
                 this.waitingEl = waitingTemplate();
 
                 this.lastPinchAck = Date.now();
+
+                this.chapterRequest = options.chapter;
 
                 this.model.fetch({
                     success: this.render.bind(this)
@@ -221,7 +224,6 @@ define('view/ebook/index',
                 this.sendMessageToSandbox({
                     action: Teavents.Actions.BOOKMARK_PAGE
                 });
-                this.hideUi();
             },
 
             changeFontSize: function (fontSize) {
@@ -246,14 +248,21 @@ define('view/ebook/index',
             },
 
             saveBookmark: function (bookmarkInfo) {
+                var paginationInfo = this.paginationView.model.attributes,
+                    tocItem = this.tocView.model.getCurrentItem().attributes;
+                window.document.l10n.updateData({
+                    "pageCurrent": paginationInfo.pageCurrent,
+                    "pageTotal": paginationInfo.pageTotal,
+                    "chapter": (tocItem.parent ? (tocItem.parent.label + ", ") : "") + tocItem.label
+                });
+
                 this.bookmarksView.saveBookmark({
                     path: this.model.get('path'),
                     cfi: bookmarkInfo.contentCFI,
                     idref: bookmarkInfo.idref,
-                    label: "Chapter " + this.paginationView.model.get("chapterCurrent") + ", page " + this.paginationView.model.get("pageCurrent")
+                    label: window.document.l10n.getSync('bookmarkLabel'),
+                    rank: paginationInfo.chapterCurrent * 1000 + paginationInfo.pageCurrent
                 });
-
-                this.hideBookmarks();
             },
 
             spin: function () {
@@ -274,7 +283,7 @@ define('view/ebook/index',
             sendEpub: function () {
                 var sdcard = navigator.getDeviceStorage('sdcard'),
                     request = sdcard.get(this.model.get('path')),
-                    chapter = this.model.get("chapter"),
+                    chapter = this.chapterRequest,
                     position = this.model.get("position"),
                     sandbox = this.getSandbox(),
                     epubData = {
@@ -291,13 +300,12 @@ define('view/ebook/index',
 
                         if (chapter) {
                             epubData.chapter = chapter;
-                        }
-                        if (position) {
+                        } else if (position) {
                             epubData.position = position;
                         }
 
                         sandbox.postMessage(epubData, "*");
-                    };
+                    }.bind(this);
                     reader.readAsArrayBuffer(this.result);
                 };
 
@@ -394,6 +402,7 @@ define('view/ebook/index',
                 this.optionsView.hide();
                 this.tocView.hide();
                 this.paginationView.hide();
+                this.bookmarksView.hide();
             },
 
             hideUiTempo: function () {

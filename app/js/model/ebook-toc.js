@@ -18,26 +18,28 @@ define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbo
             tocDom = (new DOMParser()).parseFromString(xml, "text/xml");
             items = this.parseNavPoint(tocDom.querySelector("navPoint"), []);
 
-            console.debug(xml);
-
             this.setPositions(items, 1, 0);
             this.set("items", items);
+            if (items.length > 0) {
+                this.currentItem = items[0];
+            }
         },
 
-        parseNavPoint: function (navPoint, items) {
+        parseNavPoint: function (navPoint, items, parent) {
             var item, navPointChild, navLabel;
 
             navLabel = navPoint.querySelector("navLabel");
             if (navLabel) {
                 item = new TocItemModel({
                     label: navLabel.textContent.trim(),
-                    href: navPoint.querySelector("content").getAttribute("src").trim()
+                    href: navPoint.querySelector("content").getAttribute("src").trim(),
+                    parent: parent ? { href: parent.get('href'), label: parent.get('label')} : false
                 });
 
                 // parsing first child and its siblings
                 navPointChild = navPoint.querySelector("navPoint");
                 if (navPointChild) {
-                    item.set("items", this.parseNavPoint(navPointChild, []));
+                    item.set("items", this.parseNavPoint(navPointChild, [], item));
                 }
 
                 items.push(item);
@@ -45,7 +47,7 @@ define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbo
 
             // next nav point
             if (navPoint.nextElementSibling) {
-                this.parseNavPoint(navPoint.nextElementSibling, items);
+                this.parseNavPoint(navPoint.nextElementSibling, items, parent);
             }
 
             return items;
@@ -89,8 +91,13 @@ define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbo
             return item ? item.get("position") : false;
         },
 
+        getCurrentItem: function () {
+            return this.currentItem;
+        },
+
         setCurrentItem: function (item) {
             this.removeCurrent(this.get('items'), item);
+            this.currentItem = item;
             item.set("current", true);
         },
 

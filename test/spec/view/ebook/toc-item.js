@@ -34,10 +34,11 @@
             it('should render 2 toc child items', function (done) {
                 curl(['model/ebook-toc-item', 'view/ebook/toc-item'], function (EbookTocItemModel, EbookTocItemView) {
                     // Given a toc item with 2 child items and an ebookTocItem view
-                    var tocItem = new EbookTocItemModel({ label: "test" });
-                    tocItem.addItem(new EbookTocItemModel({ label: "child1" }));
-                    tocItem.addItem(new EbookTocItemModel({ label: "child2" }));
+                    var childItems = [], tocItem = new EbookTocItemModel({ label: "test" });
                     var ebookTocItemView = new EbookTocItemView({ model: tocItem });
+                    childItems.push(new EbookTocItemModel({ label: "child1" }));
+                    childItems.push(new EbookTocItemModel({ label: "child2" }));
+                    tocItem.set('items', childItems);
 
                     // When it renders
                     ebookTocItemView.render();

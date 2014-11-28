@@ -38,7 +38,10 @@
                                 console.error(err);
                             }
                         };
-                        request.result = new ArrayBuffer(1024);
+                        request.result = {
+                            name: "/sdcard/mybook.epub",
+                            content: new ArrayBuffer(1024)
+                        };
                         setTimeout(function () {
                             if (request.onsuccess) {
                                 request.onsuccess();

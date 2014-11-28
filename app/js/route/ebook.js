@@ -24,12 +24,12 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
                 }
             } else {
                 ebook = new EbookModel({
-                    path: window.decodeURIComponent(uri),
-                    chapter: chapter ? window.decodeURIComponent(chapter) : null
+                    path: window.decodeURIComponent(uri)
                 });
 
                 view = new EbookView({
-                    model: ebook
+                    model: ebook,
+                    chapter: chapter ? window.decodeURIComponent(chapter) : null
                 });
 
                 // and render

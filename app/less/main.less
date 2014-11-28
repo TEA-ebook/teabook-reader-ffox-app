@@ -27,10 +27,13 @@ iframe {
   width: 100%;
 }
 
-button {
+button, button:focus {
   background: none transparent;
-  border: 0px;
+  border: none;
   border-radius: 0px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 #content, .readium, .shelf {
@@ -249,11 +252,25 @@ button.ebook-bookmark-add {
   background-color: @brick;
   color: @white;
   float: right;
+  font-size: 1rem;
+  padding: 0.5rem;
   position: absolute;
   right: 1rem;
   top: 1rem;
 }
 
+button.ebook-bookmark-add > span {
+  padding-left: 0.5rem;
+}
+
+.ebook-bookmark-label {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ebook-bookmark-label button {
+  padding: 0.3rem 1rem 0.3rem 0.5rem;
+}
 
 /** ebook Pagination **/
 .ebook-pagination {

@@ -1,4 +1,5 @@
 /*global define, window, Teavents*/
+/*jslint unparam: true*/
 define('view/ebook/bookmarks', ['backbone', 'model/bookmark', 'collection/bookmarks', 'view/ebook/bookmark', 'template/ebook/bookmarks'],
     function (Backbone, BookmarkModel, BookmarkCollection, BookmarkView, template) {
         "use strict";
@@ -33,9 +34,11 @@ define('view/ebook/bookmarks', ['backbone', 'model/bookmark', 'collection/bookma
                 var bookmarkView = new BookmarkView({ model: bookmark });
                 bookmarkView.render(window.encodeURIComponent(this.uri));
                 this.bookmarksEl.append(bookmarkView.el);
+                this.sortList();
             },
 
-            bookmarkPage: function () {
+            bookmarkPage: function (event) {
+                event.stopImmediatePropagation();
                 Backbone.trigger(Teavents.Actions.BOOKMARK_PAGE);
             },
 
@@ -62,6 +65,16 @@ define('view/ebook/bookmarks', ['backbone', 'model/bookmark', 'collection/bookma
             hide: function () {
                 this.$el[0].classList.add("hidden");
                 return false;
+            },
+
+            sortList: function () {
+                var parent = this.$el.find("ul");
+                parent.find("li").detach().sort(function (a, b) {
+                    return (a.getAttribute('data-rank') - b.getAttribute('data-rank'));
+                }).each(function (index, el) {
+                    parent.append(el);
+                });
+                return this;
             }
         });
 

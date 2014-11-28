@@ -22,11 +22,6 @@ define("model/ebook-toc-item", ["backbone"], function (Backbone) {
             this.set({ endPoint: this.get('items').length === 0 }, { silent: true });
         },
 
-        addItem: function (item) {
-            this.get("items").push(item);
-            this.set("endPoint", false);
-        },
-
         getTotalEndPoints: function () {
             var items = this.get("items");
             if (items.length > 0) {

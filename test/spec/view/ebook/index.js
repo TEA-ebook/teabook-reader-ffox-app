@@ -15,6 +15,16 @@
                     options.success();
                 }
             });
+            sandbox.stub(Backbone.Model.prototype, "save", function (options) {
+                if (options && options.success) {
+                    options.success();
+                }
+            });
+            sandbox.stub(Backbone.Collection.prototype, "fetch", function (options) {
+                if (options && options.success) {
+                    options.success();
+                }
+            });
         });
 
         afterEach(function () {
@@ -92,6 +102,12 @@
             it('should navigate to the bookshelf when back button is pressed', function (done) {
                 curl(['model/ebook', 'view/ebook/index'], function (EbookModel, EbookView) {
                     sandbox.stub(Backbone.history, "navigate", checkRouterNav);
+                    sandbox.stub(EbookView.prototype, "getPosition", function(callback) {
+                        callback({
+                            type: Teavents.CURRENT_POSITION,
+                            data: {}
+                        });
+                    });
 
                     // Given an ebook view
                     var ebookView = new EbookView({ model: new EbookModel() });

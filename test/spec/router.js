@@ -22,9 +22,9 @@
         });
 
         describe('instance', function () {
-            it('should have 3 routes', function (done) {
+            it('should have 4 routes', function (done) {
                 curl(['router'], function (appRouter) {
-                    appRouter.routes.should.have.keys(['', 'ebook/:uri', 'ebook/:uri/:chapter']);
+                    appRouter.routes.should.have.keys(['', 'ebook/:uri', 'ebook/:uri/:chapter', 'ebook/:uri/:idref/:cfi']);
                     done();
                 });
             });

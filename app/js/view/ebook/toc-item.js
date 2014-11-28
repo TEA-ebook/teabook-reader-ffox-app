@@ -9,6 +9,10 @@ define('view/ebook/toc-item', ['backbone', 'template/ebook/toc-item'],
             tagName: 'li',
             className: 'ebook-toc-item',
 
+            events: {
+                "click": "highlightItem"
+            },
+
             initialize: function () {
                 this.model.on("change:current", this.setCurrent.bind(this));
             },
@@ -32,6 +36,11 @@ define('view/ebook/toc-item', ['backbone', 'template/ebook/toc-item'],
                 var childView = new EbookTocItemView({ model: child });
                 childView.render(this.uri);
                 this.childrenEl.append(childView.el);
+            },
+
+            highlightItem: function (event) {
+                event.stopImmediatePropagation();
+                this.$el.addClass("current");
             },
 
             setCurrent: function (model, current) {
