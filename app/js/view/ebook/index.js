@@ -317,7 +317,7 @@ define('view/ebook/index',
                     this.optionsView.theme = attributes.theme;
                 }
 
-                // need to better handle that
+                // we need to better handle that
                 request.onerror = function () {
                     console.error(this.error);
                 };
@@ -345,6 +345,11 @@ define('view/ebook/index',
                 this.paginationView.setToc(toc);
 
                 this.$el.append(this.tocView.el);
+
+                // first access to the book, we trust the first item of the toc
+                if (!this.model.has('position')) {
+                    this.openChapter(toc.getFirstItem().get('href'));
+                }
             },
 
             showToc: function (event) {
@@ -406,6 +411,7 @@ define('view/ebook/index',
                     this.toolbarView.show();
                     this.paginationView.show();
                     this.tocView.hide();
+                    this.bookmarksView.hide();
                 }
             },
 

@@ -1,6 +1,6 @@
 /*global define, window, Uint8Array, Blob*/
-define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
-    function (Backbone, bookTemplate) {
+define('view/bookshelf/book', ['backbone', 'helper/device', 'template/bookshelf/book'],
+    function (Backbone, Device, bookTemplate) {
         "use strict";
 
         var BookView = Backbone.View.extend({
@@ -20,19 +20,16 @@ define('view/bookshelf/book', ['backbone', 'template/bookshelf/book'],
             },
 
             render: function () {
-                var blob, attributes;
+                var attributes = this.model.attributes;
 
-                attributes = this.model.attributes;
-
-                if (this.model.has('cover')) {
-                    if (!this.coverUrl) {
-                        blob = new Blob([new Uint8Array(this.model.get("cover"))], { type: "image/jpeg" });
-                        this.coverUrl = window.URL.createObjectURL(blob);
-                    }
-                    attributes.coverUrl = this.coverUrl;
+                if (!this.model.has('coverUrl') && this.model.has('cover')) {
+                    Device.readFile(this.model.get("cover"), function (file) {
+                        attributes.coverUrl = window.URL.createObjectURL(file);
+                        this.$el.html(bookTemplate(attributes));
+                    }.bind(this));
+                } else {
+                    this.$el.html(bookTemplate(attributes));
                 }
-
-                this.$el.html(bookTemplate(attributes));
             },
 
             open: function () {

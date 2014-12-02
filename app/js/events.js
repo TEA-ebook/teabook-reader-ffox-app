@@ -15,6 +15,7 @@ window.Teavents = {
     NOT_WORKING: "not-working",
     PAGE_BOOKMARKED: "page-bookmarked",
     CURRENT_POSITION: "current-position",
+    SCAN_FINISHED: "scan-finished",
 
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",

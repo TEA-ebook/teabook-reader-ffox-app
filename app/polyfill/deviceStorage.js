@@ -90,6 +90,38 @@ if (!navigator.getDeviceStorage) {
         return request;
     };
 
+    DeviceStorage.prototype.addNamed = function (file, fileName) {
+        "use strict";
+        var request = {
+            onsuccess: false,
+            onerror: function (err) {
+                console.error(err);
+            }
+        };
+        setTimeout(function () {
+            console.debug(fileName + " added on SD card", file);
+            request.onerror();
+        }, 100);
+        return request;
+    };
+
+    DeviceStorage.prototype.delete = function (fileName) {
+        "use strict";
+        var request = {
+            onsuccess: false,
+            onerror: function (err) {
+                console.error(err);
+            }
+        };
+        setTimeout(function () {
+            console.debug(fileName + " deleted on SD card");
+            if (request.onsuccess) {
+                request.onsuccess();
+            }
+        }, 100);
+        return request;
+    };
+
     var getDeviceStorage = function (storageName) {
         "use strict";
 

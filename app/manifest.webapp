@@ -15,7 +15,7 @@
   "launch_path": "/index.html",
   "installs_allowed_from": ["https://marketplace.firefox.com", "*"],
   "permissions": {
-      "device-storage:sdcard":{ "access": "readonly" },
+      "device-storage:sdcard":{ "access": "readwrite" },
       "browser": {}
   },
   "precompile": [

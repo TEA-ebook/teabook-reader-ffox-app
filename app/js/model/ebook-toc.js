@@ -101,6 +101,10 @@ define("model/ebook-toc", ["backbone", "model/ebook-toc-item"], function (Backbo
             item.set("current", true);
         },
 
+        getFirstItem: function () {
+            return this.get('items')[0];
+        },
+
         removeCurrent: function (items, currentItem) {
             var item, i = 0;
             for (i; i < items.length; i += 1) {

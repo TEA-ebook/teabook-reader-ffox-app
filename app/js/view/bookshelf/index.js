@@ -1,4 +1,4 @@
-/*global define, window*/
+/*global define, window, Teavents*/
 define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/book', 'template/bookshelf/index'],
     function (Backbone, DeviceHelper, ShelfBookView, bookshelfTemplate) {
         "use strict";
@@ -16,9 +16,11 @@ define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/boo
 
             initialize: function () {
                 this.listenTo(Backbone, 'destroy', this.close.bind(this));
+                this.listenTo(Backbone, Teavents.SCAN_FINISHED, this.scanFinished.bind(this));
+
+                this.ongoingScan = false;
 
                 this.initShelves();
-
                 this.render();
 
                 this.collection.on("add", this.renderEbook, this);
@@ -85,7 +87,14 @@ define('view/bookshelf/index', ['backbone', 'helper/device', 'view/bookshelf/boo
             },
 
             scanSdCard: function () {
-                DeviceHelper.scanSdCard(this.collection);
+                if (!this.ongoingScan) {
+                    this.ongoingScan = true;
+                    DeviceHelper.scanSdCard(this.collection);
+                }
+            },
+
+            scanFinished: function () {
+                this.ongoingScan = false;
             },
 
             resetShelf: function () {

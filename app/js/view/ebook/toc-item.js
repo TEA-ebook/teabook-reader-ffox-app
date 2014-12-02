@@ -41,6 +41,11 @@ define('view/ebook/toc-item', ['backbone', 'template/ebook/toc-item'],
             highlightItem: function (event) {
                 event.stopImmediatePropagation();
                 this.$el.addClass("current");
+
+                // in case of the user misses the a link, we trigger it
+                if (event.target.tagName.toLowerCase() !== 'a') {
+                    this.$el.find('a')[0].click();
+                }
             },
 
             setCurrent: function (model, current) {
