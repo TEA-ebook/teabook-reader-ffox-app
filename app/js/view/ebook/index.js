@@ -67,7 +67,7 @@ define('view/ebook/index',
 
                 this.lastPinchAck = Date.now();
 
-                this.chapterRequest = options.chapter;
+                this.pageRequest = options.pageRequest;
 
                 this.model.fetch({
                     success: this.render.bind(this)
@@ -283,7 +283,7 @@ define('view/ebook/index',
             sendEpub: function () {
                 var sdcard = navigator.getDeviceStorage('sdcard'),
                     request = sdcard.get(this.model.get('path')),
-                    chapter = this.chapterRequest,
+                    pageRequest = this.pageRequest,
                     attributes = this.model.attributes,
                     sandbox = this.getSandbox(),
                     epubData = {
@@ -298,8 +298,13 @@ define('view/ebook/index',
                         // pass epub data to readium sandboxed iframe
                         epubData.content = e.target.result;
 
-                        if (chapter) {
-                            epubData.chapter = chapter;
+                        if (pageRequest.chapter && !pageRequest.cfi) {
+                            epubData.chapter = pageRequest.chapter;
+                        } else if (pageRequest.chapter && pageRequest.cfi) {
+                            epubData.position = {
+                                idref: pageRequest.chapter,
+                                contentCFI: pageRequest.cfi
+                            };
                         } else if (attributes.position) {
                             epubData.position = attributes.position;
                         }

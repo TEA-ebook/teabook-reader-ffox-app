@@ -29,7 +29,10 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
 
                 view = new EbookView({
                     model: ebook,
-                    chapter: chapter ? window.decodeURIComponent(chapter) : null
+                    pageRequest: {
+                        chapter: chapter ? window.decodeURIComponent(chapter) : null,
+                        cfi: cfi ? window.decodeURIComponent(cfi) : null
+                    }
                 });
 
                 // and render

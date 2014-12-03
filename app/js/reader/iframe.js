@@ -38,6 +38,7 @@ openEpub = function (data) {
             elementCfi: data.position.contentCFI
         };
     }
+    console.debug("open epub page request", openPageRequest);
 
     if (data.fontSize) {
         setFontSize(data.fontSize);
