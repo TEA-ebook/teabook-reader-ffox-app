@@ -9,7 +9,7 @@ define('view/ebook/toc', ['backbone', 'view/ebook/toc-item', 'template/ebook/toc
             className: 'ebook-toc hidden',
 
             initialize: function (options) {
-                this.uri = options.uri;
+                this.hash = options.hash;
             },
 
             render: function () {
@@ -22,7 +22,7 @@ define('view/ebook/toc', ['backbone', 'view/ebook/toc-item', 'template/ebook/toc
 
             renderItem: function (item) {
                 var tocItemView = new TocItemView({ model: item });
-                tocItemView.render(window.encodeURIComponent(this.uri));
+                tocItemView.render(this.hash);
                 this.itemsEl.append(tocItemView.el);
             },
 

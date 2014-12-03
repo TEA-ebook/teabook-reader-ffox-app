@@ -14,12 +14,12 @@ define('view/ebook/bookmarks', ['backbone', 'model/bookmark', 'collection/bookma
             },
 
             initialize: function (options) {
-                this.uri = options.path;
+                this.hash = options.hash;
                 this.render();
                 this.collection = new BookmarkCollection();
                 this.collection.on("add", this.renderBookmark, this);
                 this.collection.fetch({
-                    conditions: { path: options.path }
+                    conditions: { hash: options.hash }
                 });
             },
 
@@ -32,7 +32,7 @@ define('view/ebook/bookmarks', ['backbone', 'model/bookmark', 'collection/bookma
 
             renderBookmark: function (bookmark) {
                 var bookmarkView = new BookmarkView({ model: bookmark });
-                bookmarkView.render(window.encodeURIComponent(this.uri));
+                bookmarkView.render(this.hash);
                 this.bookmarksEl.append(bookmarkView.el);
                 this.sortList();
             },

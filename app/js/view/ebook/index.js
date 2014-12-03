@@ -61,7 +61,7 @@ define('view/ebook/index',
                 this.paginationView = new PaginationView({ model: new EbookPaginationModel() });
                 this.toolbarView = new ToolbarView();
                 this.optionsView = new OptionsView();
-                this.bookmarksView = new BookmarksView({ path: this.model.get('path') });
+                this.bookmarksView = new BookmarksView({ hash: this.model.get('hash') });
 
                 this.waitingEl = waitingTemplate();
 
@@ -257,7 +257,7 @@ define('view/ebook/index',
                 });
 
                 this.bookmarksView.saveBookmark({
-                    path: this.model.get('path'),
+                    hash: this.model.get('hash'),
                     cfi: bookmarkInfo.contentCFI,
                     idref: bookmarkInfo.idref,
                     label: window.document.l10n.getSync('bookmarkLabel'),
@@ -339,7 +339,7 @@ define('view/ebook/index',
                 var toc = new EbookTocModel();
                 toc.load(tocXml);
 
-                this.tocView = new TocView({ model: toc, uri: this.model.get("path") });
+                this.tocView = new TocView({ model: toc, hash: this.model.get("hash") });
                 this.tocView.render();
 
                 this.paginationView.setToc(toc);

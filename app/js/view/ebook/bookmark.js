@@ -16,9 +16,9 @@ define('view/ebook/bookmark', ['backbone', 'template/ebook/bookmark'],
                 this.model.on("destroy", this.remove, this);
             },
 
-            render: function (uri) {
+            render: function (hash) {
                 var attributes = this.model.attributes;
-                attributes.uri = "#/ebook/" + uri + "/" + window.encodeURIComponent(attributes.idref) + "/" + window.encodeURIComponent(attributes.cfi);
+                attributes.uri = "#/ebook/" + hash + "/" + window.encodeURIComponent(attributes.idref) + "/" + window.encodeURIComponent(attributes.cfi);
 
                 this.$el.attr('data-rank', this.model.get('rank'));
                 this.$el.html(template(attributes));

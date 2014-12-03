@@ -17,13 +17,13 @@ define('view/ebook/toc-item', ['backbone', 'template/ebook/toc-item'],
                 this.model.on("change:current", this.setCurrent.bind(this));
             },
 
-            render: function (uri) {
-                this.uri = uri;
+            render: function (hash) {
+                this.hash = hash;
                 this.$el.html(template({
                     label: this.model.get('label'),
                     href: window.encodeURIComponent(this.model.get('href')),
                     level: this.model.get('level'),
-                    uri: uri,
+                    hash: hash,
                     current: this.model.get('current')
                 }));
                 this.childrenEl = this.$el.find('ul');
