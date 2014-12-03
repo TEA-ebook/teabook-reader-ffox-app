@@ -16,9 +16,9 @@ define('router', ['backbone', 'helper/dom-events', 'route/bookshelf', 'route/ebo
 
             routes: {
                 '': bookshelfRoute,
-                'ebook/:uri': ebookRoute,
-                'ebook/:uri/:chapter': ebookRoute,
-                'ebook/:uri/:idref/:cfi': ebookRoute
+                'ebook/:hash': ebookRoute,
+                'ebook/:hash/:chapter': ebookRoute,
+                'ebook/:hash/:idref/:cfi': ebookRoute
             }
         });
 

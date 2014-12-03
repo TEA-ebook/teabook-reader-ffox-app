@@ -9,6 +9,14 @@ define("model/ebook", ["backbone", "database"], function (Backbone, database) {
         defaults: {
             fontSize: 120,
             theme: "author"
+        },
+
+        initialize: function () {
+            this.on("change:path", this.computeHash, this);
+        },
+
+        computeHash: function () {
+            this.set({ hash: this.get('path').hashCode() }, { silent: true });
         }
     });
 

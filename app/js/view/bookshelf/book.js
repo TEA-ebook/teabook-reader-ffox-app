@@ -35,7 +35,7 @@ define('view/bookshelf/book', ['backbone', 'helper/device', 'template/bookshelf/
             open: function () {
                 this.ell.classList.add("open");
                 setTimeout(function () {
-                    Backbone.history.navigate("ebook/" + window.encodeURIComponent(this.model.get("path")), true);
+                    Backbone.history.navigate("ebook/" + this.model.get("hash"), true);
                 }.bind(this), 200);
             },
 

@@ -3,12 +3,12 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
     function ($, Backbone, EbookModel, EbookView) {
         "use strict";
 
-        return function (uri, chapter, cfi) {
+        return function (hash, chapter, cfi) {
             var contentEl = $("#content"),
                 ebook,
                 view;
 
-            console.info("route to ebook " + window.decodeURIComponent(uri));
+            console.info("route to ebook " + hash);
             if (chapter) {
                 console.info("and chapter " + window.decodeURIComponent(chapter));
                 if (cfi) {
@@ -24,7 +24,7 @@ define('route/ebook', ['jquery', 'backbone', 'model/ebook', 'view/ebook/index'],
                 }
             } else {
                 ebook = new EbookModel({
-                    path: window.decodeURIComponent(uri)
+                    hash: hash
                 });
 
                 view = new EbookView({

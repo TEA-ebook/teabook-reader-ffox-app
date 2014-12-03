@@ -8,9 +8,9 @@ define('database', function () {
             {
                 version: 1,
                 migrate: function (transaction, next) {
-                    var ebooks = transaction.db.createObjectStore("ebooks", { keyPath: "path" });
+                    var ebooks = transaction.db.createObjectStore("ebooks", { keyPath: 'hash' });
                     ebooks.createIndex("title", "title");
-                    ebooks.createIndex("path", "path", { unique: true });
+                    ebooks.createIndex("hash", "hash", { unique: true });
                     next();
                 }
             },
