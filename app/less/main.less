@@ -1,4 +1,5 @@
 @import "variables.less";
+@import "mixins.less";
 @import "animations.less";
 
 html {
@@ -36,77 +37,38 @@ button {
   -moz-appearance: none;
 }
 
-#content, .readium, .shelf {
+.hidden {
+  .hide();
+}
+
+#content, .readium, .bookcase {
   height: 100%;
 }
 
-/** Bookshelf **/
-.shelf > .shelf-tab {
-  align-items: flex-end;
-  background: url('../images/shelf-tab.jpg') repeat-x bottom, linear-gradient(to bottom, @shelf-gradient-start, @shelf-gradient-end);
+/** Bookcase **/
+.bookcase .books {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
-  height: 120px;
-  width: 100%;
+  margin-top: @toolbar-height + 1rem;
 }
 
-.shelf .ebook {
-  background-color: @app-background-color;
-  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.8);
+.bookcase .book {
   cursor: pointer;
-  height: 80px;
-  line-height: 80px;
-  margin-bottom: 24px;
-  overflow: hidden;
-  text-align: center;
-  width: 60px;
+  padding: 0.2rem;
 }
 
-.shelf .ebook img {
-  height: 100%;
-  width: 100%;
+.bookcase .book img {
+  max-height: 7rem;
 }
 
-.shelf > .shelf-tab > .ebook.open {
+.bookcase .book.open {
   box-shadow: 0px 3px 50px 0px rgba(0, 0, 0, 0.5);
   transition-property: box-shadow;
   transition-duration: 0.4s;
 }
 
-.shelf-scan, .shelf-reset {
-  background-color: @app-background-color;
-  color: @toolbar-color;
-  cursor: pointer;
-  display: block;
-  height: 2rem;
-  line-height: 2rem;
-  text-align: center;
-  width: 100%;
-}
-
-.shelf-reset {
-  background-color: @toolbar-color;
-  color: @app-background-color;
-}
-
-.shelf-add {
-  background-color: @app-background-color;
-  height: 2rem;
-  position: relative;
-  text-align: center;
-  width: 100%;
-}
-
-.shelf-add-text {
-  color: @brick;
-  left: 0;
-  line-height: 2rem;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-input#ebook-upload {
+input#book-upload {
   height: 100%;
   left: 0;
   opacity: 0;
@@ -118,8 +80,8 @@ input#ebook-upload {
   -webkit-appearance: none;
 }
 
-/** ebook Toolbar **/
-.ebook-toolbar {
+/** Toolbar **/
+.toolbar {
   background-color: @toolbar-color;
   color: @font-secondary-color;
   display: flex;
@@ -127,26 +89,26 @@ input#ebook-upload {
   height: @toolbar-height;
   justify-content: flex-start;
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100%;
   will-change: height;
   transition: height 0.5s ease;
 }
 
-.ebook-toolbar.hidden {
+.toolbar.hidden {
   height: 0px;
   transition: height 0.5s ease;
 }
 
-.ebook-toolbar button {
+.toolbar button {
   color: @font-secondary-color;
   float: right;
   line-height: inherit;
   z-index: 500;
 }
 
-.ebook-toolbar > .back {
+.toolbar > .back {
   background: none transparent;
   border: 0px;
   border-radius: 0px;
@@ -157,27 +119,52 @@ input#ebook-upload {
   z-index: 500;
 }
 
-.ebook-toolbar button.bookmark.on {
+.toolbar button.bookmark.on {
   color: @blue-pastel;
 }
 
-.ebook-toolbar-buttons {
+.toolbar-buttons {
   display: flex;
   justify-content: flex-start;
   margin-left: 16px;
   width: 100%;
 }
 
-.ebook-toolbar-buttons > button {
+.toolbar-buttons > button {
   padding: 0 8px;
 }
 
-.ebook-toolbar-buttons > button:last-child {
+.toolbar-buttons > button:last-child {
   margin-left: auto;
   padding: 0 1rem 0 2rem;
 }
 
-/** ebook Table Of Contents **/
+
+/** Footer bar **/
+.footerbar {
+  background-color: @footerbar-color;
+  color: @font-secondary-color;
+  display: flex;
+  font-family: Fira Sans Regular;
+  height: @footerbar-height;
+  justify-content: flex-start;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.footerbar button {
+  color: @font-secondary-color;
+  padding: 0;
+  width: 20%;
+}
+
+.footerbar button:last-child {
+  margin-left: 40%;
+}
+
+/** Table Of Contents **/
 .ebook-toc, .ebook-bookmarks {
   background-color: #ffffff;
   bottom: -@toolbar-height;
@@ -351,7 +338,7 @@ button.ebook-bookmark-add > span {
   box-shadow: 2px 2px 8px 0 black;
   border-radius: 5px;
   color: @font-primary-color;
-  display: none;
+  .hide();
   padding: 1rem;
   position: absolute;
   z-index: 5000;

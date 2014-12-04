@@ -22,11 +22,11 @@
 
         describe('should', function () {
             it('scan SD card and find 2 ebooks', function (done) {
-                curl(['helper/device', 'model/ebook', 'collection/ebooks'], function (DeviceHelper, EbookModel, EbookCollection) {
+                curl(['helper/device', 'model/book', 'collection/books'], function (DeviceHelper, BookModel, BookCollection) {
                     var counter = 0;
 
                     // skip indexedDB
-                    sandbox.stub(EbookModel.prototype, "save", function (attr, options) {
+                    sandbox.stub(BookModel.prototype, "save", function (attr, options) {
                         options.success();
                     });
 
@@ -56,7 +56,7 @@
                     });
 
                     // Given 2 fake books on the sd card and an ebook collection
-                    var ebooks = new EbookCollection();
+                    var ebooks = new BookCollection();
 
                     // When we scan the card
                     DeviceHelper.scanSdCard(ebooks);

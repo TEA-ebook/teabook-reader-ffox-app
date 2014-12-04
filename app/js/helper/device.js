@@ -1,6 +1,6 @@
 /*global define, Blob, FileReader, Worker, window, navigator, Uint8Array, Teavents*/
 /*jslint regexp: true, unparam: true*/
-define('helper/device', ['backbone', 'model/ebook', 'helper/resizer'], function (Backbone, EbookModel, Resizer) {
+define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (Backbone, BookModel, Resizer) {
     "use strict";
 
     var device = {
@@ -16,7 +16,7 @@ define('helper/device', ['backbone', 'model/ebook', 'helper/resizer'], function 
                     if (!this.done) {
                         var file = this.result;
                         if (file && !/\.Trashes/.test(file.name) && /.*\/[\w\-_\., ']*\.epub$/.test(file.name)) {
-                            device.addEbook(file, collection, this.continue.bind(this));
+                            device.addBook(file, collection, this.continue.bind(this));
                         } else {
                             this.continue();
                         }
@@ -33,8 +33,8 @@ define('helper/device', ['backbone', 'model/ebook', 'helper/resizer'], function 
             }
         },
 
-        addEbook: function (file, collection, callback) {
-            var ebook = new EbookModel(), path, title;
+        addBook: function (file, collection, callback) {
+            var ebook = new BookModel(), path, title;
             path = window.decodeURIComponent(file.name);
             if (!navigator.mozSetMessageHandler) {
                 path = "books/" + path;
