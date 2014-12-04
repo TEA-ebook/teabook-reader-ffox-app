@@ -8,10 +8,13 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
             tagName: "div",
             className: "bookcase",
 
+            displayMode: "gallery",
+
             events: {
                 "click .search": "scanSdCard",
                 "click .add": "openPicker",
                 "click .remove": "resetBookcase",
+                "click .sort": "toggleSort",
                 "change input#book-upload": "handleFile"
             },
 
@@ -40,7 +43,7 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
                 this.footerBar.render();
                 this.$el.append(this.footerBar.el);
 
-                this.$el.append(template());
+                this.$el.append(template({ 'displayMode': this.displayMode }));
 
                 window.document.l10n.localizeNode(this.el);
             },
@@ -88,13 +91,25 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
 
                 activity.onsuccess = this.handleFile.bind(this);
 
-                activity.onerror = function() {
+                activity.onerror = function () {
                     console.warn(this.error);
                 };
             },
 
             scanFinished: function () {
                 this.ongoingScan = false;
+            },
+
+            toggleSort: function () {
+                var booksEl = this.$el.find(".books");
+                if (booksEl.hasClass("gallery")) {
+                    booksEl.removeClass("gallery");
+                    booksEl.addClass("list");
+                } else {
+                    booksEl.removeClass("list");
+                    booksEl.addClass("gallery");
+                }
+                window.scrollTo(0, 0);
             },
 
             resetBookcase: function () {

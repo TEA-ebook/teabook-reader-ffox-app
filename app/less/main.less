@@ -47,19 +47,64 @@ button {
 
 /** Bookcase **/
 .bookcase .books {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  margin-bottom: @footerbar-height;
   margin-top: @toolbar-height + 1rem;
 }
 
-.bookcase .book {
-  cursor: pointer;
-  padding: 0.2rem;
+.books.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
-.bookcase .book img {
-  max-height: 7rem;
+
+.books .book {
+  cursor: pointer;
+}
+
+.books.gallery .book {
+  background-color: @light-gray;
+  height: 7rem;
+  min-width: 4rem;
+  margin: 0.2rem;
+  text-align: center;
+}
+
+.books.gallery .book img {
+  height: 7rem;
+}
+
+.books.gallery .book span {
+  .hide();
+}
+
+.books.list .book {
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 1rem;
+  width: 100%;
+}
+
+.books.list .book .book-cover {
+  padding: 0 0.5rem;
+  width: 25%;
+}
+.books.list .book .book-cover img {
+  max-width: 90%;
+}
+
+.books.list .book .book-details {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+
+.book-details .book-details-authors {
+  font-weight: bold;
+}
+
+.bookcase .book > i {
+  margin-top: 50%;
 }
 
 .bookcase .book.open {
@@ -138,7 +183,6 @@ input#book-upload {
   margin-left: auto;
   padding: 0 1rem 0 2rem;
 }
-
 
 /** Footer bar **/
 .footerbar {
@@ -232,7 +276,6 @@ input#book-upload {
   background-color: #B2F2FF;
   background-origin: padding-box;
 }
-
 
 /** ebook Table Of Contents **/
 button.ebook-bookmark-add {

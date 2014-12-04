@@ -1,5 +1,11 @@
 {{#if coverUrl}}
-    <img src="{{coverUrl}}" alt="{{title}}" />
+    <div class="book-cover">
+        <img src="{{coverUrl}}" alt="{{title}}" />
+    </div>
+    <div class="book-details">
+        <span class="book-details-authors">{{#each authors}} {{this}} {{/each}}</span>
+        <span class="book-details-title">{{title}}</span>
+    </div>
 {{else}}
     <i class="fa fa-book fa-2x"></i>
 {{/if}}
