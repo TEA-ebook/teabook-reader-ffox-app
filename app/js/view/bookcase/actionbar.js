@@ -1,12 +1,12 @@
 /*global define*/
-define('view/bookcase/headerbar', ['backbone', 'template/bookcase/headerbar'],
+define('view/bookcase/actionbar', ['backbone', 'template/bookcase/actionbar'],
     function (Backbone, template) {
         "use strict";
 
-        var HeaderBarView = Backbone.View.extend({
+        var ActionBarView = Backbone.View.extend({
 
             tagName: 'div',
-            className: 'bar toolbar',
+            className: 'bar actionbar',
 
             render: function () {
                 this.$el.html(template());
@@ -14,5 +14,5 @@ define('view/bookcase/headerbar', ['backbone', 'template/bookcase/headerbar'],
             }
         });
 
-        return HeaderBarView;
+        return ActionBarView;
     });

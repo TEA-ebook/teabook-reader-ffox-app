@@ -15,6 +15,7 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
             initialize: function () {
                 this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
                 this.model.on('change', this.render, this);
+                this.model.on('destroy', this.close, this);
                 this.render();
                 this.ell = this.$el[0];
             },
@@ -32,11 +33,31 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
                 }
             },
 
-            open: function () {
-                this.ell.classList.add("open");
-                setTimeout(function () {
-                    Backbone.history.navigate("book/" + this.model.get("hash"), true);
-                }.bind(this), 200);
+            open: function (event) {
+                if (this.model.get("selection")) {
+                    this.toggleSelection(event);
+                } else {
+                    this.ell.classList.add("open");
+                    setTimeout(function () {
+                        Backbone.history.navigate("book/" + this.model.get("hash"), true);
+                    }.bind(this), 200);
+                }
+            },
+
+            toggleSelection: function (event) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                var checkbox = this.ell.querySelector("input[type=checkbox]"),
+                    selected = !checkbox.getAttribute("checked");
+
+                if (selected) {
+                    checkbox.setAttribute("checked", "checked");
+                } else {
+                    checkbox.removeAttribute("checked");
+                }
+
+                this.model.set({ "selected": selected }, { "silent": true });
             },
 
             close: function () {

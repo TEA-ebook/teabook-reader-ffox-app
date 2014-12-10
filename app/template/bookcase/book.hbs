@@ -3,9 +3,10 @@
         <img src="{{coverUrl}}" alt="{{title}}" />
     </div>
     <div class="book-details">
-        <span class="book-details-authors">{{#each authors}} {{this}} {{/each}}</span>
         <span class="book-details-title">{{title}}</span>
+        <span class="book-details-authors">{{#each authors}} {{this}} {{/each}}</span>
     </div>
+    <div class="book-select"><input type="checkbox" id="{{id}}" /><label for="{{id}}"></label></div>
 {{else}}
     <i class="fa fa-book fa-2x"></i>
 {{/if}}

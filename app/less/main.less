@@ -37,6 +37,28 @@ button {
   -moz-appearance: none;
 }
 
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"] + label:before {
+  border-radius: 4px;
+  border: 2px solid @red;
+  display: inline-block;
+  content: " ";
+  line-height: 17px;
+  height: 20px;
+  width: 20px;
+}
+
+input[type=checkbox]:checked + label:before {
+  background-color: @red;
+  color: @white;
+  content: "\2713";
+  font-size: 16px;
+  text-align: center;
+}
+
 .hidden {
   .hide();
 }
@@ -46,61 +68,113 @@ button {
 }
 
 /** Bookcase **/
-.bookcase .books {
-  margin-bottom: @footerbar-height;
-  margin-top: @toolbar-height + 1rem;
+.books .book {
+  cursor: pointer;
+  position: relative;
+}
+
+.books .book .book-select {
+  display: none;
+}
+
+.books.selection .book .book-select {
+  display: block;
 }
 
 .books.gallery {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-
-.books .book {
-  cursor: pointer;
+  justify-content: space-between;
+  margin: (@toolbar-height + 0.5rem) 1rem @footerbar-height 1rem;
 }
 
 .books.gallery .book {
   background-color: @light-gray;
-  height: 7rem;
-  min-width: 4rem;
-  margin: 0.2rem;
+  height: @bookcase-book-height;
+  min-width: 5rem;
+  margin: 0.3rem 0;
   text-align: center;
 }
 
 .books.gallery .book img {
-  height: 7rem;
+  height: @bookcase-book-height;
 }
 
 .books.gallery .book span {
   .hide();
 }
 
+.books.selection.gallery .book .book-cover {
+  opacity: 0.7;
+}
+
+.books.gallery .book .book-select {
+  position: absolute;
+  left: 40%;
+  top: 40%;
+}
+
+.books.list {
+  margin: @toolbar-height 0 @footerbar-height 0;
+}
+
 .books.list .book {
+  align-items: center;
+  border-top: 0.2rem solid @ivory;
   display: flex;
-  justify-content: space-around;
-  padding-bottom: 1rem;
   width: 100%;
 }
 
 .books.list .book .book-cover {
-  padding: 0 0.5rem;
-  width: 25%;
+  margin: 0 0 -3px 0;
+  padding: 0;
+  width: 15%;
 }
+
 .books.list .book .book-cover img {
-  max-width: 90%;
+  max-width: 100%;
 }
 
 .books.list .book .book-details {
   display: flex;
   flex-direction: column;
-  width: 75%;
+  justify-content: space-around;
+  margin: 0 0.2rem 0 1rem;
+  width: 70%;
+}
+
+@media (orientation: landscape) {
+  .books.list .book .book-cover {
+    width: 10%;
+  }
+
+  .books.list .book .book-details {
+    width: 75%;
+  }
+}
+
+.books.list .book .book-select {
+  position: absolute;
+  right: 1rem;
+  top: 32%;
+}
+
+.books.list .book .book-details > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-details .book-details-title {
+  font-size: 6vmin;
+  font-weight: bold;
+  margin-bottom: 0.1rem;
 }
 
 .book-details .book-details-authors {
-  font-weight: bold;
+  color: @gray-m2;
+  font-size: 5vmin;
+  margin-bottom: 0.3rem;
 }
 
 .bookcase .book > i {
@@ -126,7 +200,7 @@ input#book-upload {
 }
 
 /** Toolbar **/
-.toolbar {
+.bar {
   background-color: @toolbar-color;
   color: @font-secondary-color;
   display: flex;
@@ -135,8 +209,12 @@ input#book-upload {
   justify-content: flex-start;
   overflow: hidden;
   position: fixed;
-  top: 0;
   width: 100%;
+  z-index: 100;
+}
+
+.toolbar {
+  top: 0;
   will-change: height;
   transition: height 0.5s ease;
 }
@@ -146,10 +224,19 @@ input#book-upload {
   transition: height 0.5s ease;
 }
 
+.toolbar .title {
+  font-size: 1.5rem;
+  left: @toolbar-back-width;
+  line-height: @toolbar-height;
+  position: absolute;
+}
+
 .toolbar button {
   color: @font-secondary-color;
   float: right;
   line-height: inherit;
+  margin: 0;
+  padding: 0;
   z-index: 500;
 }
 
@@ -160,7 +247,7 @@ input#book-upload {
   color: @font-secondary-color;
   height: 100%;
   line-height: inherit;
-  width: 2rem;
+  width: @toolbar-back-width;
   z-index: 500;
 }
 
@@ -184,18 +271,11 @@ input#book-upload {
   padding: 0 1rem 0 2rem;
 }
 
-/** Footer bar **/
+/***** Footer bar *****/
 .footerbar {
   background-color: @footerbar-color;
-  color: @font-secondary-color;
-  display: flex;
-  font-family: Fira Sans Regular;
-  height: @footerbar-height;
-  justify-content: flex-start;
-  overflow: hidden;
-  position: fixed;
   bottom: 0;
-  width: 100%;
+  height: @footerbar-height;
 }
 
 .footerbar button {
@@ -206,6 +286,41 @@ input#book-upload {
 
 .footerbar button:last-child {
   margin-left: 40%;
+}
+
+.footerbar button.selected {
+  background-color: @blue;
+}
+
+/****** Action bar ******/
+.actionbar {
+  align-items: center;
+  background-color: @actionbar-color;
+  bottom: @footerbar-height;
+  height: @actionbar-height;
+  justify-content: space-around;
+  padding: 0 0.5rem;
+}
+
+.actionbar button {
+  background-color: @light-gray;
+  border-radius: 3px;
+  font-size: 1rem;
+  height: 2.4rem;
+  width: 46%;
+}
+
+.actionbar button:active {
+  background-color: @darkblue;
+}
+
+.actionbar button.confirm {
+  background-color: @red;
+  color: @white;
+}
+
+.actionbar button.confirm:active {
+  background-color: @darkred;
 }
 
 /** Table Of Contents **/

@@ -178,7 +178,7 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
                 "underscore": "../vendor/underscore/underscore",
                 "handlebars": "../vendor/handlebars/handlebars.amd",
                 "spin": "../vendor/spin.js/spin",
-                "indexeddb": "../vendor/indexeddb-backbonejs-adapter/backbone-indexeddb"
+                "indexeddb": "../vendor/indexeddb-backbonejs-adapter-fork/backbone-indexeddb"
             }
         }))
         .pipe(addsrc('app/js/events.js'))

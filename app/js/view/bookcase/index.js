@@ -1,6 +1,16 @@
 /*global define, window, Teavents, MozActivity*/
-define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/headerbar', 'view/bookcase/footerbar', 'view/bookcase/book', 'template/bookcase/index'],
-    function (Backbone, DeviceHelper, HeaderBarView, FooterBarView, BookView, template) {
+define('view/bookcase/index',
+    [
+        'backbone',
+        'helper/device',
+        'view/bookcase/headerbar',
+        'view/bookcase/footerbar',
+        'view/bookcase/actionbar',
+        'view/bookcase/book',
+        'template/bookcase/index'
+    ],
+
+    function (Backbone, DeviceHelper, HeaderBarView, FooterBarView, ActionBarView, BookView, template) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -13,7 +23,9 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
             events: {
                 "click .search": "scanSdCard",
                 "click .add": "openPicker",
-                "click .remove": "resetBookcase",
+                "click .remove": "toggleDelete",
+                "click .cancel": "toggleDelete",
+                "click .confirm": "deleteSelectedBooks",
                 "click .sort": "toggleSort",
                 "change input#book-upload": "handleFile"
             },
@@ -27,6 +39,7 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
                 // UI components
                 this.headerBar = new HeaderBarView();
                 this.footerBar = new FooterBarView();
+                this.actionBar = new ActionBarView();
 
                 this.render();
 
@@ -56,7 +69,7 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
             handleFile: function (event) {
                 var file, files;
 
-                if (event.target instanceof MozActivity) {
+                if (window.MozActivity && event.target instanceof window.MozActivity) {
                     file = event.target.result.blob;
                 } else {
                     files = event.target.files;
@@ -69,7 +82,7 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
                     DeviceHelper.addBook(file, this.collection, function (path) {
                         console.info(path + " was successfully uploaded");
                         this.$el.find("input#book-upload").val("");
-                        Backbone.history.navigate("book/" + path.hashCode(), true);
+                        //Backbone.history.navigate("book/" + path.hashCode(), true);
                     }.bind(this));
                 }
             },
@@ -82,18 +95,22 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
             },
 
             openPicker: function () {
-                var activity = new MozActivity({
-                    name: "pick",
-                    data: {
-                        type: "application/epub+zip"
-                    }
-                });
+                if (window.MozActivity) {
+                    var activity = new MozActivity({
+                        name: "pick",
+                        data: {
+                            type: "application/epub+zip"
+                        }
+                    });
 
-                activity.onsuccess = this.handleFile.bind(this);
+                    activity.onsuccess = this.handleFile.bind(this);
 
-                activity.onerror = function () {
-                    console.warn(this.error);
-                };
+                    activity.onerror = function () {
+                        console.warn(this.error);
+                    };
+                } else {
+                    this.$el.find("input[type='file']").click();
+                }
             },
 
             scanFinished: function () {
@@ -118,6 +135,43 @@ define('view/bookcase/index', ['backbone', 'helper/device', 'view/bookcase/heade
                         this.collection.reset();
                     }.bind(this)
                 });
+            },
+
+            toggleDelete: function () {
+                this.toggleSelection();
+                this.footerBar.toggleDelete();
+            },
+
+            toggleSelection: function () {
+                var booksEl = this.$el.find(".books"),
+                    selectionMode;
+
+                booksEl.toggleClass("selection");
+                selectionMode = booksEl.hasClass("selection");
+
+                if (selectionMode) {
+                    this.actionBar.render();
+                    this.$el.append(this.actionBar.el);
+                } else {
+                    this.actionBar.$el.remove();
+                }
+
+                this.collection.forEach(function (book) {
+                    book.set({ "selection": selectionMode }, { "silent": true });
+                });
+            },
+
+            deleteSelectedBooks: function () {
+                var toDelete = [], i;
+                this.collection.forEach(function (book) {
+                    if (book && book.has('selected') && book.get('selected')) {
+                        toDelete.push(book);
+                    }
+                });
+                for (i = 0; i < toDelete.length; i += 1) {
+                    toDelete[i].destroy({ silent: true });
+                }
+                this.toggleDelete();
             },
 
             close: function () {
