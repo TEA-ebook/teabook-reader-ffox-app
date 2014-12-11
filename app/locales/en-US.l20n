@@ -29,3 +29,17 @@
 <bookmarkLabel "{{ $chapter }} (page {{ $pageCurrent }})">
 
 <bookcase "Bookcase">
+
+<display "Display">
+
+<displayMode "View">
+<gallery "Cover">
+<list "Detail">
+
+<sort "Sort">
+<authorAsc "Author A->Z">
+<authorDesc "Author Z->A">
+<lastRead "Last read">
+<lastAdded "Last added">
+<titleAsc "Title A->Z">
+<titleDesc "Title Z->A">

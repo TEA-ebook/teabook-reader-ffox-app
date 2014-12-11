@@ -1,0 +1,47 @@
+<span class="panel-title" data-l10n-id="display">Display</span>
+
+<div class="bookcase-option">
+    <span class="bookcase-option-title" data-l10n-id="displayMode">View</span>
+    <ul>
+        <li>
+            <input type="radio" id="display-mode-gallery" name="display-mode" value="cover" {{#if view.cover}}checked{{/if}} />
+            <label for="display-mode-gallery" data-l10n-id="gallery">Gallery</label>
+        </li>
+        <li>
+            <input type="radio" id="display-mode-list" name="display-mode" value="detail" {{#if view.detail}}checked{{/if}} />
+            <label for="display-mode-list" data-l10n-id="list">List</label>
+        </li>
+    </ul>
+</div>
+
+<hr>
+
+<div class="bookcase-option">
+    <span class="bookcase-option-title" data-l10n-id="sort">Sort</span>
+    <ul>
+        <li>
+            <input type="radio" id="display-sort-author-asc" name="display-sort" value="authorAsc" {{#if sort.authorAsc}}checked{{/if}} />
+            <label for="display-sort-author-asc" data-l10n-id="authorAsc">Author A->Z</label>
+        </li>
+        <li>
+            <input type="radio" id="display-sort-author-desc" name="display-sort" value="authorDesc" {{#if sort.authorDesc}}checked{{/if}} />
+            <label for="display-sort-author-desc" data-l10n-id="authorDesc">Author Z->A</label>
+        </li>
+        <li>
+            <input type="radio" id="display-sort-last-read" name="display-sort" value="lastRead" {{#if sort.lastRead}}checked{{/if}} />
+            <label for="display-sort-last-read" data-l10n-id="lastRead">Last read</label>
+        </li>
+        <li>
+            <input type="radio" id="display-sort-last-added" name="display-sort" value="lastAdded" {{#if sort.lastAdded}}checked{{/if}} />
+            <label for="display-sort-last-added" data-l10n-id="lastAdded">Last added</label>
+        </li>
+        <li>
+            <input type="radio" id="display-sort-title-asc" name="display-sort" value="titleAsc" {{#if sort.titleAsc}}checked{{/if}} />
+            <label for="display-sort-title-asc" data-l10n-id="titleAsc">Title A->Z</label>
+        </li>
+        <li>
+            <input type="radio" id="display-sort-title-desc" name="display-sort" value="titleDesc" {{#if sort.titleDesc}}checked{{/if}} />
+            <label for="display-sort-title-desc" data-l10n-id="titleDesc">Title Z->A</label>
+        </li>
+    </ul>
+</div>

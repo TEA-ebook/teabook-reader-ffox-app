@@ -7,7 +7,7 @@ define('view/book/bookmarks', ['backbone', 'model/bookmark', 'collection/bookmar
         var BookmarksView = Backbone.View.extend({
 
             tagName: 'div',
-            className: 'ebook-bookmarks hidden',
+            className: 'panel ebook-bookmarks hidden',
 
             events: {
                 "click button": "bookmarkPage"

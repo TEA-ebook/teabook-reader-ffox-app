@@ -20,6 +20,17 @@ define('database', function () {
 
                     next();
                 }
+            },
+            {
+                version: 2,
+                migrate: function (transaction, next) {
+                    var settings;
+
+                    settings = transaction.db.createObjectStore("settings", { keyPath: 'id', autoIncrement: true });
+                    settings.createIndex("name", "name", { unique: true });
+
+                    next();
+                }
             }
         ]
     };

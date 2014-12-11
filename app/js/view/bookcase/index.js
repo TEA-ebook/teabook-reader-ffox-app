@@ -3,14 +3,15 @@ define('view/bookcase/index',
     [
         'backbone',
         'helper/device',
+        'collection/settings',
         'view/bookcase/headerbar',
         'view/bookcase/footerbar',
-        'view/bookcase/actionbar',
+        'view/bookcase/options',
         'view/bookcase/book',
         'template/bookcase/index'
     ],
 
-    function (Backbone, DeviceHelper, HeaderBarView, FooterBarView, ActionBarView, BookView, template) {
+    function (Backbone, DeviceHelper, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -23,10 +24,10 @@ define('view/bookcase/index',
             events: {
                 "click .search": "scanSdCard",
                 "click .add": "openPicker",
-                "click .remove": "toggleDelete",
-                "click .cancel": "toggleDelete",
+                "click .remove": "showDelete",
+                "click .cancel": "showDelete",
                 "click .confirm": "deleteSelectedBooks",
-                "click .sort": "toggleSort",
+                "click .sort": "showOptions",
                 "change input#book-upload": "handleFile"
             },
 
@@ -36,17 +37,31 @@ define('view/bookcase/index',
 
                 this.ongoingScan = false;
 
+                this.settings = new SettingCollection();
+                this.settings.on("ready", this.render.bind(this));
+                this.settings.on("update", this.sortBooks.bind(this));
+
                 // UI components
                 this.headerBar = new HeaderBarView();
                 this.footerBar = new FooterBarView();
-                this.actionBar = new ActionBarView();
+                this.options = new OptionsView({ collection: this.settings });
 
-                this.render();
+                this.fetchBooks();
+            },
 
-                // Books from DB
+            fetchBooks: function () {
                 this.collection.on("add", this.renderBook, this);
                 this.collection.on("reset", this.render, this);
                 this.collection.fetch();
+            },
+
+            sortBooks: function () {
+                var booksEl = this.$el.find(".books");
+                booksEl.removeClass("cover");
+                booksEl.removeClass("detail");
+                booksEl.addClass(this.options.settings.view);
+                window.scrollTo(0, 0);
+                this.footerBar.clear();
             },
 
             render: function () {
@@ -56,7 +71,11 @@ define('view/bookcase/index',
                 this.footerBar.render();
                 this.$el.append(this.footerBar.el);
 
-                this.$el.append(template({ 'displayMode': this.displayMode }));
+                this.options.render();
+                this.$el.append(this.options.el);
+
+                console.debug(this.options.settings);
+                this.$el.append(template(this.options.settings));
 
                 window.document.l10n.localizeNode(this.el);
             },
@@ -95,6 +114,9 @@ define('view/bookcase/index',
             },
 
             openPicker: function () {
+                this.footerBar.clear();
+                this.options.hide();
+                this.hideSelection();
                 if (window.MozActivity) {
                     var activity = new MozActivity({
                         name: "pick",
@@ -117,48 +139,44 @@ define('view/bookcase/index',
                 this.ongoingScan = false;
             },
 
-            toggleSort: function () {
+            showOptions: function () {
+                if (this.options.toggle()) {
+                    this.hideSelection();
+                    this.footerBar.showSort();
+                } else {
+                    this.footerBar.hideSort();
+                }
+            },
+
+            showDelete: function () {
+                if (this.footerBar.toggleDelete()) {
+                    this.options.hide();
+                    this.showSelection();
+                } else {
+                    this.hideSelection();
+                }
+            },
+
+            showSelection: function () {
                 var booksEl = this.$el.find(".books");
-                if (booksEl.hasClass("gallery")) {
-                    booksEl.removeClass("gallery");
-                    booksEl.addClass("list");
-                } else {
-                    booksEl.removeClass("list");
-                    booksEl.addClass("gallery");
+
+                if (!booksEl.hasClass("selection")) {
+                    booksEl.addClass("selection");
+                    this.collection.forEach(function (book) {
+                        book.set({ "selection": true }, { "silent": true });
+                    });
                 }
-                window.scrollTo(0, 0);
             },
 
-            resetBookcase: function () {
-                Backbone.sync("delete", this.collection, {
-                    success: function () {
-                        this.collection.reset();
-                    }.bind(this)
-                });
-            },
+            hideSelection: function () {
+                var booksEl = this.$el.find(".books");
 
-            toggleDelete: function () {
-                this.toggleSelection();
-                this.footerBar.toggleDelete();
-            },
-
-            toggleSelection: function () {
-                var booksEl = this.$el.find(".books"),
-                    selectionMode;
-
-                booksEl.toggleClass("selection");
-                selectionMode = booksEl.hasClass("selection");
-
-                if (selectionMode) {
-                    this.actionBar.render();
-                    this.$el.append(this.actionBar.el);
-                } else {
-                    this.actionBar.$el.remove();
+                if (booksEl.hasClass("selection")) {
+                    booksEl.removeClass("selection");
+                    this.collection.forEach(function (book) {
+                        book.set({ "selection": false }, { "silent": true });
+                    });
                 }
-
-                this.collection.forEach(function (book) {
-                    book.set({ "selection": selectionMode }, { "silent": true });
-                });
             },
 
             deleteSelectedBooks: function () {
@@ -172,6 +190,14 @@ define('view/bookcase/index',
                     toDelete[i].destroy({ silent: true });
                 }
                 this.toggleDelete();
+            },
+
+            resetBookcase: function () {
+                Backbone.sync("delete", this.collection, {
+                    success: function () {
+                        this.collection.reset();
+                    }.bind(this)
+                });
             },
 
             close: function () {

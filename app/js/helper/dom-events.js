@@ -12,6 +12,9 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
 
         this.listenTo(Backbone, Teavents.FULLSCREEN_ENTER, this.enterFullScreen);
         this.listenTo(Backbone, Teavents.FULLSCREEN_EXIT, this.exitFullScreen);
+
+        this.listenTo(Backbone, Teavents.FREEZE_BODY, this.freezeBody);
+        this.listenTo(Backbone, Teavents.UNFREEZE_BODY, this.unfreezeBody);
     };
 
     DomEvents.handleMessage = function (event) {
@@ -52,6 +55,15 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
         $(window).off(Teavents.MESSAGE);
         $(window.document).off(Teavents.VISIBILITY_CHANGE);
         this.stopListening(Backbone);
+    };
+
+    DomEvents.freezeBody = function () {
+        window.scrollTo(0, 0);
+        $("body").addClass("noscroll");
+    };
+
+    DomEvents.unfreezeBody = function () {
+        $("body").removeClass("noscroll");
     };
 
     return DomEvents;

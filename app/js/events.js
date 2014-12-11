@@ -6,6 +6,8 @@ window.Teavents = {
     VISIBILITY_CHANGE: "visibilitychange",
     FULLSCREEN_ENTER: "fullscreen:enter",
     FULLSCREEN_EXIT: "fullscreen:exit",
+    FREEZE_BODY: "body:freeze",
+    UNFREEZE_BODY: "body:unfreeze",
     OPTIONS_CLOSED: "options:closed",
     EPUB_SEND: "sendEpub",
     READY_TO_READ: "readyToRead",

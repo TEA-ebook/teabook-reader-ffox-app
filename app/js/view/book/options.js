@@ -6,7 +6,7 @@ define('view/book/options', ['backbone', 'model/book', 'template/book/options'],
         var BookOptionsView = Backbone.View.extend({
 
             tagName: 'div',
-            className: 'ebook-options hidden',
+            className: 'book-options hidden',
 
             events: {
                 "change input[type=range]": "updateFontSize",
@@ -79,7 +79,7 @@ define('view/book/options', ['backbone', 'model/book', 'template/book/options'],
             },
 
             hideIfOutClick: function (event) {
-                if (event.target.classList.contains("ebook-options")) {
+                if (event.target.classList.contains("book-options")) {
                     Backbone.trigger(Teavents.OPTIONS_CLOSED);
                     this.hide();
                 }

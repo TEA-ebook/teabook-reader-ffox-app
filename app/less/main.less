@@ -22,6 +22,10 @@ body:fullscreen, body:-moz-full-screen, body:-webkit-full-screen {
   overflow: hidden;
 }
 
+body.noscroll {
+  overflow: hidden;
+}
+
 iframe {
   border: 0;
   height: 100%;
@@ -37,7 +41,7 @@ button {
   -moz-appearance: none;
 }
 
-input[type="checkbox"] {
+input[type="checkbox"], input[type="radio"] {
   display: none;
 }
 
@@ -51,12 +55,36 @@ input[type="checkbox"] + label:before {
   width: 20px;
 }
 
-input[type=checkbox]:checked + label:before {
+input[type="checkbox"]:checked + label:before {
   background-color: @red;
   color: @white;
   content: "\2713";
   font-size: 16px;
   text-align: center;
+}
+
+input[type="radio"] + label {
+  margin-left: 30px;
+}
+
+input[type="radio"] + label:before {
+  border-radius: 50%;
+  border: 2px solid @blue-pastel;
+  display: inline-block;
+  color: @blue-pastel;
+  content: " ";
+  font-size: 22px;
+  height: 20px;
+  left: 0;
+  line-height: 18px;
+  position: absolute;
+  text-align: center;
+  top: 5px;
+  width: 20px;
+}
+
+input[type="radio"]:checked + label:before {
+  content: "\25CF";
 }
 
 .hidden {
@@ -81,14 +109,14 @@ input[type=checkbox]:checked + label:before {
   display: block;
 }
 
-.books.gallery {
+.books.cover {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   margin: (@toolbar-height + 0.5rem) 1rem @footerbar-height 1rem;
 }
 
-.books.gallery .book {
+.books.cover .book {
   background-color: @light-gray;
   height: @bookcase-book-height;
   min-width: 5rem;
@@ -96,46 +124,46 @@ input[type=checkbox]:checked + label:before {
   text-align: center;
 }
 
-.books.gallery .book img {
+.books.cover .book img {
   height: @bookcase-book-height;
 }
 
-.books.gallery .book span {
+.books.cover .book span {
   .hide();
 }
 
-.books.selection.gallery .book .book-cover {
+.books.selection.cover .book .book-cover {
   opacity: 0.7;
 }
 
-.books.gallery .book .book-select {
+.books.cover .book .book-select {
   position: absolute;
   left: 40%;
   top: 40%;
 }
 
-.books.list {
+.books.detail {
   margin: @toolbar-height 0 @footerbar-height 0;
 }
 
-.books.list .book {
+.books.detail .book {
   align-items: center;
   border-top: 0.2rem solid @ivory;
   display: flex;
   width: 100%;
 }
 
-.books.list .book .book-cover {
+.books.detail .book .book-cover {
   margin: 0 0 -3px 0;
   padding: 0;
   width: 15%;
 }
 
-.books.list .book .book-cover img {
+.books.detail .book .book-cover img {
   max-width: 100%;
 }
 
-.books.list .book .book-details {
+.books.detail .book .book-details {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -144,22 +172,22 @@ input[type=checkbox]:checked + label:before {
 }
 
 @media (orientation: landscape) {
-  .books.list .book .book-cover {
+  .books.detail .book .book-cover {
     width: 10%;
   }
 
-  .books.list .book .book-details {
+  .books.detail .book .book-details {
     width: 75%;
   }
 }
 
-.books.list .book .book-select {
+.books.detail .book .book-select {
   position: absolute;
   right: 1rem;
   top: 32%;
 }
 
-.books.list .book .book-details > * {
+.books.detail .book .book-details > * {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -199,9 +227,42 @@ input#book-upload {
   -webkit-appearance: none;
 }
 
-/** Toolbar **/
+/*** Bookcase options ***/
+.bookcase-option {
+  font-family: "Fira Sans Light";
+  margin-top: 1rem;
+}
+
+.bookcase-option ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.bookcase-option ul li {
+  height: 2rem;
+  line-height: 2rem;
+  position: relative;
+}
+
+.bookcase-option-title {
+  color: @blue-pastel;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+  text-transform: uppercase;
+}
+
+.bookcase-options hr {
+  background: @blue-pastel;
+  border: 0;
+  height: 1px;
+  width: 80%;
+}
+
+/******** Toolbar *******/
 .bar {
   background-color: @toolbar-color;
+  box-shadow: 1px 1px 1px #ccc;
   color: @font-secondary-color;
   display: flex;
   font-family: Fira Sans Regular;
@@ -324,23 +385,31 @@ input#book-upload {
 }
 
 /** Table Of Contents **/
-.ebook-toc, .ebook-bookmarks {
+.panel {
   background-color: #ffffff;
   bottom: -@toolbar-height;
   height: 100%;
   overflow-y: auto;
   position: absolute;
   width: 100%;
+  z-index: 50;
   transition: bottom 0.5s ease;
 }
 
-.ebook-toc.hidden, .ebook-bookmarks.hidden {
+.panel.hidden {
   bottom: -100%;
   transition: bottom 0.5s ease;
 }
 
-.ebook-toc > h3, .ebook-bookmarks > h3 {
-  padding-left: 1rem;
+.panel .panel-title {
+  background-color: @ivory;
+  box-shadow: 1px 1px 1px #ccc;
+  display: block;
+  height: 2rem;
+  line-height: 2rem;
+  margin: 0;
+  padding-left: @toolbar-back-width;
+  width: 100%;
 }
 
 .ebook-toc ul, .ebook-bookmarks ul {
@@ -502,9 +571,9 @@ button.ebook-bookmark-add > span {
   z-index: 5000;
 }
 
-/** ebook Options **/
-.ebook-options {
-  background-color: rgba(0, 0, 0, 0.40);
+/** book Options **/
+.book-options {
+  background-color: rgba(0, 0, 0, 0.20);
   height: 100%;
   opacity: 1;
   overflow-y: auto;
@@ -514,25 +583,25 @@ button.ebook-bookmark-add > span {
   transition: opacity 0.3s ease;
 }
 
-.ebook-options.hidden {
+.book-options.hidden {
   opacity: 0;
   overflow: hidden;
   z-index: -2;
   transition: opacity 0.3s ease;
 }
 
-.ebook-options.hidden > .ebook-options-content {
+.book-options.hidden > .book-options-content {
   height: 0;
   transition: height 0.5s ease;
 }
 
-.ebook-options-content {
+.book-options-content {
   background-color: @options-panel-color;
   height: 45%;
   transition: opacity 0.5s ease;
 }
 
-.ebook-options-footer {
+.book-options-footer {
   background-color: @options-panel-footer-color;
   height: 2rem;
 }
@@ -551,7 +620,7 @@ button.ebook-bookmark-add > span {
   height: 2rem;
 }
 
-.ebook-options.working .wheel, .waiting .wheel {
+.book-options.working .wheel, .waiting .wheel {
   .vendors(animation-name, spin);
   .vendors(animation-duration, 2000ms);
   .vendors(animation-iteration-count, infinite);
@@ -562,7 +631,7 @@ button.ebook-bookmark-add > span {
   height: 100%;
 }
 
-.ebook-option-title {
+.book-option-title {
   font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   text-transform: uppercase;
@@ -570,7 +639,7 @@ button.ebook-bookmark-add > span {
   padding: 0.2rem 0.5rem;
 }
 
-.ebook-option {
+.book-option {
   align-items: center;
   display: flex;
   justify-content: space-around;
@@ -578,11 +647,11 @@ button.ebook-bookmark-add > span {
   width: 100%;
 }
 
-.ebook-option.font-size > span:first-child {
+.book-option.font-size > span:first-child {
   font-size: 1.5rem;
 }
 
-.ebook-option.font-size > span:last-child {
+.book-option.font-size > span:last-child {
   font-size: 2rem;
 }
 
@@ -643,21 +712,21 @@ input[type=range]:focus::-webkit-slider-thumb {
   .transformKeyframes(moz);
 }
 
-.ebook-option.theme {
+.book-option.theme {
   flex-direction: column;
 }
 
 @media (orientation: landscape) {
-  .ebook-option.theme {
+  .book-option.theme {
     flex-direction: row;
   }
 
-  .ebook-option.theme button {
+  .book-option.theme button {
     margin: 0 0.5rem;
   }
 }
 
-.ebook-option.theme button {
+.book-option.theme button {
   border-radius: 4px;
   border: 1px solid #777;
   cursor: pointer;
