@@ -280,7 +280,7 @@
 
                     // It should generate the html toc
                     BookView.prototype.generateToc.should.have.been.calledOnce;
-                    bookView.tocView.$el.find(".ebook-toc-item").should.have.length(1);
+                    bookView.tocView.$el.find(".book-toc-item").should.have.length(1);
 
                     done();
                 });

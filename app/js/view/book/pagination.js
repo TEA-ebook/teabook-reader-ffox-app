@@ -7,7 +7,7 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
         var BookPaginationView = Backbone.View.extend({
 
             tagName: 'div',
-            className: 'ebook-pagination',
+            className: 'book-pagination',
 
             autoHideTimeout: 1500,
 
@@ -47,7 +47,7 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
                 this.$el.html(template(this.model.attributes));
                 window.document.l10n.updateData({ "pageLeft": this.model.get('pageLeft') });
                 window.document.l10n.localizeNode(this.el);
-                this.pageInfoEl = this.$el.find(".ebook-pagination-page-destination");
+                this.pageInfoEl = this.$el.find(".book-pagination-page-destination");
                 return this;
             },
 

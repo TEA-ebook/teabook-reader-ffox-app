@@ -33,7 +33,7 @@
                     bookPaginationView.render();
 
                     // It should render the current chapter number vs the total
-                    bookPaginationView.$el.find(".ebook-pagination-chapters").text().trim().should.have.a.string(paginationInfo.chapterCurrent + "/" + paginationInfo.chapterTotal);
+                    bookPaginationView.$el.find(".book-pagination-chapters").text().trim().should.have.a.string(paginationInfo.chapterCurrent + "/" + paginationInfo.chapterTotal);
 
                     bookPaginationView.close();
                     done();
@@ -44,16 +44,16 @@
                 curl(['model/book-pagination', 'view/book/pagination'], function (BookPaginationModel, BookPaginationView) {
                     // Given a book with 20 chapters and a chapter with 36 pages
                     var pagination = new BookPaginationModel(paginationInfo);
-                    var ebookPaginationView = new BookPaginationView({ model: pagination });
+                    var bookPaginationView = new BookPaginationView({ model: pagination });
 
                     // When the pagination renders
-                    ebookPaginationView.render();
+                    bookPaginationView.render();
 
                     // It should render the progress bar with correct values
-                    ebookPaginationView.$el.find(".ebook-pagination-pages progress").attr("value").should.be.a.string(paginationInfo.pageCurrent);
-                    ebookPaginationView.$el.find(".ebook-pagination-pages progress").attr("max").should.be.a.string(paginationInfo.pageTotal);
+                    bookPaginationView.$el.find(".book-pagination-pages progress").attr("value").should.be.a.string(paginationInfo.pageCurrent);
+                    bookPaginationView.$el.find(".book-pagination-pages progress").attr("max").should.be.a.string(paginationInfo.pageTotal);
 
-                    ebookPaginationView.close();
+                    bookPaginationView.close();
                     done();
                 });
             });

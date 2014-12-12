@@ -75,7 +75,7 @@ define('view/book/index',
             },
 
             render: function () {
-                // open ebook in fullscreen
+                // open book in fullscreen
                 this.requestFullScreen();
 
                 // render toolbar
@@ -95,7 +95,7 @@ define('view/book/index',
                 // render bookmarks
                 this.$el.append(this.bookmarksView.el);
 
-                // spinning wheel : ebook is indeed long to load
+                // spinning wheel : book is indeed long to load
                 this.spinner = new Spinner({
                     hwaccel: true,
                     lines: 12,
@@ -395,7 +395,7 @@ define('view/book/index',
                 this.toolbarView.hide();
             },
 
-            setEbookTitle: function (title) {
+            setBookTitle: function (title) {
                 this.paginationView.model.set('title', title);
             },
 

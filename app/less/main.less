@@ -412,17 +412,17 @@ input#book-upload {
   width: 100%;
 }
 
-.ebook-toc ul, .ebook-bookmarks ul {
+.book-toc ul, .book-bookmarks ul {
   font-size: 1rem;
   list-style: none;
   padding: 0;
 }
 
-.ebook-toc > ul, .ebook-bookmarks > ul {
+.book-toc > ul, .book-bookmarks > ul {
   margin-bottom: @toolbar-height + 2rem;
 }
 
-.ebook-toc a, .ebook-bookmarks a {
+.book-toc a, .book-bookmarks a {
   color: @font-primary-color;
   display: block;
   margin-top: 0.6rem;
@@ -432,15 +432,15 @@ input#book-upload {
   width: 90%;
 }
 
-.ebook-toc a.level-2 {
+.book-toc a.level-2 {
   padding-left: 2rem;
 }
 
-.ebook-toc a.level-3 {
+.book-toc a.level-3 {
   padding-left: 3rem;
 }
 
-.ebook-toc-item ul {
+.book-toc-item ul {
   background-color: @toc-sub-entry-color;
   background-origin: padding-box;
   border-width: 1px 0;
@@ -448,21 +448,21 @@ input#book-upload {
   border-color: @toc-sub-entry-border-color;
 }
 
-.ebook-toc-item ul:empty {
+.book-toc-item ul:empty {
   border: none;
 }
 
-.ebook-toc-item-label {
+.book-toc-item-label {
   padding: 0.1rem 0 0.3rem 0;
 }
 
-.ebook-toc-item.current {
+.book-toc-item.current {
   background-color: #B2F2FF;
   background-origin: padding-box;
 }
 
-/** ebook Table Of Contents **/
-button.ebook-bookmark-add {
+/** Table Of Contents **/
+button.book-bookmark-add {
   background-color: @brick;
   color: @white;
   float: right;
@@ -473,21 +473,21 @@ button.ebook-bookmark-add {
   top: 1rem;
 }
 
-button.ebook-bookmark-add > span {
+button.book-bookmark-add > span {
   padding-left: 0.5rem;
 }
 
-.ebook-bookmark-label {
+.book-bookmark-label {
   display: flex;
   justify-content: space-between;
 }
 
-.ebook-bookmark-label button {
+.book-bookmark-label button {
   padding: 0.3rem 1rem 0.3rem 0.5rem;
 }
 
-/** ebook Pagination **/
-.ebook-pagination {
+/** Pagination **/
+.book-pagination {
   bottom: 0;
   color: @pagination-text-color;
   display: flex;
@@ -501,27 +501,27 @@ button.ebook-bookmark-add > span {
   transition: height 0.5s ease;
 }
 
-.ebook-pagination.expanded {
+.book-pagination.expanded {
   height: @pagination-bar-expanded-height;
   transition: height 0.5s ease;
 }
 
-.ebook-pagination-chapters {
+.book-pagination-chapters {
   text-align: center;
   visibility: hidden;
   width: 100%;
 }
 
-.expanded .ebook-pagination-chapters, .expanded .ebook-pagination-title {
+.expanded .book-pagination-chapters, .expanded .book-pagination-title {
   visibility: visible;
 }
 
-.ebook-pagination-pages {
+.book-pagination-pages {
   text-align: center;
   width: 100%;
 }
 
-.ebook-pagination .ebook-pagination-pages progress {
+.book-pagination .book-pagination-pages progress {
   background-color: @progress-bar-background;
   border: none;
   height: 0.4rem;
@@ -530,24 +530,24 @@ button.ebook-bookmark-add > span {
   transition: height 0.5s ease;
 }
 
-.ebook-pagination.expanded .ebook-pagination-pages progress {
+.book-pagination.expanded .book-pagination-pages progress {
   height: 1.1rem;
   transition: height 0.5s ease;
 }
 
-.ebook-pagination-pages progress::-moz-progress-bar {
+.book-pagination-pages progress::-moz-progress-bar {
   background-color: @progress-bar-color;
 }
 
-.ebook-pagination-pages progress::-webkit-progress-bar {
+.book-pagination-pages progress::-webkit-progress-bar {
   background: @progress-bar-background;
 }
 
-.ebook-pagination-pages progress::-webkit-progress-value {
+.book-pagination-pages progress::-webkit-progress-value {
   background: @progress-bar-color;
 }
 
-.ebook-pagination-title {
+.book-pagination-title {
   height: 100%;
   line-height: 1rem;
   overflow: hidden;
@@ -559,7 +559,7 @@ button.ebook-bookmark-add > span {
   width: 100%;
 }
 
-.ebook-pagination-page-destination {
+.book-pagination-page-destination {
   background-color: rgb(250, 250, 250);
   bottom: 1.5 * @pagination-bar-height;
   box-shadow: 2px 2px 8px 0 black;

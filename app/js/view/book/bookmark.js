@@ -6,7 +6,7 @@ define('view/book/bookmark', ['backbone', 'template/book/bookmark'],
         var BookmarkView = Backbone.View.extend({
 
             tagName: 'li',
-            className: 'ebook-bookmark',
+            className: 'book-bookmark',
 
             events: {
                 "click button": "deleteBookmark"

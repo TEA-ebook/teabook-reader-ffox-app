@@ -21,7 +21,7 @@
         });
 
         describe('should', function () {
-            it('scan SD card and find 2 ebooks', function (done) {
+            it('scan SD card and find 2 books', function (done) {
                 curl(['helper/device', 'model/book', 'collection/books'], function (DeviceHelper, BookModel, BookCollection) {
                     var counter = 0;
 
@@ -51,21 +51,21 @@
                     });
 
                     // fake call to web worker
-                    sandbox.stub(DeviceHelper, "scanFile", function (file, ebook, callback) {
+                    sandbox.stub(DeviceHelper, "scanFile", function (file, book, callback) {
                         callback();
                     });
 
-                    // Given 2 fake books on the sd card and an ebook collection
-                    var ebooks = new BookCollection();
+                    // Given 2 fake books on the sd card and a book collection
+                    var books = new BookCollection();
 
                     // When we scan the card
-                    DeviceHelper.scanSdCard(ebooks);
+                    DeviceHelper.scanSdCard(books);
 
-                    // Then the collection should have 2 ebooks
-                    ebooks.on("add", function () {
+                    // Then the collection should have 2 books
+                    books.on("add", function () {
                         counter += 1;
                         if (counter === 2) {
-                            ebooks.models.should.have.length(2);
+                            books.models.should.have.length(2);
                             done();
                         }
                     });

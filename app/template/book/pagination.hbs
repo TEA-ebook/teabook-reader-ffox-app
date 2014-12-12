@@ -1,18 +1,18 @@
 {{#if chapterCurrent}}
-<span class="ebook-pagination-chapters">
+<span class="book-pagination-chapters">
     <span data-l10n-id="chapter">Chapter</span> {{chapterCurrent}}/{{chapterTotal}} : <span data-l10n-id="pagesLeft">3 pages left</span>
 </span>
-<span class="ebook-pagination-pages">
+<span class="book-pagination-pages">
 {{#if monoPage}}
     <progress value="1" max="1"></progress>
 {{else}}
-    <span class="ebook-pagination-page-destination"></span>
+    <span class="book-pagination-page-destination"></span>
     <progress value="{{pageCurrent}}" max="{{pageTotal}}"></progress>
 {{/if}}
 </span>
 {{else}}
-<span class="ebook-pagination-title">{{title}}</span>
-<span class="ebook-pagination-pages">
+<span class="book-pagination-title">{{title}}</span>
+<span class="book-pagination-pages">
     <progress value="1" max="1"></progress>
 </span>
 {{/if}}

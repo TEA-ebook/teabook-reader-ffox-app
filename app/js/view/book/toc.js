@@ -6,7 +6,7 @@ define('view/book/toc', ['backbone', 'view/book/toc-item', 'template/book/toc'],
         var BookTocView = Backbone.View.extend({
 
             tagName: 'div',
-            className: 'panel ebook-toc hidden',
+            className: 'panel book-toc hidden',
 
             initialize: function (options) {
                 this.hash = options.hash;

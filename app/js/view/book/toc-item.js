@@ -7,7 +7,7 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
         var BookTocItemView = Backbone.View.extend({
 
             tagName: 'li',
-            className: 'ebook-toc-item',
+            className: 'book-toc-item',
 
             events: {
                 "click": "highlightItem"
@@ -34,7 +34,7 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
 
             renderChild: function (child) {
                 var childView = new BookTocItemView({ model: child });
-                childView.render(this.uri);
+                childView.render(this.hash);
                 this.childrenEl.append(childView.el);
             },
 

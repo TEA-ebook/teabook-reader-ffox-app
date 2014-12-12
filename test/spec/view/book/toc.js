@@ -20,7 +20,7 @@
                     // Given a toc and a bookToc view
                     var toc = new BookTocModel();
                     toc.load(tocXml);
-                    var bookTocView = new BookTocView({ model: toc, uri: 'books/myebook.epub' });
+                    var bookTocView = new BookTocView({ model: toc, uri: 'books/mybook.epub' });
 
                     // When it renders
                     bookTocView.render();

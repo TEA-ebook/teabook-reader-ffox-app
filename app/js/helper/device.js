@@ -10,7 +10,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
             if (navigator && navigator.getDeviceStorage) {
                 sdcard = navigator.getDeviceStorage('sdcard');
 
-                // Let's browse all the ebooks available
+                // Let's browse all the books available
                 cursor = sdcard.enumerate();
                 cursor.onsuccess = function () {
                     if (!this.done) {
@@ -26,7 +26,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                 };
 
                 cursor.onerror = function () {
-                    console.warn("No ebook file found: " + this.error);
+                    console.warn("No book file found: " + this.error);
                 };
             } else {
                 console.warn("You have no SD card access");
@@ -34,22 +34,22 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
         },
 
         addBook: function (file, collection, callback) {
-            var ebook = new BookModel(), path, title;
+            var book = new BookModel(), path, title;
             path = window.decodeURIComponent(file.name);
             if (!navigator.mozSetMessageHandler) {
                 path = "books/" + path;
             }
             title = path.match(/\/([\w\-_\., ']*)\.epub$/);
             title = title ? title[1] : path;
-            ebook.save({
+            book.save({
                 'title': title,
                 'path': path,
                 'size': file.size,
                 'added': Date.now()
             }, {
                 'success': function () {
-                    collection.add(ebook);
-                    device.scanFile(file, ebook, function () {
+                    collection.add(book);
+                    device.scanFile(file, book, function () {
                         callback(path);
                     }.bind(this));
                 }.bind(this),
@@ -60,7 +60,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
             });
         },
 
-        scanFile: function (file, ebook, callback) {
+        scanFile: function (file, book, callback) {
             var reader, importBookWorker, sdCard;
 
             sdCard = navigator.getDeviceStorage("sdcard");
@@ -80,8 +80,8 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                                 }
 
                                 // set metadata extracted from epub in the model
-                                ebook.set(event.data);
-                                ebook.save(null, {
+                                book.set(event.data);
+                                book.save(null, {
                                     'success': callback,
                                     'error': callback
                                 });
@@ -89,8 +89,8 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                         } else {
                             delete event.data.cover;
                             event.data.coverUrl = thumbnail;
-                            ebook.set(event.data);
-                            ebook.save(null, {
+                            book.set(event.data);
+                            book.save(null, {
                                 'success': callback,
                                 'error': callback
                             });
