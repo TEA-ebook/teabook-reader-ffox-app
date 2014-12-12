@@ -44,7 +44,8 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
             ebook.save({
                 'title': title,
                 'path': path,
-                'size': file.size
+                'size': file.size,
+                'added': Date.now()
             }, {
                 'success': function () {
                     collection.add(ebook);

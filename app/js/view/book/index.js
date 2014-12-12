@@ -107,7 +107,7 @@ define('view/book/index',
                 this.spin();
 
                 // font sample
-                this.fontSample = this.$el.find(".ebook-font-size-sample");
+                this.fontSample = this.$el.find(".book-font-size-sample");
 
                 return this;
             },
@@ -403,7 +403,8 @@ define('view/book/index',
                 this.model.set({
                     "position": currentPositionInfo,
                     "fontSize": this.optionsView.fontSize,
-                    "theme": this.optionsView.theme
+                    "theme": this.optionsView.theme,
+                    "read": Date.now()
                 }, { silent: true });
                 this.model.save();
             },

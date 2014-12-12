@@ -1,8 +1,9 @@
-/*global define, window, Teavents, MozActivity*/
+/*global define, window, navigator, Teavents, MozActivity*/
 define('view/bookcase/index',
     [
         'backbone',
         'helper/device',
+        'helper/books-sort',
         'collection/settings',
         'view/bookcase/headerbar',
         'view/bookcase/footerbar',
@@ -11,7 +12,7 @@ define('view/bookcase/index',
         'template/bookcase/index'
     ],
 
-    function (Backbone, DeviceHelper, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template) {
+    function (Backbone, DeviceHelper, BooksSort, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -44,23 +45,29 @@ define('view/bookcase/index',
                 // UI components
                 this.headerBar = new HeaderBarView();
                 this.footerBar = new FooterBarView();
-                this.options = new OptionsView({ collection: this.settings });
-
-                this.fetchBooks();
+                this.optionsView = new OptionsView({ collection: this.settings });
             },
 
             fetchBooks: function () {
-                this.collection.on("add", this.renderBook, this);
-                this.collection.on("reset", this.render, this);
-                this.collection.fetch();
+                this.collection.fetch({
+                    success: this.sortBooks.bind(this)
+                });
             },
 
             sortBooks: function () {
-                var booksEl = this.$el.find(".books");
-                booksEl.removeClass("cover");
-                booksEl.removeClass("detail");
-                booksEl.addClass(this.options.settings.view);
+                // display mode
+                this.booksEl.removeClass("cover");
+                this.booksEl.removeClass("detail");
+                this.booksEl.addClass(this.optionsView.settings.view);
                 window.scrollTo(0, 0);
+
+                // books sort
+                this.collection.comparator = BooksSort[this.optionsView.settings.sort];
+                this.collection.sort();
+
+                // display
+                this.renderBooks();
+
                 this.footerBar.clear();
             },
 
@@ -71,13 +78,20 @@ define('view/bookcase/index',
                 this.footerBar.render();
                 this.$el.append(this.footerBar.el);
 
-                this.options.render();
-                this.$el.append(this.options.el);
+                this.optionsView.render();
+                this.$el.append(this.optionsView.el);
 
-                console.debug(this.options.settings);
-                this.$el.append(template(this.options.settings));
+                this.$el.append(template(this.optionsView.settings));
+                this.booksEl = this.$el.find(".books");
+
+                this.fetchBooks();
 
                 window.document.l10n.localizeNode(this.el);
+            },
+
+            renderBooks: function () {
+                this.booksEl.html("");
+                this.collection.models.forEach(this.renderBook.bind(this));
             },
 
             renderBook: function (model) {
@@ -98,10 +112,11 @@ define('view/bookcase/index',
                 }
 
                 if (file) {
+                    this.collection.on('add', this.renderBooks.bind(this));
                     DeviceHelper.addBook(file, this.collection, function (path) {
                         console.info(path + " was successfully uploaded");
                         this.$el.find("input#book-upload").val("");
-                        //Backbone.history.navigate("book/" + path.hashCode(), true);
+                        this.collection.off('add');
                     }.bind(this));
                 }
             },
@@ -115,7 +130,7 @@ define('view/bookcase/index',
 
             openPicker: function () {
                 this.footerBar.clear();
-                this.options.hide();
+                this.optionsView.hide();
                 this.hideSelection();
                 if (window.MozActivity) {
                     var activity = new MozActivity({
@@ -137,10 +152,11 @@ define('view/bookcase/index',
 
             scanFinished: function () {
                 this.ongoingScan = false;
+                this.renderBooks();
             },
 
             showOptions: function () {
-                if (this.options.toggle()) {
+                if (this.optionsView.toggle()) {
                     this.hideSelection();
                     this.footerBar.showSort();
                 } else {
@@ -150,7 +166,7 @@ define('view/bookcase/index',
 
             showDelete: function () {
                 if (this.footerBar.toggleDelete()) {
-                    this.options.hide();
+                    this.optionsView.hide();
                     this.showSelection();
                 } else {
                     this.hideSelection();
@@ -189,7 +205,7 @@ define('view/bookcase/index',
                 for (i = 0; i < toDelete.length; i += 1) {
                     toDelete[i].destroy({ silent: true });
                 }
-                this.toggleDelete();
+                this.footerBar.hideDelete();
             },
 
             resetBookcase: function () {

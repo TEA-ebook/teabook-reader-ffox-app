@@ -10,6 +10,7 @@ define('view/bookcase/options', ['backbone', 'model/setting', 'template/bookcase
             className: 'panel bookcase-options hidden',
 
             events: {
+                "click li": "clickRadio",
                 "change input[name='display-mode']": "saveDisplayMode",
                 "change input[name='display-sort']": "saveDisplaySort"
             },
@@ -27,8 +28,10 @@ define('view/bookcase/options', ['backbone', 'model/setting', 'template/bookcase
             },
 
             notifyReady: function () {
+                this.collection.off('reset');
                 if (this.collection.isEmpty()) {
-                    this.initializeSettings(this.notifyReady.bind(this));
+                    this.collection.on('reset', this.notifyReady.bind(this));
+                    this.initializeSettings();
                     return;
                 }
 
@@ -60,7 +63,7 @@ define('view/bookcase/options', ['backbone', 'model/setting', 'template/bookcase
 
                 sortSetting = new SettingModel({
                     name: "sort",
-                    value: "authorAsc"
+                    value: "lastAdded"
                 });
                 sortSetting.save();
 
@@ -111,6 +114,12 @@ define('view/bookcase/options', ['backbone', 'model/setting', 'template/bookcase
                 this.$el[0].classList.add("hidden");
                 Backbone.trigger(Teavents.UNFREEZE_BODY);
                 return false;
+            },
+
+            clickRadio: function (event) {
+                if (event.target.tagName.toLowerCase() === 'li') {
+                    this.$(event.target).find("input").click();
+                }
             }
         });
 

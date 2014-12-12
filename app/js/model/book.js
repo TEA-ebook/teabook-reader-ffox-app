@@ -8,7 +8,9 @@ define("model/book", ["backbone", "database"], function (Backbone, database) {
 
         defaults: {
             fontSize: 120,
-            theme: "author"
+            theme: "author",
+            added: 0,
+            read: 0
         },
 
         initialize: function () {
