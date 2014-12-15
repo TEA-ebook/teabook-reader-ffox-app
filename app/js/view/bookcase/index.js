@@ -23,13 +23,14 @@ define('view/bookcase/index',
             displayMode: "gallery",
 
             events: {
-                "click .search": "scanSdCard",
+                "click .search-cancel": "fetchBooks",
                 "click .add": "openPicker",
                 "click .remove": "showDelete",
                 "click .cancel": "showDelete",
                 "click .confirm": "deleteSelectedBooks",
                 "click .sort": "showOptions",
-                "change input#book-upload": "handleFile"
+                "change input#book-upload": "handleFile",
+                "keyup input[type=search]": "searchFor"
             },
 
             initialize: function () {
@@ -48,9 +49,11 @@ define('view/bookcase/index',
                 this.optionsView = new OptionsView({ collection: this.settings });
             },
 
-            fetchBooks: function () {
+            fetchBooks: function (search) {
                 this.collection.fetch({
-                    success: this.sortBooks.bind(this)
+                    success: (search === undefined) ? this.sortBooks.bind(this) : function () {
+                        this.searchBooks(search);
+                    }.bind(this)
                 });
             },
 
@@ -59,7 +62,7 @@ define('view/bookcase/index',
                 this.booksEl.removeClass("cover");
                 this.booksEl.removeClass("detail");
                 this.booksEl.addClass(this.optionsView.settings.view);
-                window.scrollTo(0, 0);
+                Backbone.trigger(Teavents.SCROLL_TOP);
 
                 // books sort
                 this.collection.comparator = BooksSort[this.optionsView.settings.sort];
@@ -69,6 +72,18 @@ define('view/bookcase/index',
                 this.renderBooks();
 
                 this.footerBar.clear();
+            },
+
+            searchBooks: function (searchText) {
+                var searchRegexp = new RegExp(searchText, "i"), results;
+                results = this.collection.filter(function (book) {
+                    return searchRegexp.test(book.get('title').removeDiacritics())
+                        || searchRegexp.test(book.get('title'))
+                        || searchRegexp.test(book.get('authors').join(" "))
+                        || searchRegexp.test(book.get('authors').join(" ").removeDiacritics());
+                });
+                this.collection.reset(results);
+                this.renderBooks();
             },
 
             render: function () {
@@ -91,12 +106,13 @@ define('view/bookcase/index',
 
             renderBooks: function () {
                 this.booksEl.html("");
+                this.booksEl.removeClass("hidden");
                 this.collection.models.forEach(this.renderBook.bind(this));
             },
 
             renderBook: function (model) {
                 var book = new BookView({ "model": model });
-                this.$el.find('.books').append(book.el);
+                this.booksEl.append(book.el);
             },
 
             handleFile: function (event) {
@@ -158,9 +174,11 @@ define('view/bookcase/index',
 
             showOptions: function () {
                 if (this.optionsView.toggle()) {
+                    this.booksEl.addClass("hidden");
                     this.hideSelection();
                     this.footerBar.showSort();
                 } else {
+                    this.booksEl.removeClass("hidden");
                     this.footerBar.hideSort();
                 }
             },
@@ -175,10 +193,8 @@ define('view/bookcase/index',
             },
 
             showSelection: function () {
-                var booksEl = this.$el.find(".books");
-
-                if (!booksEl.hasClass("selection")) {
-                    booksEl.addClass("selection");
+                if (!this.booksEl.hasClass("selection")) {
+                    this.booksEl.addClass("selection");
                     this.collection.forEach(function (book) {
                         book.set({ "selection": true }, { "silent": true });
                     });
@@ -186,10 +202,8 @@ define('view/bookcase/index',
             },
 
             hideSelection: function () {
-                var booksEl = this.$el.find(".books");
-
-                if (booksEl.hasClass("selection")) {
-                    booksEl.removeClass("selection");
+                if (this.booksEl.hasClass("selection")) {
+                    this.booksEl.removeClass("selection");
                     this.collection.forEach(function (book) {
                         book.set({ "selection": false }, { "silent": true });
                     });
@@ -216,6 +230,18 @@ define('view/bookcase/index',
                         this.collection.reset();
                     }.bind(this)
                 });
+            },
+
+            searchFor: function (event) {
+                var text = event.target.value.trim();
+                if (text.length > 0) {
+                    if (text !== this.searchText) {
+                        this.fetchBooks(text);
+                        this.searchText = text;
+                    }
+                } else {
+                    this.fetchBooks();
+                }
             },
 
             close: function () {

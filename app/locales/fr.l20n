@@ -5,6 +5,7 @@
 <selectEpub "Sélectionner un livre">
 
 <plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
+<rand($n) { $n == 0 ? "zero" : $n == 1 ? "one" : $n == 2 ? "two" : $n == 3 ? "three" : "four" }>
 
 <toc "Table des matières">
 <chapter "Chapitre">
@@ -43,3 +44,11 @@
 <lastAdded "Derniers ajoutés">
 <titleAsc "Titre A->Z">
 <titleDesc "Titre Z->A">
+
+<cancel "Annuler">
+<searchTip[rand($random)] {
+ zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"oui ?\" />",
+ one: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"que cherchez-vous ?\" />",
+ two: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"un titre ? un auteur ?\" />",
+ three: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"puis-je vous aider ?\" />"
+}>

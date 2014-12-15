@@ -4,11 +4,15 @@ define('helper/books-sort', function () {
 
     return {
         authorAsc: function (bookA, bookB) {
-            return bookA.get('authors')[0].localeCompare(bookB.get('authors')[0], navigator.language);
+            var authorsA = bookA.has("authors") ? bookA.get('authors').join(" ") : "",
+                authorsB = bookB.has("authors") ? bookB.get('authors').join(" ") : "";
+            return authorsA.localeCompare(authorsB, navigator.language);
         },
 
         authorDesc: function (bookA, bookB) {
-            return bookB.get('authors')[0].localeCompare(bookA.get('authors')[0], navigator.language);
+            var authorsA = bookA.has("authors") ? bookA.get('authors').join(" ") : "",
+                authorsB = bookB.has("authors") ? bookB.get('authors').join(" ") : "";
+            return authorsB.localeCompare(authorsA, navigator.language);
         },
 
         lastRead: function (bookA, bookB) {

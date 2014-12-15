@@ -259,10 +259,11 @@ input#book-upload {
   width: 80%;
 }
 
-/******** Toolbar *******/
+
+/** Gerneric Firefox bar **/
 .bar {
   background-color: @toolbar-color;
-  box-shadow: 1px 1px 1px #ccc;
+  box-shadow: 0px 1px 1px #aaaaaa;
   color: @font-secondary-color;
   display: flex;
   font-family: Fira Sans Regular;
@@ -270,26 +271,28 @@ input#book-upload {
   justify-content: flex-start;
   overflow: hidden;
   position: fixed;
+  transition: height 0.5s ease;
   width: 100%;
+  will-change: height;
   z-index: 100;
 }
 
+.bar .title {
+  font-size: 1.5rem;
+  margin-left: @toolbar-back-width;
+  line-height: @toolbar-height;
+  opacity: 1;
+}
+
+
+/***** Book toolbar *****/
 .toolbar {
   top: 0;
-  will-change: height;
-  transition: height 0.5s ease;
 }
 
 .toolbar.hidden {
   height: 0px;
   transition: height 0.5s ease;
-}
-
-.toolbar .title {
-  font-size: 1.5rem;
-  left: @toolbar-back-width;
-  line-height: @toolbar-height;
-  position: absolute;
 }
 
 .toolbar button {
@@ -299,6 +302,11 @@ input#book-upload {
   margin: 0;
   padding: 0;
   z-index: 500;
+}
+
+.toolbar button:last-child {
+  margin-left: auto;
+  padding: 0 1rem;
 }
 
 .toolbar > .back {
@@ -327,12 +335,98 @@ input#book-upload {
   padding: 0 8px;
 }
 
-.toolbar-buttons > button:last-child {
-  margin-left: auto;
-  padding: 0 1rem 0 2rem;
+
+/*** Bookcase header bar ***/
+.headerbar {
+  top: 0;
 }
 
-/***** Footer bar *****/
+.headerbar .title {
+  left: @toolbar-back-width;
+  margin-left: 0px;
+  position: absolute;
+  transition-property: left;
+  transition-duration: 0.5s;
+}
+
+.headerbar button {
+  color: @search-text-color;
+}
+
+.headerbar .search {
+  color: @search-text-color;
+  display: flex;
+  height: @toolbar-height;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding: 0 0 0 1rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition-property: width;
+  transition-duration: 0.5s;
+  width: 60px;
+}
+
+.headerbar button.search-display {
+  min-width: 40px;
+  padding: 0;
+  text-align: left;
+}
+
+.headerbar .search-input-wrap {
+  width: 100%;
+}
+
+.headerbar .search-input-wrap input {
+  -webkit-appearance: none;
+  background-color: @search-bg-color;
+  background-image: none;
+  border: 0px;
+  border-radius: 0px;
+  color: @search-text-color;
+  display: block;
+  font-family: "Fira Sans Light";
+  font-size: 1.2rem;
+  height: @toolbar-height;
+  outline: 0;
+  padding: 0;
+  width: 105%;
+}
+
+.headerbar button.search-cancel {
+  font-size: 1rem;
+  min-width: 5rem;
+  padding: 0 0.5rem;
+  text-transform: capitalize;
+}
+
+
+/*** Bookcase search bar ***/
+.searchbar {
+  background-color: @search-bg-color;
+  color: @search-text-color;
+}
+
+.searchbar .title {
+  left: -5 * @toolbar-back-width;
+  position: absolute;
+}
+
+.searchbar .search {
+  width: 100%;
+}
+
+.searchbar input::-webkit-input-placeholder {
+  color: @search-text-color;
+  opacity: 0.5;
+}
+.searchbar input::-moz-placeholder  {
+  color: @search-text-color;
+}
+
+
+/*** Bookcase footer bar ***/
 .footerbar {
   background-color: @footerbar-color;
   bottom: 0;
@@ -353,7 +447,8 @@ input#book-upload {
   background-color: @blue;
 }
 
-/****** Action bar ******/
+
+/*** Bookcase action bar ***/
 .actionbar {
   align-items: center;
   background-color: @actionbar-color;
@@ -384,21 +479,16 @@ input#book-upload {
   background-color: @darkred;
 }
 
-/** Table Of Contents **/
+
+/**** Generic panel ****/
 .panel {
   background-color: #ffffff;
-  bottom: -@toolbar-height;
   height: 100%;
+  margin-bottom: @footerbar-height + 1rem;
+  margin-top: @toolbar-height;
   overflow-y: auto;
-  position: absolute;
   width: 100%;
   z-index: 50;
-  transition: bottom 0.5s ease;
-}
-
-.panel.hidden {
-  bottom: -100%;
-  transition: bottom 0.5s ease;
 }
 
 .panel .panel-title {
@@ -410,6 +500,23 @@ input#book-upload {
   margin: 0;
   padding-left: @toolbar-back-width;
   width: 100%;
+}
+
+.panel.hidden {
+  .hide();
+}
+
+
+/** Table Of Contents **/
+.book-toc.panel, .book-bookmarks.panel {
+  top: 0;
+  position: absolute;
+  transition: top 0.2s ;
+}
+
+.book-toc.panel.hidden, .book-bookmarks.panel.hidden {
+  top: 100%;
+  display: block;
 }
 
 .book-toc ul, .book-bookmarks ul {
@@ -461,16 +568,15 @@ input#book-upload {
   background-origin: padding-box;
 }
 
-/** Table Of Contents **/
+/** Bookmarks **/
+.book-bookmarks .panel-title {
+  display: flex;
+  justify-content: space-between;
+}
+
 button.book-bookmark-add {
-  background-color: @brick;
-  color: @white;
-  float: right;
   font-size: 1rem;
   padding: 0.5rem;
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
 }
 
 button.book-bookmark-add > span {
@@ -764,7 +870,7 @@ input[type=range]:focus::-webkit-slider-thumb {
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 2000000001;
 }
 
 .book-loading-cover-v {
