@@ -7,7 +7,7 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
         var BookPaginationView = Backbone.View.extend({
 
             tagName: 'div',
-            className: 'book-pagination',
+            className: 'book-pagination hidden',
 
             autoHideTimeout: 1500,
 

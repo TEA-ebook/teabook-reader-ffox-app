@@ -70,7 +70,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                 importBookWorker = new Worker("importBook.js");
                 importBookWorker.postMessage(e.target.result);
                 importBookWorker.onmessage = function (event) {
-                    Resizer.resize(event.data.cover, Math.round(window.screen.height / 4), function (thumbnail) {
+                    Resizer.resize(event.data.cover, Math.round(window.screen.height / 2), function (thumbnail) {
                         if (thumbnail instanceof Blob) {
                             // create cover thumbnail
                             device.generateThumbnail(sdCard, thumbnail, event.data.authors[0].hashCode() + event.data.title.hashCode() + ".png", function (result) {

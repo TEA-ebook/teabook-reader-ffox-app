@@ -23,21 +23,27 @@ define('helper/resizer', function () {
                 ratio1 = (img.height + minHeight) / (2 * img.height);
                 ratio2 = minHeight / (ratio1 * img.height);
 
-                // canvas sizes in 2 steps
-                offCanvas.width = Math.round(img.width * ratio1);
-                offCanvas.height = Math.round(img.height * ratio1);
+                if (ratio1 < 1) {
+                    // canvas sizes in 2 steps
+                    offCanvas.width = Math.round(img.width * ratio1);
+                    offCanvas.height = Math.round(img.height * ratio1);
 
-                finalCanvas.width = Math.round(offCanvas.width * ratio2);
-                finalCanvas.height = Math.round(offCanvas.height * ratio2);
+                    finalCanvas.width = Math.round(offCanvas.width * ratio2);
+                    finalCanvas.height = Math.round(offCanvas.height * ratio2);
 
-                // step 1 : first resize
-                offCanvasContext.drawImage(img, 0, 0, offCanvas.width, offCanvas.height);
+                    // step 1 : first resize
+                    offCanvasContext.drawImage(img, 0, 0, offCanvas.width, offCanvas.height);
 
-                // step 2 : second resize
-                offCanvasContext.drawImage(offCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
+                    // step 2 : second resize
+                    offCanvasContext.drawImage(offCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
 
-                // step 3 : crop to final canvas
-                finalCanvasContext.drawImage(offCanvas, 0, 0, finalCanvas.width, finalCanvas.height, 0, 0, finalCanvas.width, finalCanvas.height);
+                    // step 3 : crop to final canvas
+                    finalCanvasContext.drawImage(offCanvas, 0, 0, finalCanvas.width, finalCanvas.height, 0, 0, finalCanvas.width, finalCanvas.height);
+                } else {
+                    finalCanvas.width = img.width;
+                    finalCanvas.height = img.height;
+                    finalCanvasContext.drawImage(img, 0, 0, img.width, img.height);
+                }
 
                 // export to blob/base64
                 if (HTMLCanvasElement.prototype.toBlob) {
@@ -45,6 +51,10 @@ define('helper/resizer', function () {
                 } else {
                     callback(finalCanvas.toDataURL('image/png'));
                 }
+
+                // clean up
+                offCanvas.remove();
+                finalCanvas.remove();
             });
         }
     };

@@ -54,7 +54,6 @@
                     // It should call the render and spin functions
                     BookView.prototype.render.should.have.been.calledOnce;
                     bookView.$el.find("iframe").should.have.length(1);
-                    BookView.prototype.spin.should.have.been.calledOnce;
 
                     done();
                 });
@@ -225,7 +224,7 @@
                     bookView.close();
 
                     // It should spin the spinner
-                    BookView.prototype.spin.should.have.been.calledTwice;
+                    BookView.prototype.spin.should.have.been.calledOnce;
 
                     done();
                 });

@@ -124,6 +124,7 @@ define('view/bookcase/index',
             scanSdCard: function () {
                 if (!this.ongoingScan) {
                     this.ongoingScan = true;
+                    this.collection.on('add', this.renderBooks.bind(this));
                     DeviceHelper.scanSdCard(this.collection);
                 }
             },
@@ -152,7 +153,7 @@ define('view/bookcase/index',
 
             scanFinished: function () {
                 this.ongoingScan = false;
-                this.renderBooks();
+                this.collection.off('add');
             },
 
             showOptions: function () {
@@ -205,6 +206,7 @@ define('view/bookcase/index',
                 for (i = 0; i < toDelete.length; i += 1) {
                     toDelete[i].destroy({ silent: true });
                 }
+                this.hideSelection();
                 this.footerBar.hideDelete();
             },
 

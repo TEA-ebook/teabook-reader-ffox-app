@@ -3,6 +3,7 @@
 define('view/book/index',
     ['backbone',
         'helper/blobber',
+        'helper/device',
         'model/book-toc',
         'model/book-pagination',
         'view/book/bookmarks',
@@ -15,6 +16,7 @@ define('view/book/index',
         'spin'],
     function (Backbone,
               Blobber,
+              Device,
               BookTocModel,
               BookPaginationModel,
               BookmarksView,
@@ -83,7 +85,15 @@ define('view/book/index',
                 this.$el.html(this.toolbarView.el);
 
                 // render sanboxed iframe
-                this.$el.append(template(this.model.attributes));
+                if (!this.model.has('coverUrl') && this.model.has('cover')) {
+                    Device.readFile(this.model.get("cover"), function (file) {
+                        var attributes = this.model.attributes;
+                        attributes.coverUrl = window.URL.createObjectURL(file);
+                        this.$el.append(template(attributes));
+                    }.bind(this));
+                } else {
+                    this.$el.append(template(this.model.attributes));
+                }
 
                 // render options
                 this.optionsView.render();
@@ -104,7 +114,6 @@ define('view/book/index',
                     trail: 40,
                     width: 12
                 });
-                this.spin();
 
                 // font sample
                 this.fontSample = this.$el.find(".book-font-size-sample");
@@ -130,9 +139,7 @@ define('view/book/index',
                     } else if (event.type === Teavents.EPUB_SEND) {
                         this.sendEpub();
                     } else if (event.type === Teavents.READY_TO_READ) {
-                        this.toolbarView.hide();
-                        this.optionsView.hide();
-                        this.paginationView.hide();
+                        this.$el.find(".book-loading-cover").remove();
                     } else if (event.type === Teavents.TOC) {
                         this.generateToc(event.data);
                     } else if (event.type === Teavents.PAGE_BOOKMARKED) {

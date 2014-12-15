@@ -6,7 +6,7 @@ define('view/book/toolbar', ['backbone', 'template/book/toolbar'],
         var BookToolbarView = Backbone.View.extend({
 
             tagName: 'div',
-            className: 'bar toolbar',
+            className: 'bar toolbar hidden',
 
             render: function () {
                 this.$el.html(template());
