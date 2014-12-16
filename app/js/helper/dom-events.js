@@ -14,6 +14,8 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
         this.listenTo(Backbone, Teavents.FULLSCREEN_EXIT, this.exitFullScreen);
 
         this.listenTo(Backbone, Teavents.SCROLL_TOP, this.scrollTop);
+        this.listenTo(Backbone, Teavents.FREEZE_BODY, this.freezeBody);
+        this.listenTo(Backbone, Teavents.UNFREEZE_BODY, this.unfreezeBody);
     };
 
     DomEvents.handleMessage = function (event) {
@@ -58,6 +60,16 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
 
     DomEvents.scrollTop = function () {
         window.scrollTo(0, 0);
+    };
+
+    DomEvents.freezeBody = function () {
+        DomEvents.scrollTop();
+        $("body").addClass("noscroll");
+    };
+
+    DomEvents.unfreezeBody = function () {
+        $("body").removeClass("noscroll");
+        DomEvents.scrollTop();
     };
 
     return DomEvents;

@@ -105,14 +105,14 @@ define('view/bookcase/options', ['backbone', 'model/setting', 'template/bookcase
             },
 
             show: function () {
-                Backbone.trigger(Teavents.SCROLL_TOP);
+                Backbone.trigger(Teavents.FREEZE_BODY);
                 this.$el[0].classList.remove("hidden");
                 return true;
             },
 
             hide: function () {
                 this.$el[0].classList.add("hidden");
-                Backbone.trigger(Teavents.SCROLL_TOP);
+                Backbone.trigger(Teavents.UNFREEZE_BODY);
                 return false;
             },
 

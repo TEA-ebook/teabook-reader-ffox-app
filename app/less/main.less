@@ -228,6 +228,36 @@ input#book-upload {
 }
 
 /*** Bookcase options ***/
+.bookcase-options-list {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (orientation: landscape) {
+  .bookcase-options-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .bookcase-options hr {
+    display: none;
+  }
+
+  .bookcase-option:last-child {
+    border-left: 1px solid @blue-pastel;
+  }
+
+  .bookcase-option ul {
+    display: flex;
+    flex-flow: wrap row;
+  }
+
+  .bookcase-option ul li {
+    width: 10rem;
+  }
+}
+
 .bookcase-option {
   font-family: "Fira Sans Light";
   margin-top: 1rem;
@@ -358,20 +388,23 @@ input#book-upload {
   display: flex;
   height: @toolbar-height;
   justify-content: flex-start;
-  overflow: hidden;
+  overflow-x: hidden;
   padding: 0 0 0 1rem;
   position: absolute;
   right: 0;
   top: 0;
   transition-property: width;
   transition-duration: 0.5s;
-  width: 60px;
+  width: 45px;
 }
 
 .headerbar button.search-display {
   min-width: 40px;
+  height: 100%;
+  left: 0;
   padding: 0;
-  text-align: left;
+  position: absolute;
+  top: 0;
 }
 
 .headerbar .search-input-wrap {
@@ -391,14 +424,24 @@ input#book-upload {
   height: @toolbar-height;
   outline: 0;
   padding: 0;
+  visibility: hidden;
   width: 105%;
+}
+
+.headerbar .search-input-wrap input::-webkit-input-placeholder {
+  color: @search-text-color;
+  opacity: 0.5;
+}
+
+.headerbar .search-input-wrap input::-moz-placeholder  {
+  color: @search-text-color;
 }
 
 .headerbar button.search-cancel {
   font-size: 1rem;
   min-width: 5rem;
-  padding: 0 0.5rem;
   text-transform: capitalize;
+  visibility: hidden;
 }
 
 
@@ -417,14 +460,18 @@ input#book-upload {
   width: 100%;
 }
 
-.searchbar input::-webkit-input-placeholder {
-  color: @search-text-color;
-  opacity: 0.5;
-}
-.searchbar input::-moz-placeholder  {
-  color: @search-text-color;
+.searchbar .search-input-wrap input {
+  visibility: visible;
 }
 
+.searchbar button.search-display {
+  position: relative;
+}
+
+.searchbar button.search-cancel {
+  padding: 0 0.5rem;
+  visibility: visible;
+}
 
 /*** Bookcase footer bar ***/
 .footerbar {
@@ -484,7 +531,6 @@ input#book-upload {
 .panel {
   background-color: #ffffff;
   height: 100%;
-  margin-bottom: @footerbar-height + 1rem;
   margin-top: @toolbar-height;
   overflow-y: auto;
   width: 100%;

@@ -106,7 +106,6 @@ define('view/bookcase/index',
 
             renderBooks: function () {
                 this.booksEl.html("");
-                this.booksEl.removeClass("hidden");
                 this.collection.models.forEach(this.renderBook.bind(this));
             },
 
@@ -174,11 +173,9 @@ define('view/bookcase/index',
 
             showOptions: function () {
                 if (this.optionsView.toggle()) {
-                    this.booksEl.addClass("hidden");
                     this.hideSelection();
                     this.footerBar.showSort();
                 } else {
-                    this.booksEl.removeClass("hidden");
                     this.footerBar.hideSort();
                 }
             },
