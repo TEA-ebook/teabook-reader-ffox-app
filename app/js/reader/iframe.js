@@ -150,6 +150,7 @@ isReadiumReady = function () {
                     type: "Readium:" + ReadiumSDK.Events.PAGINATION_CHANGED,
                     data: {
                         pageInfo: pageChangeData.paginationInfo.openPages[0],
+                        spineTotal: pageChangeData.paginationInfo.spineItemCount,
                         spineHref: window.readium.reader.getLoadedSpineItems()[0].href
                     }
                 }, "*");
