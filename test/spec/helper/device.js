@@ -71,6 +71,37 @@
                     });
                 });
             });
+
+            it('generate a search string with book metadata', function (done) {
+                curl(['helper/device'], function (DeviceHelper) {
+                    // Given some book metadata
+                    var metadata, searchString;
+                    metadata = {
+                        'title': "L'attaque du Jihad Butlérien",
+                        'authors': [ "Herbert,Brian", "Kevin J Anderson" ],
+                        'publisher': "Robert Laffont"
+                    };
+
+                    // When we generate a search string
+                    searchString = DeviceHelper.generateSearchString(metadata);
+
+                    // Then we should find the title, the authors and the publisher in the string
+                    searchString.should.match(/attaque/);
+                    searchString.should.match(/du/);
+                    searchString.should.match(/jihad/);
+                    searchString.should.match(/butlerien/);
+                    searchString.should.match(/herbert/);
+                    searchString.should.match(/brian/);
+                    searchString.should.match(/kevin/);
+                    searchString.should.match(/anderson/);
+                    searchString.should.match(/robert/);
+                    searchString.should.match(/laffont/);
+                    searchString.should.not.match(/J/);
+                    searchString.should.not.match(/Butlérien/);
+
+                    done();
+                });
+            });
         });
     });
 }());

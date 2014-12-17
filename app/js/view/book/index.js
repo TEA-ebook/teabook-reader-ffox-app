@@ -157,7 +157,7 @@ define('view/book/index',
             },
 
             handleReadiumEvent: function (event) {
-                var readiumEvent, cssValues;
+                var readiumEvent, cssValues, fontSample;
                 readiumEvent = event.type.match(/^Readium:(\w*)/)[1];
                 if (readiumEvent === Teavents.Readium.PAGINATION_CHANGED) {
                     this.stopSpin();
@@ -186,7 +186,7 @@ define('view/book/index',
                         cssValues = {
                             "font-size": event.data.fontSize + "%"
                         };
-                        var fontSample = this.getFontSizeSample();
+                        fontSample = this.getFontSizeSample();
                         if (fontSample.css("display") === "none") {
                             cssValues.top = (event.data.center.y - (this.fontSample.height() / 2)) + "px";
                             cssValues.left = (event.data.center.x - (this.fontSample.width() / 2)) + "px";

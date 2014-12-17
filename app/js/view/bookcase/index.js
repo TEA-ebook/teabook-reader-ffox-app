@@ -9,10 +9,11 @@ define('view/bookcase/index',
         'view/bookcase/footerbar',
         'view/bookcase/options',
         'view/bookcase/book',
-        'template/bookcase/index'
+        'template/bookcase/index',
+        'template/bookcase/empty'
     ],
 
-    function (Backbone, DeviceHelper, BooksSort, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template) {
+    function (Backbone, DeviceHelper, BooksSort, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template, templateEmpty) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -38,7 +39,9 @@ define('view/bookcase/index',
                 this.listenTo(Backbone, Teavents.SCAN_FINISHED, this.scanFinished.bind(this));
 
                 this.ongoingScan = false;
+                this.searchText = "";
 
+                // We need the user display settings before rendering the books
                 this.settings = new SettingCollection();
                 this.settings.on("ready", this.render.bind(this));
                 this.settings.on("update", this.sortBooks.bind(this));
@@ -47,21 +50,51 @@ define('view/bookcase/index',
                 this.headerBar = new HeaderBarView();
                 this.footerBar = new FooterBarView();
                 this.optionsView = new OptionsView({ collection: this.settings });
+
+                this.collection.on('destroy', this.checkEmptiness, this);
             },
 
+            /**
+             * Get books from indexedDB and sort it
+             * If search is set : apply searchBooks on books fetched from indexedDB
+             *
+             * @param search (optionnal)
+             */
             fetchBooks: function (search) {
                 this.collection.fetch({
                     success: (search === undefined) ? this.sortBooks.bind(this) : function () {
                         this.searchBooks(search);
                     }.bind(this)
                 });
+                this.searchText = "";
             },
 
-            sortBooks: function () {
-                // display mode
+            setMode: function (mode) {
                 this.booksEl.removeClass("cover");
                 this.booksEl.removeClass("detail");
-                this.booksEl.addClass(this.optionsView.settings.view);
+                this.booksEl.removeClass("empty");
+                if (mode) {
+                    this.booksEl.addClass(mode);
+                    if (mode === "empty") {
+                        this.$el.addClass(mode);
+                        this.headerBar.$el.find("button").attr("disabled", "disabled");
+                        this.footerBar.$el.find("button.remove").attr("disabled", "disabled");
+                        this.footerBar.$el.find("button.sort").attr("disabled", "disabled");
+                    } else {
+                        this.$el.removeClass("empty");
+                        this.headerBar.$el.find("button").removeAttr("disabled");
+                        this.footerBar.$el.find("button.remove").removeAttr("disabled");
+                        this.footerBar.$el.find("button.sort").removeAttr("disabled");
+                    }
+                }
+            },
+
+            /**
+             * Sort books with user settings
+             */
+            sortBooks: function () {
+                // display mode
+                this.setMode(this.optionsView.settings.view);
                 Backbone.trigger(Teavents.SCROLL_TOP);
 
                 // books sort
@@ -74,18 +107,36 @@ define('view/bookcase/index',
                 this.footerBar.clear();
             },
 
+            /**
+             * Full text search in book title and authors
+             *
+             * @param searchText
+             */
             searchBooks: function (searchText) {
-                var searchRegexp = new RegExp(searchText, "i"), results;
+                var searchTokens, results;
+
+                searchTokens = searchText.tokenize(2);
+
                 results = this.collection.filter(function (book) {
-                    return searchRegexp.test(book.get('title').removeDiacritics())
-                        || searchRegexp.test(book.get('title'))
-                        || searchRegexp.test(book.get('authors').join(" "))
-                        || searchRegexp.test(book.get('authors').join(" ").removeDiacritics());
+                    var search = book.get('search');
+                    return searchTokens.every(function (token) {
+                        return search.indexOf(token) >= 0;
+                    });
                 });
+
                 this.collection.reset(results);
                 this.renderBooks();
             },
 
+            checkEmptiness: function () {
+                if (this.collection.isEmpty()) {
+                    this.renderBooks();
+                }
+            },
+
+            /**
+             * UI render + books fetching
+             */
             render: function () {
                 this.headerBar.render();
                 this.$el.html(this.headerBar.el);
@@ -104,11 +155,26 @@ define('view/bookcase/index',
                 window.document.l10n.localizeNode(this.el);
             },
 
+            /**
+             * Render books if any
+             * Or a text to invite the user to add a book otherwise
+             */
             renderBooks: function () {
                 this.booksEl.html("");
-                this.collection.models.forEach(this.renderBook.bind(this));
+
+                if (this.collection.isEmpty() && this.searchText.length === 0) {
+                    this.setMode("empty");
+                    this.booksEl.html(templateEmpty());
+                    window.document.l10n.localizeNode(this.booksEl[0]);
+                } else {
+                    this.setMode(this.optionsView.settings.view);
+                    this.collection.models.forEach(this.renderBook.bind(this));
+                }
             },
 
+            /**
+             * @param model : a book
+             */
             renderBook: function (model) {
                 var book = new BookView({ "model": model });
                 this.booksEl.append(book.el);
@@ -144,6 +210,10 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             * Open a file picker in Firefox OS
+             * Or a hidden file input for desktop browsers
+             */
             openPicker: function () {
                 this.footerBar.clear();
                 this.optionsView.hide();
@@ -230,7 +300,7 @@ define('view/bookcase/index',
             },
 
             searchFor: function (event) {
-                var text = event.target.value.trim();
+                var text = event.target.value.trim().toLowerCase().removeDiacritics();
                 if (text.length > 0) {
                     if (text !== this.searchText) {
                         this.fetchBooks(text);

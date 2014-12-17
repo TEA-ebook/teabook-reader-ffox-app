@@ -109,6 +109,12 @@ input[type="radio"]:checked + label:before {
   display: block;
 }
 
+.books.empty {
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+
 .books.cover {
   display: flex;
   flex-wrap: wrap;
@@ -227,6 +233,7 @@ input#book-upload {
   -webkit-appearance: none;
 }
 
+
 /*** Bookcase options ***/
 .bookcase-options-list {
   display: flex;
@@ -289,7 +296,6 @@ input#book-upload {
   width: 80%;
 }
 
-
 /** Gerneric Firefox bar **/
 .bar {
   background-color: @toolbar-color;
@@ -313,7 +319,6 @@ input#book-upload {
   line-height: @toolbar-height;
   opacity: 1;
 }
-
 
 /***** Book toolbar *****/
 .toolbar {
@@ -364,7 +369,6 @@ input#book-upload {
 .toolbar-buttons > button {
   padding: 0 8px;
 }
-
 
 /*** Bookcase header bar ***/
 .headerbar {
@@ -433,7 +437,7 @@ input#book-upload {
   opacity: 0.5;
 }
 
-.headerbar .search-input-wrap input::-moz-placeholder  {
+.headerbar .search-input-wrap input::-moz-placeholder {
   color: @search-text-color;
 }
 
@@ -443,7 +447,6 @@ input#book-upload {
   text-transform: capitalize;
   visibility: hidden;
 }
-
 
 /*** Bookcase search bar ***/
 .searchbar {
@@ -494,6 +497,28 @@ input#book-upload {
   background-color: @blue;
 }
 
+/***** empty bookcase *****/
+.bookcase-empty {
+  font-size: 1.5rem;
+  padding: 0 1rem;
+  text-align: center;
+  width: 100%;
+}
+
+.empty .footerbar button.add {
+  .vendors(animation-name, glow);
+  .vendors(animation-duration, 1.8s);
+  .vendors(animation-iteration-count, 5);
+  .vendors(animation-timing-function, ease-in);
+}
+
+.empty .headerbar button.search-display {
+  opacity: 0.5;
+}
+
+.empty .footerbar button.remove, .empty .footerbar button.sort {
+  color: @gray-m1;
+}
 
 /*** Bookcase action bar ***/
 .actionbar {
@@ -526,7 +551,6 @@ input#book-upload {
   background-color: @darkred;
 }
 
-
 /**** Generic panel ****/
 .panel {
   background-color: #ffffff;
@@ -552,12 +576,11 @@ input#book-upload {
   .hide();
 }
 
-
 /** Table Of Contents **/
 .book-toc.panel, .book-bookmarks.panel {
   top: 0;
   position: absolute;
-  transition: top 0.2s ;
+  transition: top 0.2s;
 }
 
 .book-toc.panel.hidden, .book-bookmarks.panel.hidden {
@@ -862,6 +885,16 @@ input[type=range]:focus::-webkit-slider-thumb {
 
 @-moz-keyframes spin {
   .transformKeyframes(moz);
+}
+
+@-webkit-keyframes glow {
+  0%, 100% { background-color: @footerbar-color; }
+  50% { background-color: @blue-pastel; }
+}
+
+@-moz-keyframes glow {
+  0%, 100% { background-color: @footerbar-color; }
+  50% { background-color: @blue-pastel; }
 }
 
 .book-option.theme {

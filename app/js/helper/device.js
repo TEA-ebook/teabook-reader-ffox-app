@@ -45,7 +45,8 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                 'title': title,
                 'path': path,
                 'size': file.size,
-                'added': Date.now()
+                'added': Date.now(),
+                'read': Math.round(Date.now() / 10000)
             }, {
                 'success': function () {
                     collection.add(book);
@@ -70,6 +71,10 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                 importBookWorker = new Worker("importBook.js");
                 importBookWorker.postMessage(e.target.result);
                 importBookWorker.onmessage = function (event) {
+                    // generate search string
+                    event.data.search = device.generateSearchString(event.data);
+
+                    // generate thumbnail
                     Resizer.resize(event.data.cover, Math.round(window.screen.height / 2), function (thumbnail) {
                         if (thumbnail instanceof Blob) {
                             // create cover thumbnail
@@ -132,6 +137,14 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                 console.warn('Unable to read the file', fileName, this.error);
                 callback(false);
             };
+        },
+
+        generateSearchString: function (metadata) {
+            var keys = [];
+            keys.push(metadata.title.removeDiacritics().toLowerCase().tokenize(2));
+            keys.push(metadata.authors.join(" ").removeDiacritics().toLowerCase().tokenize(2));
+            keys.push(metadata.publisher.removeDiacritics().toLowerCase().tokenize(2));
+            return keys.join(",");
         }
     };
 

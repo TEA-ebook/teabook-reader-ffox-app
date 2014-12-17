@@ -47,8 +47,13 @@
 
 <cancel "Annuler">
 <searchTip[rand($random)] {
- zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"oui ?\" />",
+ zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"vous cherchez un livre ?\" />",
  one: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"que cherchez-vous ?\" />",
  two: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"un titre ? un auteur ?\" />",
  three: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"puis-je vous aider ?\" />"
 }>
+
+<welcome "<strong>Bienvenue dans votre bibliothèque !</strong>">
+<noBookHere "... qui est désespérément vide.">
+<useThePlusButton1 "Utiliser le bouton ">
+<useThePlusButton2 " pour ajouter vos livres !">
