@@ -115,10 +115,14 @@ define('view/book/index',
                     width: 12
                 });
 
-                // font sample
-                this.fontSample = this.$el.find(".book-font-size-sample");
-
                 return this;
+            },
+
+            getFontSizeSample: function () {
+                if (!this.fontSample) {
+                    this.fontSample = this.$el.find(".book-font-size-sample");
+                }
+                return this.fontSample;
             },
 
             backToBookcase: function () {
@@ -154,7 +158,6 @@ define('view/book/index',
 
             handleReadiumEvent: function (event) {
                 var readiumEvent, cssValues;
-
                 readiumEvent = event.type.match(/^Readium:(\w*)/)[1];
                 if (readiumEvent === Teavents.Readium.PAGINATION_CHANGED) {
                     this.stopSpin();
@@ -176,19 +179,20 @@ define('view/book/index',
                     }
                 } else if (readiumEvent === Teavents.Readium.GESTURE_PINCH) {
                     this.lastPinchAck = Date.now();
-                    this.fontSample.hide();
+                    this.getFontSizeSample().hide();
                     this.isWorking();
                 } else if (readiumEvent === Teavents.Readium.GESTURE_PINCH_MOVE) {
                     if (Date.now() - this.lastPinchAck > 50) {
                         cssValues = {
                             "font-size": event.data.fontSize + "%"
                         };
-                        if (this.fontSample.css("display") === "none") {
+                        var fontSample = this.getFontSizeSample();
+                        if (fontSample.css("display") === "none") {
                             cssValues.top = (event.data.center.y - (this.fontSample.height() / 2)) + "px";
                             cssValues.left = (event.data.center.x - (this.fontSample.width() / 2)) + "px";
-                            this.fontSample.show();
+                            fontSample.show();
                         }
-                        this.fontSample.css(cssValues);
+                        fontSample.css(cssValues);
                     }
                 }
             },
