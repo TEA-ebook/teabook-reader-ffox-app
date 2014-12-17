@@ -31,8 +31,12 @@ define('gestures', ['jquery', 'hammer', 'underscore'], function ($, Hammer, _) {
             }
         };
 
-        onTap = function () {
-            reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
+        onTap = function (event) {
+            if (!event.target.hasAttribute('href') && !event.target.parentNode.hasAttribute('href')) {
+                reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
+            } else {
+                $(event.target).click();
+            }
         };
 
         onPinchMove = _.throttle(function (event) {

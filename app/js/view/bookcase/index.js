@@ -128,6 +128,9 @@ define('view/bookcase/index',
                 this.renderBooks();
             },
 
+            /**
+             *
+             */
             checkEmptiness: function () {
                 if (this.collection.isEmpty()) {
                     this.renderBooks();
@@ -300,6 +303,7 @@ define('view/bookcase/index',
             },
 
             searchFor: function (event) {
+                this.optionsView.hide();
                 var text = event.target.value.trim().toLowerCase().removeDiacritics();
                 if (text.length > 0) {
                     if (text !== this.searchText) {

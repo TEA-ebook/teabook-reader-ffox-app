@@ -26,6 +26,7 @@ var paths = {
     manifest: ['./app/manifest.*'],
     locales: ['./app/locales/*'],
     l20n: ['./app/vendor/l20n/l20n.js'],
+    epubs: ['./epubs/*'],
     templates: ['./app/template/**/*.hbs'],
     readium: './readium-js',
     readiumEmbedded: [
@@ -53,6 +54,7 @@ var paths = {
         templates: './app/js/template/',
         images: './dist/images/',
         html: './dist/',
+        epubs: './dist/books/',
         locales: './dist/locales'
     },
     curl: [
@@ -224,6 +226,13 @@ gulp.task('copy-l20n', function () {
         .pipe(gulp.dest(paths.dist.js));
 });
 
+gulp.task('copy-epubs', function () {
+    if (debug) {
+        return gulp.src(paths.epubs)
+            .pipe(gulp.dest(paths.dist.epubs));
+    }
+});
+
 gulp.task('process-html', function () {
     return gulp.src(paths.html)
         .pipe(plugins.preprocess({ context: { DEBUG: debug.toString() } }))
@@ -237,7 +246,7 @@ gulp.task("open-browser", function () {
         .pipe(gulpif(openBrowser, plugins.open("", { url: "http://localhost:8080/" })));
 });
 
-gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-workers', 'copy-picker', 'copy-l20n', 'copy-locales', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
+gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-workers', 'copy-picker', 'copy-l20n', 'copy-locales', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
 
 gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
