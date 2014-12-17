@@ -1,6 +1,10 @@
 {{#if chapterCurrent}}
 <span class="book-pagination-chapters">
+{{#if chapterTotal}}
     <span data-l10n-id="chapter">Chapter</span> {{chapterCurrent}}/{{chapterTotal}} : <span data-l10n-id="pagesLeft">3 pages left</span>
+{{else}}
+    &nbsp;
+{{/if}}
 </span>
 <span class="book-pagination-pages">
 {{#if monoPage}}
@@ -16,4 +20,3 @@
     <progress value="1" max="1"></progress>
 </span>
 {{/if}}
-

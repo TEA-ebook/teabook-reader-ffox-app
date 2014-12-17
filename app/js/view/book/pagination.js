@@ -25,7 +25,7 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
             readiumEvent: function (event) {
                 if (event.type === "Readium:" + Teavents.Readium.PAGINATION_CHANGED) {
                     if (event.data) {
-                        var item = false, position = false, chapterTotal = this.model.get('chapterTotal');
+                        var item = false, position = false, chapterCurrent = false, chapterTotal = this.model.get('chapterTotal');
                         if (this.toc) {
                             item = this.toc.getItem(event.data.spineHref);
                             if (item) {
@@ -34,13 +34,15 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
                             }
                         }
 
-                        if (chapterTotal < Math.round(event.data.spineTotal / 2)) {
-                            chapterTotal = event.data.spineTotal;
+                        chapterCurrent = position || (event.data.pageInfo.spineItemIndex);
+
+                        if (chapterCurrent > chapterTotal) {
+                            chapterTotal = false;
                         }
 
                         this.model.set({
                             chapterTotal: chapterTotal,
-                            chapterCurrent: position || (event.data.pageInfo.spineItemIndex),
+                            chapterCurrent: chapterCurrent,
                             pageCurrent: event.data.pageInfo.spineItemPageIndex + 1,
                             pageTotal: event.data.pageInfo.spineItemPageCount
                         });
