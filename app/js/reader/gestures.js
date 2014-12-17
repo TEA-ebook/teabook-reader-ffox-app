@@ -32,10 +32,10 @@ define('gestures', ['jquery', 'hammer', 'underscore'], function ($, Hammer, _) {
         };
 
         onTap = function (event) {
-            if (!event.target.hasAttribute('href') && !event.target.parentNode.hasAttribute('href')) {
-                reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
-            } else {
+            if (event.target.hasAttribute('href') || (event.target.parentNode.hasAttribute && event.target.parentNode.hasAttribute('href'))) {
                 $(event.target).click();
+            } else {
+                reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
             }
         };
 
