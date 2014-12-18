@@ -16,10 +16,10 @@ var openBrowser = args['nobrowser'] ? false : true;
 
 var paths = {
     less: [
-        './app/vendor/font-awesome/less/font-awesome.less',
+        './app/less/teareader.css',
         './app/less/*.less'
     ],
-    fonts: ['./app/vendor/font-awesome/fonts/*'],
+    fonts: ['./app/font/*'],
     js: ['./app/js/**/*.js'],
     images: ['./app/images/*'],
     html: ['./app/*.html'],
@@ -49,7 +49,7 @@ var paths = {
     ],
     dist: {
         css: './dist/css/',
-        fonts: './dist/fonts/',
+        fonts: './dist/font/',
         js: './dist/js/',
         templates: './app/js/template/',
         images: './dist/images/',

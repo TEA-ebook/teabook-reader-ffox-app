@@ -212,14 +212,24 @@ input[type="radio"]:checked + label:before {
 }
 
 .bookcase .book > i {
+  color: @gray-m1;
+  display: block;
+  font-size: 2rem;
   margin-top: 50%;
 }
 
-.bookcase .book.open {
-  box-shadow: 0px 3px 50px 0px rgba(0, 0, 0, 0.5);
-  transition-property: box-shadow;
-  transition-duration: 0.4s;
+.bookcase .books.cover .book.open img {
+  transition-property: height;
+  transition-duration: 0.2s;
+  height: @bookcase-book-height - 0.3rem;
 }
+
+.bookcase .books.detail .book.open .book-cover {
+  transition-property: width;
+  transition-duration: 0.2s;
+  width: 13%;
+}
+
 
 input#book-upload {
   height: 100%;
@@ -341,7 +351,7 @@ input#book-upload {
 
 .toolbar button:last-child {
   margin-left: auto;
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .toolbar > .back {
@@ -366,9 +376,10 @@ input#book-upload {
   width: 100%;
 }
 
-.toolbar-buttons > button {
-  padding: 0 8px;
+.toolbar [class^="icon-"]:before {
+  font-size: 1.8rem;
 }
+
 
 /*** Bookcase header bar ***/
 .headerbar {
@@ -411,6 +422,10 @@ input#book-upload {
   top: 0;
 }
 
+.headerbar button.search-display .icon-search:before {
+  margin-left: 0;
+}
+
 .headerbar .search-input-wrap {
   width: 100%;
 }
@@ -446,6 +461,10 @@ input#book-upload {
   min-width: 5rem;
   text-transform: capitalize;
   visibility: hidden;
+}
+
+.headerbar [class^="icon-"]:before {
+  font-size: 2rem;
 }
 
 /*** Bookcase search bar ***/
@@ -495,6 +514,10 @@ input#book-upload {
 
 .footerbar button.selected {
   background-color: @blue;
+}
+
+.footerbar [class^="icon-"]:before {
+  font-size: 1.5rem;
 }
 
 /***** empty bookcase *****/
@@ -646,10 +669,6 @@ input#book-upload {
 button.book-bookmark-add {
   font-size: 1rem;
   padding: 0.5rem;
-}
-
-button.book-bookmark-add > span {
-  padding-left: 0.5rem;
 }
 
 .book-bookmark-label {
