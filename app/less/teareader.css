@@ -1,18 +1,10 @@
 @font-face {
   font-family: 'teareader';
-<<<<<<< HEAD
   src: url('../font/teareader.eot?27700589');
   src: url('../font/teareader.eot?27700589#iefix') format('embedded-opentype'),
        url('../font/teareader.woff?27700589') format('woff'),
        url('../font/teareader.ttf?27700589') format('truetype'),
        url('../font/teareader.svg?27700589#teareader') format('svg');
-=======
-  src: url('../font/teareader.eot?19268722');
-  src: url('../font/teareader.eot?19268722#iefix') format('embedded-opentype'),
-       url('../font/teareader.woff?19268722') format('woff'),
-       url('../font/teareader.ttf?19268722') format('truetype'),
-       url('../font/teareader.svg?19268722#teareader') format('svg');
->>>>>>> dev/icons-font
   font-weight: normal;
   font-style: normal;
 }
@@ -22,11 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'teareader';
-<<<<<<< HEAD
     src: url('../font/teareader.svg?27700589#teareader') format('svg');
-=======
-    src: url('../font/teareader.svg?19268722#teareader') format('svg');
->>>>>>> dev/icons-font
   }
 }
 */
@@ -70,9 +58,5 @@
 .icon-settings:before { content: '\e805'; } /* '' */
 .icon-bookmark:before { content: '\e806'; } /* '' */
 .icon-bookcase:before { content: '\e807'; } /* '' */
-<<<<<<< HEAD
 .icon-close:before { content: '\e808'; } /* '' */
 .icon-loading:before { content: '\e809'; } /* '' */
-=======
-.icon-close:before { content: '\e808'; } /* '' */
->>>>>>> dev/icons-font
