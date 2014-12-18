@@ -33,7 +33,11 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
             }
         },
 
-        addBook: function (file, collection, callback) {
+        addBook: function (file, callback) {
+            device.addBookToBookcase(file, null, callback);
+        },
+
+        addBookToBookcase: function (file, collection, callback) {
             var book = new BookModel(), path, title;
             path = window.decodeURIComponent(file.name);
             if (!navigator.mozSetMessageHandler) {
@@ -49,14 +53,16 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                 'read': Math.round(Date.now() / 10000)
             }, {
                 'success': function () {
-                    collection.add(book);
+                    if (collection) {
+                        collection.add(book);
+                    }
                     device.scanFile(file, book, function () {
-                        callback(path);
+                        callback(book);
                     }.bind(this));
                 }.bind(this),
                 'error': function (model, error) {
                     console.warn("Can't import " + model.get('path') + " :", error.target.error.message);
-                    callback(path);
+                    callback(book);
                 }.bind(this)
             });
         },

@@ -30,9 +30,25 @@
       "href": "./picker.html",
       "disposition": "inline",
       "filters": {
-          "type": ["application/epub+zip"]
+          "type": [ "application/epub+zip" ]
       },
       "returnValue": true
+    },
+    "open": {
+      "filters": {
+        "type": [ "application/epub+zip", "text/plain" ]
+      },
+      "href": "./index.html",
+      "disposition": "window",
+      "returnValue": false
+    },
+    "view": {
+      "filters": {
+        "type": [ "application/epub+zip", "text/plain" ]
+      },
+      "href": "./index.html",
+      "disposition": "window",
+      "returnValue": false
     }
   }
 }

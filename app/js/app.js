@@ -3,5 +3,6 @@
     'use strict';
 
     var require = curl;
-    require(["router", "indexeddb"]);
+
+    require(["router", "indexeddb", "helper/activity-handler"]);
 }());

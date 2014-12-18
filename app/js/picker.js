@@ -96,6 +96,8 @@ function cancelActivity() {
             navigator.mozSetMessageHandler('activity', function (activityReq) {
                 activityRequest = activityReq;
             });
+        } else {
+            console.warn("you are not in a Firefox OS phone or simulator");
         }
 
         document.querySelector("button.back").addEventListener("click", cancelActivity);

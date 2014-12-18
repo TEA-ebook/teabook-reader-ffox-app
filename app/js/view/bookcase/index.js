@@ -197,8 +197,8 @@ define('view/bookcase/index',
 
                 if (file) {
                     this.collection.on('add', this.renderBooks.bind(this));
-                    DeviceHelper.addBook(file, this.collection, function (path) {
-                        console.info(path + " was successfully uploaded");
+                    DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
+                        console.info(book.get('title') + " was successfully uploaded");
                         this.$el.find("input#book-upload").val("");
                         this.collection.off('add');
                     }.bind(this));

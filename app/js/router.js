@@ -1,6 +1,6 @@
 /*global define, window*/
-define('router', ['backbone', 'helper/dom-events', 'route/bookcase', 'route/book'],
-    function (Backbone, DomEvents, bookcaseRoute, bookRoute) {
+define('router', ['backbone', 'helper/dom-events', 'route/bookcase', 'route/book', 'route/open'],
+    function (Backbone, DomEvents, bookcaseRoute, bookRoute, openRoute) {
         "use strict";
 
         var AppRouter = Backbone.Router.extend({
@@ -16,6 +16,7 @@ define('router', ['backbone', 'helper/dom-events', 'route/bookcase', 'route/book
 
             routes: {
                 '': bookcaseRoute,
+                'open': openRoute,
                 'book/:hash': bookRoute,
                 'book/:hash/:chapter': bookRoute,
                 'book/:hash/:idref/:cfi': bookRoute
