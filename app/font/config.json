@@ -55,12 +55,15 @@
       "src": "entypo"
     },
     {
+<<<<<<< HEAD
       "uid": "3bd18d47a12b8709e9f4fe9ead4f7518",
       "css": "loading",
       "code": 59401,
       "src": "entypo"
     },
     {
+=======
+>>>>>>> dev/icons-font
       "uid": "cad619ef78a5500c1e5b3d021d2fdd65",
       "css": "trash",
       "code": 59394,
