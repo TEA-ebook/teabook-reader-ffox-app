@@ -33,9 +33,7 @@
         });
 
         var triggerTap = function () {
-            Backbone.trigger(Teavents.MESSAGE, {
-                type: "Readium:" + Teavents.Readium.GESTURE_TAP
-            });
+            Backbone.trigger(Teavents.Readium.GESTURE_TAP);
         };
 
         describe('instance', function () {
@@ -65,8 +63,8 @@
 
                     // Given a book view with a loaded epub
                     var bookView = new BookView({ model: new BookModel() });
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.READY_TO_READ });
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.TOC, data: fakeTocNcx });
+                    Backbone.trigger(Teavents.READY_TO_READ);
+                    Backbone.trigger(Teavents.TOC, fakeTocNcx);
 
                     // When the user tap once the screen and waits for 5s
                     triggerTap();
@@ -101,11 +99,8 @@
             it('should navigate to the bookcase when back button is pressed', function (done) {
                 curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
                     sandbox.stub(Backbone.history, "navigate", checkRouterNav);
-                    sandbox.stub(BookView.prototype, "getPosition", function(callback) {
-                        callback({
-                            type: Teavents.CURRENT_POSITION,
-                            data: {}
-                        });
+                    sandbox.stub(BookView.prototype, "backToBookcase", function() {
+                        Backbone.trigger(Teavents.CURRENT_POSITION, {});
                     });
 
                     // Given a book view
@@ -129,7 +124,7 @@
                 curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
                     // Given a book view with a loaded epub
                     var bookView = new BookView({ model: new BookModel() });
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.READY_TO_READ });
+                    Backbone.trigger(Teavents.READY_TO_READ);
 
                     // When the user taps the screen
                     triggerTap();
@@ -146,7 +141,7 @@
                 curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
                     // Given a book view with a loaded epub
                     var bookView = new BookView({ model: new BookModel() });
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.READY_TO_READ });
+                    Backbone.trigger(Teavents.READY_TO_READ);
 
                     // When the user taps twice the screen
                     triggerTap();
@@ -168,7 +163,7 @@
                     var bookView = new BookView({ model: new BookModel() });
 
                     // When a 'sendResources' event is triggered
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.SEND_RESOURCES });
+                    Backbone.trigger(Teavents.SEND_RESOURCES);
 
                     // It should transfer the resources
                     BookView.prototype.transferFile.should.have.been.calledOnce;
@@ -186,7 +181,7 @@
                     var bookView = new BookView({ model: new BookModel() });
 
                     // When a 'sendEpub' event is triggered
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.EPUB_SEND });
+                    Backbone.trigger(Teavents.EPUB_SEND);
                     bookView.close();
 
                     // It should send the epub
@@ -220,7 +215,7 @@
                     var bookView = new BookView({ model: new BookModel() });
 
                     // When readium starts loading the epub
-                    Backbone.trigger(Teavents.MESSAGE, { type: "Readium:" + Teavents.Readium.CONTENT_LOAD_START });
+                    Backbone.trigger(Teavents.Readium.CONTENT_LOAD_START);
                     bookView.close();
 
                     // It should spin the spinner
@@ -238,7 +233,7 @@
                     var bookView = new BookView({ model: new BookModel() });
 
                     // When readium has loaded the epub
-                    Backbone.trigger(Teavents.MESSAGE, { type: "Readium:" + Teavents.Readium.CONTENT_LOADED });
+                    Backbone.trigger(Teavents.Readium.CONTENT_LOADED);
                     bookView.close();
 
                     // It should stop the spinner
@@ -256,7 +251,7 @@
                     var bookView = new BookView({ model: new BookModel() });
 
                     // When readium has changed its pagination
-                    Backbone.trigger(Teavents.MESSAGE, { type: "Readium:" + Teavents.Readium.PAGINATION_CHANGED });
+                    Backbone.trigger(Teavents.Readium.PAGINATION_CHANGED);
                     bookView.close();
 
                     // It should stop the spinner
@@ -274,7 +269,7 @@
                     var bookView = new BookView({ model: new BookModel() });
 
                     // When readium sends the table of contents
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.TOC, data: fakeTocNcx });
+                    Backbone.trigger(Teavents.TOC, fakeTocNcx);
                     bookView.close();
 
                     // It should generate the html toc

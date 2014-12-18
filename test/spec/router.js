@@ -22,9 +22,9 @@
         });
 
         describe('instance', function () {
-            it('should have 4 routes', function (done) {
+            it('should have 5 routes', function (done) {
                 curl(['router'], function (appRouter) {
-                    appRouter.routes.should.have.keys(['', 'book/:hash', 'book/:hash/:chapter', 'book/:hash/:idref/:cfi']);
+                    appRouter.routes.should.have.keys(['', 'open', 'book/:hash', 'book/:hash/:chapter', 'book/:hash/:idref/:cfi']);
                     done();
                 });
             });

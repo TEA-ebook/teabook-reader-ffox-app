@@ -1,10 +1,10 @@
 /*global describe, should, it, beforeEach, afterEach, curl, sinon, $, Backbone, Teavents*/
-(function() {
+(function () {
     "use strict";
     describe('Book.Pagination view', function () {
         var sandbox, paginationInfo;
 
-        beforeEach(function() {
+        beforeEach(function () {
             // create a sandbox
             sandbox = sinon.sandbox.create();
 
@@ -17,7 +17,7 @@
             };
         });
 
-        afterEach(function() {
+        afterEach(function () {
             // restore the environment as it was before
             sandbox.restore();
         });
@@ -67,17 +67,15 @@
                     var bookPaginationView = new BookPaginationView({ model: pagination });
 
                     // When readium has changed its pagination
-                    Backbone.trigger(Teavents.MESSAGE, {
-                        type: "Readium:" + Teavents.Readium.PAGINATION_CHANGED,
-                        data: {
+                    Backbone.trigger(Teavents.Readium.PAGINATION_CHANGED,
+                        {
                             pageInfo: {
                                 spineItemIndex: 1,
                                 spineItemPageIndex: 15,
                                 spineItemPageCount: paginationInfo.pageTotal
                             },
                             spineHref: ''
-                        }
-                    });
+                        });
 
                     // It should render itself
                     BookPaginationView.prototype.render.should.have.been.calledOnce;

@@ -16,7 +16,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                     if (!this.done) {
                         var file = this.result;
                         if (file && !/\.Trashes/.test(file.name) && /.*\/[\w\-_\., ']*\.epub$/.test(file.name)) {
-                            device.addBook(file, collection, this.continue.bind(this));
+                            device.addBookToBookcase(file, collection, this.continue.bind(this));
                         } else {
                             this.continue();
                         }

@@ -15,7 +15,7 @@ define('view/book/options', ['backbone', 'model/book', 'template/book/options'],
             },
 
             initialize: function () {
-                Backbone.on(Teavents.MESSAGE, this.readiumEvent.bind(this));
+                Backbone.on(Teavents.Readium.SETTINGS_APPLIED, this.applySettings.bind(this));
                 this.fontSize = BookModel.prototype.defaults.fontSize;
             },
 
@@ -27,12 +27,10 @@ define('view/book/options', ['backbone', 'model/book', 'template/book/options'],
                 return this;
             },
 
-            readiumEvent: function (event) {
-                if (event.type === "Readium:" + Teavents.Readium.SETTINGS_APPLIED) {
-                    this.notWorking();
-                    this.fontSize = event.data.fontSize;
-                    this.render();
-                }
+            applySettings: function (data) {
+                this.notWorking();
+                this.fontSize = data.fontSize;
+                this.render();
             },
 
             updateFontSize: function (event) {
@@ -86,7 +84,7 @@ define('view/book/options', ['backbone', 'model/book', 'template/book/options'],
             },
 
             close: function () {
-                Backbone.off(Teavents.MESSAGE);
+                Backbone.off(Teavents.Readium.SETTINGS_APPLIED);
                 this.remove();
             }
         });

@@ -52,13 +52,13 @@ function fireEvent(element, event) {
 
             it('should handle postMessage events', function (done) {
                 curl(['helper/dom-events'], function (DomEvents) {
-                    sandbox.stub(DomEvents, "handleMessage");
+                    sandbox.stub(DomEvents, "handlePostMessage");
 
                     DomEvents.initialize();
                     fireEvent(window, Teavents.MESSAGE);
                     DomEvents.stop();
 
-                    DomEvents.handleMessage.should.have.been.calledOnce;
+                    DomEvents.handlePostMessage.should.have.been.calledOnce;
 
                     done();
                 });

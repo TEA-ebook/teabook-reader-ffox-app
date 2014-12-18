@@ -147,7 +147,7 @@ isReadiumReady = function () {
             // transfer pagination info to the app
             window.readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
                 window.parent.postMessage({
-                    type: "Readium:" + ReadiumSDK.Events.PAGINATION_CHANGED,
+                    type: ReadiumSDK.Events.PAGINATION_CHANGED,
                     data: {
                         pageInfo: pageChangeData.paginationInfo.openPages[0],
                         spineTotal: pageChangeData.paginationInfo.spineItemCount,
@@ -159,7 +159,7 @@ isReadiumReady = function () {
             // transfer updated settings
             window.readium.reader.on(ReadiumSDK.Events.SETTINGS_APPLIED, function () {
                 window.parent.postMessage({
-                    type: "Readium:" + ReadiumSDK.Events.SETTINGS_APPLIED,
+                    type: ReadiumSDK.Events.SETTINGS_APPLIED,
                     data: {
                         fontSize: window.readium.reader.viewerSettings().fontSize
                     }
@@ -169,7 +169,7 @@ isReadiumReady = function () {
             // transfer pinch move scale events
             window.readium.reader.on(ReadiumSDK.Events.GESTURE_PINCH_MOVE, function (scale) {
                 window.parent.postMessage({
-                    type: "Readium:" + ReadiumSDK.Events.GESTURE_PINCH_MOVE,
+                    type: ReadiumSDK.Events.GESTURE_PINCH_MOVE,
                     data: scale
                 }, "*");
             });
@@ -183,7 +183,7 @@ isReadiumReady = function () {
             ].forEach(function (event) {
                 window.readium.reader.on(event, function () {
                     window.parent.postMessage({
-                        type: "Readium:" + event
+                        type: event
                     }, "*");
                 });
             });

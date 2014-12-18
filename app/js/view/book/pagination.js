@@ -18,35 +18,33 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
             },
 
             initialize: function () {
-                Backbone.on(Teavents.MESSAGE, this.readiumEvent.bind(this));
+                Backbone.on(Teavents.Readium.PAGINATION_CHANGED, this.pageChanged.bind(this));
                 this.model.on("change", this.render, this);
             },
 
-            readiumEvent: function (event) {
-                if (event.type === "Readium:" + Teavents.Readium.PAGINATION_CHANGED) {
-                    if (event.data) {
-                        var item = false, position = false, chapterCurrent = false, chapterTotal = this.model.get('chapterTotal');
-                        if (this.toc) {
-                            item = this.toc.getItem(event.data.spineHref);
-                            if (item) {
-                                this.toc.setCurrentItem(item);
-                                position = item.get("position");
-                            }
+            pageChanged: function (data) {
+                if (data) {
+                    var item = false, position = false, chapterCurrent = false, chapterTotal = this.model.get('chapterTotal');
+                    if (this.toc) {
+                        item = this.toc.getItem(data.spineHref);
+                        if (item) {
+                            this.toc.setCurrentItem(item);
+                            position = item.get("position");
                         }
-
-                        chapterCurrent = position || (event.data.pageInfo.spineItemIndex);
-
-                        if (chapterCurrent > chapterTotal) {
-                            chapterTotal = false;
-                        }
-
-                        this.model.set({
-                            chapterTotal: chapterTotal,
-                            chapterCurrent: chapterCurrent,
-                            pageCurrent: event.data.pageInfo.spineItemPageIndex + 1,
-                            pageTotal: event.data.pageInfo.spineItemPageCount
-                        });
                     }
+
+                    chapterCurrent = position || (data.pageInfo.spineItemIndex);
+
+                    if (chapterCurrent > chapterTotal) {
+                        chapterTotal = false;
+                    }
+
+                    this.model.set({
+                        chapterTotal: chapterTotal,
+                        chapterCurrent: chapterCurrent,
+                        pageCurrent: data.pageInfo.spineItemPageIndex + 1,
+                        pageTotal: data.pageInfo.spineItemPageCount
+                    });
                 }
             },
 
@@ -164,7 +162,7 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
             },
 
             close: function () {
-                Backbone.off(Teavents.MESSAGE);
+                Backbone.off(Teavents.Readium.PAGINATION_CHANGED);
                 this.remove();
             }
         });

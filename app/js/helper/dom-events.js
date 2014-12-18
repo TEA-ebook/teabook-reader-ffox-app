@@ -7,7 +7,7 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
     _.extend(DomEvents, Backbone.Events);
 
     DomEvents.initialize = function () {
-        $(window).on(Teavents.MESSAGE, this.handleMessage);
+        $(window).on(Teavents.MESSAGE, this.handlePostMessage);
         $(window.document).on(Teavents.VISIBILITY_CHANGE, this.handleVisibilityChange);
 
         this.listenTo(Backbone, Teavents.FULLSCREEN_ENTER, this.enterFullScreen);
@@ -18,8 +18,9 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
         this.listenTo(Backbone, Teavents.UNFREEZE_BODY, this.unfreezeBody);
     };
 
-    DomEvents.handleMessage = function (event) {
-        Backbone.trigger(Teavents.MESSAGE, event.originalEvent.data);
+    DomEvents.handlePostMessage = function (event) {
+        var readiumEvent = event.originalEvent.data;
+        Backbone.trigger(readiumEvent.type, readiumEvent.data);
     };
 
     DomEvents.handleVisibilityChange = function () {
