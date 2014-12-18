@@ -49,7 +49,7 @@
                     bookView = new BookView({ model: bookModel });
 
                     // A book icon should be visible
-                    bookView.$el.find("i").attr("class").should.match(/fa\-book/);
+                    bookView.$el.find("i").attr("class").should.match(/icon\-bookcase/);
 
                     done();
                 });
