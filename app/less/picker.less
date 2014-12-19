@@ -12,9 +12,10 @@
   height: @header-height;
   justify-content: flex-start;
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100%;
+  z-index: 50;
 }
 
 .picker header .picker-title {
@@ -27,20 +28,68 @@
 
 .picker .picker-list {
   color: @ivory;
+  display: flex;
+  justify-content: center;
   margin-top: @header-height;
 }
 
 .picker-list-files {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.5rem 0 0 0;
+  width: 100%;
 }
 
 .picker-list-files li {
-  border-bottom: 1px dashed @gray;
   cursor: pointer;
+  display: flex;
+  height: 3.5rem;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+}
+
+.picker-list-files li.selected:before {
+  content: '';
+  background: rgba(0, 142, 171, 0.3);
+  height: 3.5rem;
+  padding: 1rem;
+  position: absolute;
+  top: -0.6rem;
+  width: 100%;
+}
+
+.picker-list-files li:last-child hr {
+  display: none;
+}
+
+.picker-list-files .picker-file-title {
   overflow: hidden;
+  padding: 0 1.5rem;
   text-overflow: ellipsis;
-  padding: 0.5rem;
   white-space: nowrap;
+}
+
+.picker-list-files .picker-file-path {
+  color: @gray-m1;
+  font-size: 90%;
+  padding: 0 1.5rem;
+}
+
+.picker-list-files hr {
+  background: @gray;
+  border: 0;
+  height: 1px;
+  margin-top: 0.6rem;
+  width: 90%;
+}
+
+.picker-ok {
+  color: @font-secondary-color;
+  font-size: 1rem;
+  padding: 0 1rem;
+}
+
+.picker .waiting {
+  background: none;
 }

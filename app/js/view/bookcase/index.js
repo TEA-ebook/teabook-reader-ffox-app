@@ -2,6 +2,7 @@
 define('view/bookcase/index',
     [
         'backbone',
+        'underscore',
         'helper/device',
         'helper/books-sort',
         'collection/settings',
@@ -13,7 +14,7 @@ define('view/bookcase/index',
         'template/bookcase/empty'
     ],
 
-    function (Backbone, DeviceHelper, BooksSort, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template, templateEmpty) {
+    function (Backbone, underscore, DeviceHelper, BooksSort, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template, templateEmpty) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -184,23 +185,22 @@ define('view/bookcase/index',
             },
 
             handleFile: function (event) {
-                var file, files;
+                var files;
 
                 if (window.MozActivity && event.target instanceof window.MozActivity) {
-                    file = event.target.result.blob;
+                    files = event.target.result.files;
                 } else {
                     files = event.target.files;
-                    if (files && files.length > 0) {
-                        file = files[0];
-                    }
                 }
 
-                if (file) {
+                if (files) {
                     this.collection.on('add', this.renderBooks.bind(this));
-                    DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
-                        console.info(book.get('title') + " was successfully uploaded");
-                        this.$el.find("input#book-upload").val("");
-                        this.collection.off('add');
+                    underscore.each(files, function (file) {
+                        DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
+                            console.info(book.get('title') + " was successfully uploaded");
+                            this.$el.find("input#book-upload").val("");
+                            this.collection.off('add');
+                        }.bind(this));
                     }.bind(this));
                 }
             },

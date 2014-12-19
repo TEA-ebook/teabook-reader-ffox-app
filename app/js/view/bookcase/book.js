@@ -21,15 +21,13 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
             },
 
             render: function () {
-                var attributes = this.model.attributes;
-
                 if (!this.model.has('coverUrl') && this.model.has('cover')) {
                     Device.readFile(this.model.get("cover"), function (file) {
-                        attributes.coverUrl = window.URL.createObjectURL(file);
-                        this.$el.html(bookTemplate(attributes));
+                        this.model.set('coverUrl', window.URL.createObjectURL(file));
+                        this.$el.html(bookTemplate(this.model.attributes));
                     }.bind(this));
                 } else {
-                    this.$el.html(bookTemplate(attributes));
+                    this.$el.html(bookTemplate(this.model.attributes));
                 }
             },
 

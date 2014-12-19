@@ -101,9 +101,8 @@ define('view/book/index',
                 // render sanboxed iframe
                 if (!this.model.has('coverUrl') && this.model.has('cover')) {
                     Device.readFile(this.model.get("cover"), function (file) {
-                        var attributes = this.model.attributes;
-                        attributes.coverUrl = window.URL.createObjectURL(file);
-                        this.$el.append(template(attributes));
+                        this.model.set('coverUrl', window.URL.createObjectURL(file));
+                        this.$el.append(template(this.model.attributes));
                     }.bind(this));
                 } else {
                     this.$el.append(template(this.model.attributes));
@@ -409,6 +408,7 @@ define('view/book/index',
             },
 
             savePosition: function (currentPositionInfo) {
+                this.model.unset("coverUrl", { silent: true });
                 this.model.set({
                     "position": currentPositionInfo,
                     "fontSize": this.optionsView.fontSize,
@@ -466,7 +466,33 @@ define('view/book/index',
             },
 
             close: function () {
-                Backbone.off();
+                Backbone.off(Teavents.SEND_RESOURCES);
+                Backbone.off(Teavents.EPUB_SEND);
+                Backbone.off(Teavents.READY_TO_READ);
+                Backbone.off(Teavents.TOC);
+                Backbone.off(Teavents.PAGE_BOOKMARKED);
+                Backbone.off(Teavents.CURRENT_POSITION);
+
+                Backbone.off(Teavents.Readium.GESTURE_TAP);
+                Backbone.off(Teavents.Readium.CONTENT_LOAD_START);
+                Backbone.off(Teavents.Readium.CONTENT_LOADED);
+                Backbone.off(Teavents.Readium.GESTURE_PINCH_MOVE);
+                Backbone.off(Teavents.Readium.GESTURE_PINCH);
+                Backbone.off(Teavents.Readium.PAGINATION_CHANGED);
+                Backbone.off(Teavents.Readium.SETTINGS_APPLIED);
+
+                Backbone.off(Teavents.VISIBILITY_VISIBLE);
+                Backbone.off(Teavents.OPTIONS_CLOSED);
+
+                Backbone.off(Teavents.WORKING);
+                Backbone.off(Teavents.NOT_WORKING);
+
+                Backbone.off(Teavents.Actions.OPEN_CHAPTER);
+                Backbone.off(Teavents.Actions.OPEN_PAGE);
+                Backbone.off(Teavents.Actions.OPEN_POSITION);
+                Backbone.off(Teavents.Actions.SET_FONT_SIZE);
+                Backbone.off(Teavents.Actions.SET_THEME);
+                Backbone.off(Teavents.Actions.BOOKMARK_PAGE);
 
                 this.exitFullScreen();
 
