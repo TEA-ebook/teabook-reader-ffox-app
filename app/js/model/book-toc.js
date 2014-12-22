@@ -13,10 +13,18 @@ define("model/book-toc", ["backbone", "model/book-toc-item"], function (Backbone
         },
 
         load: function (xml) {
-            var tocDom, items;
+            var tocDom, items, navEntryPoint;
 
             tocDom = (new DOMParser()).parseFromString(xml, "text/xml");
-            items = this.parseNavPoint(tocDom.querySelector("navPoint"), []);
+
+            navEntryPoint = tocDom.querySelector("navMap");
+            if (navEntryPoint) {
+                // ePub 2
+                items = this.parseNavItem(tocDom.querySelector("navPoint"), "navPoint", []);
+            } else {
+                // ePub 3
+                items = this.parseNavItem(tocDom.querySelector("li"), "li", []);
+            }
 
             this.setPositions(items, 1, 0);
             this.set("items", items);
@@ -26,31 +34,51 @@ define("model/book-toc", ["backbone", "model/book-toc-item"], function (Backbone
         },
 
         parseNavPoint: function (navPoint, items, parent) {
-            var item, navPointChild, navLabel;
+            return this.parseNavItem(navPoint, "navPoint", items, parent);
+        },
 
-            navLabel = navPoint.querySelector("navLabel");
-            if (navLabel) {
-                item = new TocItemModel({
-                    label: navLabel.textContent.trim(),
-                    href: navPoint.querySelector("content").getAttribute("src").trim(),
-                    parent: parent ? { href: parent.get('href'), label: parent.get('label')} : false
-                });
+        parseLi: function (li, items, parent) {
+            return this.parseNavItem(li, "li", items, parent);
+        },
+
+        parseNavItem: function (item, tagName, items, parent) {
+            var tocItem, childItem;
+
+            if (item.hasChildNodes()) {
+                tocItem = new TocItemModel(tagName === "li" ? this.extractNavLiInfos(item, parent) : this.extractNavPointInfos(item, parent));
 
                 // parsing first child and its siblings
-                navPointChild = navPoint.querySelector("navPoint");
-                if (navPointChild) {
-                    item.set("items", this.parseNavPoint(navPointChild, [], item));
+                childItem = item.querySelector(tagName);
+                if (childItem) {
+                    tocItem.set("items", this.parseNavItem(childItem, tagName, [], tocItem));
                 }
 
-                items.push(item);
+                items.push(tocItem);
             }
 
-            // next nav point
-            if (navPoint.nextElementSibling) {
-                this.parseNavPoint(navPoint.nextElementSibling, items, parent);
+            // next nav item
+            if (item.nextElementSibling) {
+                this.parseNavItem(item.nextElementSibling, tagName, items, parent);
             }
 
             return items;
+        },
+
+        extractNavPointInfos: function (item, parent) {
+            return {
+                label: item.querySelector("navLabel").textContent.trim(),
+                href: item.querySelector("content").getAttribute("src").trim(),
+                parent: parent ? { href: parent.get('href'), label: parent.get('label')} : false
+            };
+        },
+
+        extractNavLiInfos: function (item, parent) {
+            var link = item.querySelector("a");
+            return {
+                label: link.textContent.trim(),
+                href: link.getAttribute("href").trim(),
+                parent: parent ? { href: parent.get('href'), label: parent.get('label')} : false
+            };
         },
 
         getTotalEndPoints: function () {
@@ -98,7 +126,7 @@ define("model/book-toc", ["backbone", "model/book-toc-item"], function (Backbone
         setCurrentItem: function (item) {
             this.removeCurrent(this.get('items'), item);
             this.currentItem = item;
-            item.set("current", true);
+            item.set('current', true);
         },
 
         getFirstItem: function () {

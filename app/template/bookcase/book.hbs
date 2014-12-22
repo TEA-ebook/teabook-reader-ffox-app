@@ -2,11 +2,11 @@
     <div class="book-cover">
         <img src="{{coverUrl}}" alt="{{title}}" />
     </div>
-    <div class="book-details">
-        <span class="book-details-title">{{title}}</span>
-        <span class="book-details-authors">{{#each authors}} {{this}} {{/each}}</span>
-    </div>
 {{else}}
     <i class="icon-bookcase"></i>
 {{/if}}
+<div class="book-details">
+    <span class="book-details-title">{{title}}</span>
+    <span class="book-details-authors">{{#each authors}} {{this}} {{/each}}</span>
+</div>
 <div class="book-select"><input type="checkbox" id="{{id}}" /><label for="{{id}}"></label></div>

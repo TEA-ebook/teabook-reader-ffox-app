@@ -33,7 +33,7 @@ define("model/book-toc-item", ["backbone"], function (Backbone) {
         },
 
         getItem: function (href) {
-            if (this.get('href').startsWith(href)) {
+            if (this.get('href') === href) {
                 return this;
             }
 

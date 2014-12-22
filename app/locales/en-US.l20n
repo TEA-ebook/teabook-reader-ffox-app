@@ -54,8 +54,8 @@
 }>
 
 <welcome "<strong>Welcome to your bookcase!</strong>">
-<noBookHere "There is no book here yet.">
+<noBookHere "... which is desperately empty.">
 <useThePlusButton1 "Use the ">
-<useThePlusButton2 " button to add your own books right now.">
+<useThePlusButton2 " button to add your own books right now!">
 
 <done "Done">

@@ -151,7 +151,7 @@ isReadiumReady = function () {
                     data: {
                         pageInfo: pageChangeData.paginationInfo.openPages[0],
                         spineTotal: pageChangeData.paginationInfo.spineItemCount,
-                        spineHref: window.readium.reader.getLoadedSpineItems()[0].href
+                        spineHref: window.readium.reader.getLoadedSpineItems()[0].href + (pageChangeData.elementId ? "#" + pageChangeData.elementId : "")
                     }
                 }, "*");
             });
@@ -175,8 +175,7 @@ isReadiumReady = function () {
             });
 
             // transfer selected Readium events to the app
-            [
-                ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START,
+            [   ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START,
                 ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED,
                 ReadiumSDK.Events.GESTURE_PINCH,
                 ReadiumSDK.Events.GESTURE_TAP

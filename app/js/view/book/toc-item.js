@@ -39,11 +39,12 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
             },
 
             highlightItem: function (event) {
-                event.stopImmediatePropagation();
-                this.$el.addClass("current");
-
-                // in case of the user misses the a link, we trigger it
-                if (event.target.tagName.toLowerCase() !== 'a') {
+                if (event.target.hasAttribute('href')) {
+                    if (event.target.getAttribute("href").split('/').pop() === window.encodeURIComponent(this.model.get("href"))) {
+                        this.$el.addClass("current");
+                    }
+                } else {
+                    // in case of the user misses the a link, we trigger it
                     this.$el.find('a')[0].click();
                 }
             },

@@ -24,7 +24,7 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
 
             pageChanged: function (data) {
                 if (data) {
-                    var item = false, position = false, chapterCurrent = false, chapterTotal = this.model.get('chapterTotal');
+                    var item = false, position = false, chapterCurrent, chapterTotal = this.model.get('chapterTotal');
                     if (this.toc) {
                         item = this.toc.getItem(data.spineHref);
                         if (item) {

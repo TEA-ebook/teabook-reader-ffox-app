@@ -81,35 +81,39 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                     event.data.search = device.generateSearchString(event.data);
 
                     // generate thumbnail
-                    Resizer.resize(event.data.cover, Math.round(window.screen.height / 2), function (thumbnail) {
-                        if (thumbnail instanceof Blob) {
-                            // create cover thumbnail
-                            device.generateThumbnail(sdCard, thumbnail, event.data.authors[0].hashCode() + event.data.title.hashCode() + ".png", function (result) {
-                                // thumbnail available
-                                if (result) {
-                                    event.data.cover = result;
-                                }
+                    if (event.data.cover) {
+                        Resizer.resize(event.data.cover, Math.round(window.screen.height / 2), function (thumbnail) {
+                            if (thumbnail instanceof Blob) {
+                                // create cover thumbnail
+                                device.generateThumbnail(sdCard, thumbnail, event.data.authors[0].hashCode() + event.data.title.hashCode() + ".png", function (result) {
+                                    // thumbnail available
+                                    if (result) {
+                                        event.data.cover = result;
+                                    }
 
-                                // set metadata extracted from epub in the model
-                                book.set(event.data);
-                                book.save(null, {
-                                    'success': callback,
-                                    'error': callback
+                                    // set metadata extracted from epub in the model
+                                    device.saveBook(book, event.data, callback);
                                 });
-                            });
-                        } else {
-                            delete event.data.cover;
-                            event.data.coverUrl = thumbnail;
-                            book.set(event.data);
-                            book.save(null, {
-                                'success': callback,
-                                'error': callback
-                            });
-                        }
-                    });
+                            } else {
+                                delete event.data.cover;
+                                event.data.coverUrl = thumbnail;
+                                device.saveBook(book, event.data, callback);
+                            }
+                        });
+                    } else {
+                        device.saveBook(book, event.data, callback);
+                    }
                 };
             };
             reader.readAsArrayBuffer(file);
+        },
+
+        saveBook: function (book, data, callback) {
+            book.set(data);
+            book.save(null, {
+                'success': callback,
+                'error': callback
+            });
         },
 
         generateThumbnail: function (storage, thumbnail, fileName, callback) {
