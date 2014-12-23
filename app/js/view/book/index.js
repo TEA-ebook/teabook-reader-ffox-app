@@ -403,12 +403,10 @@ define('view/book/index',
                 this.toolbarView.hide();
             },
 
-            setBookTitle: function (title) {
-                this.paginationView.model.set('title', title);
-            },
-
             savePosition: function (currentPositionInfo) {
-                this.model.unset("coverUrl", { silent: true });
+                if (this.model.has("coverUrl") && this.model.get("coverUrl").startsWith("blob")) {
+                    this.model.unset("coverUrl", { silent: true });
+                }
                 this.model.set({
                     "position": currentPositionInfo,
                     "fontSize": this.optionsView.fontSize,

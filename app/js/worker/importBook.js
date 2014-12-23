@@ -2,7 +2,7 @@
 "use strict";
 var zip;
 
-function getFile (path, format) {
+function getFile(path, format) {
     var zipFile = zip.file(path);
     if (zipFile) {
         if (format === "bytes") {
@@ -16,7 +16,7 @@ function getFile (path, format) {
     return false;
 }
 
-function getBasePath (contentFilePath) {
+function getBasePath(contentFilePath) {
     var result = contentFilePath.match(/^(\w*)\/\w*\.opf$/);
     if (result) {
         return result[1] + '/';
@@ -63,18 +63,76 @@ function getMetadata(opf) {
     return metadata;
 }
 
+function getImagePath(element) {
+    var children, path = null;
+
+    if (element.name === 'img') {
+        return element.attr.src;
+    }
+
+    if (element.name === 'image') {
+        return element.attr["xlink:href"];
+    }
+
+    children = element.children;
+    children.forEach(function (child) {
+        path = getImagePath(child);
+    });
+
+    return path;
+}
+
 function getCoverFilePath(opf) {
-    var metaCoverNode, coverFilePath, document;
+    var document, manifestItems, spineItems, i = 0,
+        coverItem, file, coverPageDocument, coverPath = null;
 
     document = new XmlDocument(opf);
 
     // method 1 : search for meta cover
-    metaCoverNode = document.childNamed("metadata").childWithAttribute("name", "cover");
-    if (metaCoverNode) {
-        coverFilePath = document.childNamed("manifest").childWithAttribute("id", metaCoverNode.attr.content).attr.href;
+    coverItem = document.childNamed("metadata").childWithAttribute("name", "cover");
+    if (coverItem) {
+        return document.childNamed("manifest").childWithAttribute("id", coverItem.attr.content).attr.href;
     }
 
-    return coverFilePath;
+    // method 2 : search for mainfest item with property cover-image
+    manifestItems = document.childNamed("manifest").children;
+    if (manifestItems.length > 0) {
+        manifestItems.forEach(function (item) {
+            if (item.attr.properties && (item.attr.properties.indexOf("cover-image") != -1)) {
+                coverPath = item.attr.href;
+            }
+        });
+    }
+
+    // method 3 : search for a reference in the guide
+    if (!coverPath) {
+        coverItem = document.childNamed("guide").childWithAttribute("type", "cover");
+        if (coverItem) {
+            file = getFile(coverItem.attr.href);
+            coverPageDocument = new XmlDocument(file);
+            coverPath = getImagePath(coverPageDocument.childNamed("body"));
+        }
+    }
+
+    // method 4 : browse 3 first items of the spine
+    if (!coverPath) {
+        spineItems = document.childNamed("spine").children;
+        if (spineItems && spineItems.length > 0) {
+            for (i; i < Math.min(3, spineItems.length); i += 1) {
+                coverItem = document.childNamed("manifest").childWithAttribute("id", spineItems[i].attr.idref);
+                if (coverItem && coverItem.attr.href) {
+                    file = getFile(coverItem.attr.href);
+                    coverPageDocument = new XmlDocument(file);
+                    coverPath = getImagePath(coverPageDocument.childNamed("body"));
+                    if (coverPath) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return coverPath;
 }
 
 onmessage = function (event) {

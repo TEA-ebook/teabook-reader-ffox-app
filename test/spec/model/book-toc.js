@@ -48,7 +48,7 @@
                     bookToc.load(xmlToc);
 
                     // When we search for the book_0014.xhtml href
-                    var itemPosition = bookToc.getItemPosition("book_0014.xhtml");
+                    var itemPosition = bookToc.getItemPosition("book_0014.xhtml#auto-toc12");
 
                     // It should tell us it's the 11th item in the toc
                     itemPosition.should.be.equal(11);

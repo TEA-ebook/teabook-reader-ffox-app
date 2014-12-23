@@ -175,7 +175,8 @@ isReadiumReady = function () {
             });
 
             // transfer selected Readium events to the app
-            [   ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START,
+            [
+                ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START,
                 ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED,
                 ReadiumSDK.Events.GESTURE_PINCH,
                 ReadiumSDK.Events.GESTURE_TAP
