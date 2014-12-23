@@ -129,6 +129,11 @@ define('view/book/index',
                     width: 12
                 });
 
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_BOOK, {
+                    author: this.model.get('authors').join(", "),
+                    title: this.model.get('title')
+                });
+
                 return this;
             },
 
@@ -136,6 +141,11 @@ define('view/book/index',
                 // saving position
                 this.sendMessageToSandbox({
                     action: Teavents.Actions.GET_POSITION
+                });
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CLOSE_BOOK, {
+                    author: this.model.get('authors').join(", "),
+                    title: this.model.get('title')
                 });
             },
 
@@ -161,6 +171,8 @@ define('view/book/index',
                     this.paginationView.hide();
                     this.clearUiTempo();
                 }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.TAP);
             },
 
             getFontSizeSample: function () {
@@ -190,6 +202,8 @@ define('view/book/index',
                 this.lastPinchAck = Date.now();
                 this.getFontSizeSample().hide();
                 this.displayBusyWheel();
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.PINCH);
             },
 
             changeFontSize: function (fontSize) {
@@ -197,16 +211,22 @@ define('view/book/index',
                     action: Teavents.Actions.SET_FONT_SIZE,
                     content: fontSize
                 });
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_FONT_SIZE, { "fontSize": fontSize });
             },
 
             pageChange: function () {
                 this.stopSpin();
                 this.hideBusyWheel();
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.PAGE_CHANGED);
             },
 
             settingsChanged: function () {
                 this.lastPinchAck = Date.now();
                 this.hideBusyWheel();
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SETTINGS_CHANGED);
             },
 
             openChapter: function (chapter) {
@@ -241,6 +261,8 @@ define('view/book/index',
                     action: Teavents.Actions.SET_THEME,
                     content: theme
                 });
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_THEME, { "theme": theme });
             },
 
             sendMessageToSandbox: function (message) {
@@ -372,6 +394,8 @@ define('view/book/index',
                 } else {
                     this.hideToc();
                 }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_TOC);
             },
 
             hideToc: function () {
@@ -383,6 +407,8 @@ define('view/book/index',
                 this.sendMessageToSandbox({
                     action: Teavents.Actions.BOOKMARK_PAGE
                 });
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.BOOKMARK_PAGE);
             },
 
             showBookmarks: function (event) {
@@ -397,6 +423,8 @@ define('view/book/index',
                 } else {
                     this.hideBookmarks();
                 }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_BOOKMARKS);
             },
 
             hideBookmarks: function () {
@@ -427,6 +455,8 @@ define('view/book/index',
                     this.tocView.hide();
                     this.bookmarksView.hide();
                 }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_OPTIONS);
             },
 
             hideUi: function () {

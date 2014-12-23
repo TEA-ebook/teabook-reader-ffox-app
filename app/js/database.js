@@ -31,6 +31,18 @@ define('database', function () {
 
                     next();
                 }
+            },
+            {
+                version: 3,
+                migrate: function (transaction, next) {
+                    var events;
+
+                    events = transaction.db.createObjectStore("events", { keyPath: 'id', autoIncrement: true });
+                    events.createIndex("name", "name");
+                    events.createIndex("timestamp", "timestamp");
+
+                    next();
+                }
             }
         ]
     };

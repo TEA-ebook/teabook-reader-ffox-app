@@ -1,6 +1,6 @@
-/*global define, window*/
-define('router', ['backbone', 'helper/dom-events', 'route/bookcase', 'route/book', 'route/open'],
-    function (Backbone, DomEvents, bookcaseRoute, bookRoute, openRoute) {
+/*global define, window, Teavents*/
+define('router', ['backbone', 'helper/dom-events', 'helper/logger', 'route/bookcase', 'route/book', 'route/open'],
+    function (Backbone, DomEvents, Logger, bookcaseRoute, bookRoute, openRoute) {
         "use strict";
 
         var AppRouter = Backbone.Router.extend({
@@ -11,6 +11,8 @@ define('router', ['backbone', 'helper/dom-events', 'route/bookcase', 'route/book
                 // Wait for l20n initialization before any templating
                 window.document.l10n.ready(function () {
                     Backbone.history.start({ pushState: false, root: "/" });
+                    Backbone.on(Teavents.Actions.LOG, Logger.log);
+                    Logger.log(Teavents.Events.START_APP);
                 });
             },
 

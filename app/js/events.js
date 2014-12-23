@@ -33,11 +33,28 @@ window.Teavents = {
     Actions: {
         BOOKMARK_PAGE: "bookmark-page",
         GET_POSITION: "get-position",
+        LOG: "log",
         OPEN_EPUB: "open-epub",
         OPEN_CHAPTER: "open-chapter",
         OPEN_PAGE: "open-page",
         OPEN_POSITION: "open-position",
         SET_FONT_SIZE: "font-size",
         SET_THEME: "set-theme"
+    },
+
+    Events: {
+        START_APP: "start-app",
+        OPEN_BOOK: "open-book",
+        CLOSE_BOOK: "close-book",
+        BOOKMARK_PAGE: "bookmark-page",
+        SHOW_BOOKMARKS: "show-bookmarks",
+        SHOW_OPTIONS: "show-options",
+        SHOW_TOC: "show-toc",
+        CHANGE_FONT_SIZE: "change-font-size",
+        CHANGE_THEME: "change-theme",
+        PAGE_CHANGED: "pagination-changed",
+        SETTINGS_CHANGED: "settings-changed",
+        PINCH: "pinch",
+        TAP: "tap"
     }
 };
