@@ -45,7 +45,7 @@ define('gestures', ['jquery', 'hammer', 'underscore'], function ($, Hammer, _) {
                 "center": event.center,
                 "timestamp": Date.now().toString()
             });
-        }, 200);
+        }, 10);
 
         onPinch = function (event) {
             if (event.eventType === Hammer.INPUT_END) {

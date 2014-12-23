@@ -28,13 +28,13 @@ define('view/book/options', ['backbone', 'model/book', 'template/book/options'],
             },
 
             applySettings: function (data) {
-                this.notWorking();
+                this.hideBusyWheel();
                 this.fontSize = data.fontSize;
                 this.render();
             },
 
             updateFontSize: function (event) {
-                this.isWorking();
+                this.displayBusyWheel();
                 setTimeout(function () {
                     Backbone.trigger(Teavents.Actions.SET_FONT_SIZE, event.target.value);
                 }, 50);
@@ -52,12 +52,12 @@ define('view/book/options', ['backbone', 'model/book', 'template/book/options'],
                 this.hide();
             },
 
-            isWorking: function () {
+            displayBusyWheel: function () {
                 this.$el[0].classList.add("working");
                 this.$el.find('input').attr("disabled", "");
             },
 
-            notWorking: function () {
+            hideBusyWheel: function () {
                 this.$el[0].classList.remove("working");
                 this.$el.find('input').removeAttr("disabled");
             },

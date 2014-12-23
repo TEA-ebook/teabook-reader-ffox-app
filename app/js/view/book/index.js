@@ -44,13 +44,31 @@ define('view/book/index',
             autoHideTime: 5000,
 
             initialize: function (options) {
+                // UI components
+                this.paginationView = new PaginationView({ model: new BookPaginationModel() });
+                this.toolbarView = new ToolbarView();
+                this.optionsView = new OptionsView();
+                this.bookmarksView = new BookmarksView({ hash: this.model.get('hash') });
+                this.waitingTemplate = waitingTemplate();
+
+                // vars init
+                this.lastPinchAck = Date.now();
+                this.pageRequest = options.pageRequest;
+
+                // Backbone events
+                this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
                 Backbone.on(Teavents.SEND_RESOURCES, this.sendResourcesToReader.bind(this));
                 Backbone.on(Teavents.EPUB_SEND, this.sendEpub.bind(this));
                 Backbone.on(Teavents.READY_TO_READ, this.readerReady.bind(this));
                 Backbone.on(Teavents.TOC, this.generateToc.bind(this));
                 Backbone.on(Teavents.PAGE_BOOKMARKED, this.saveBookmark.bind(this));
                 Backbone.on(Teavents.CURRENT_POSITION, this.savePositionAndClose.bind(this));
+                Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
+                Backbone.on(Teavents.OPTIONS_CLOSED, this.hideUi.bind(this));
+                Backbone.on(Teavents.WORKING, this.displayBusyWheel.bind(this));
+                Backbone.on(Teavents.NOT_WORKING, this.hideBusyWheel.bind(this));
 
+                // Readium events
                 Backbone.on(Teavents.Readium.GESTURE_TAP, this.displayUi.bind(this));
                 Backbone.on(Teavents.Readium.CONTENT_LOAD_START, this.spin.bind(this));
                 Backbone.on(Teavents.Readium.CONTENT_LOADED, this.stopSpin.bind(this));
@@ -59,12 +77,7 @@ define('view/book/index',
                 Backbone.on(Teavents.Readium.PAGINATION_CHANGED, this.pageChange.bind(this));
                 Backbone.on(Teavents.Readium.SETTINGS_APPLIED, this.settingsChanged.bind(this));
 
-                Backbone.on(Teavents.VISIBILITY_VISIBLE, this.requestFullScreen);
-                Backbone.on(Teavents.OPTIONS_CLOSED, this.hideUi.bind(this));
-
-                Backbone.on(Teavents.WORKING, this.isWorking.bind(this));
-                Backbone.on(Teavents.NOT_WORKING, this.notWorking.bind(this));
-
+                // Backbone events for actions
                 Backbone.on(Teavents.Actions.OPEN_CHAPTER, this.openChapter.bind(this));
                 Backbone.on(Teavents.Actions.OPEN_PAGE, this.openPage.bind(this));
                 Backbone.on(Teavents.Actions.OPEN_POSITION, this.openPosition.bind(this));
@@ -72,19 +85,7 @@ define('view/book/index',
                 Backbone.on(Teavents.Actions.SET_THEME, this.changeTheme.bind(this));
                 Backbone.on(Teavents.Actions.BOOKMARK_PAGE, this.bookmarkPage.bind(this));
 
-                this.listenToOnce(Backbone, 'destroy', this.close.bind(this));
-
-                this.paginationView = new PaginationView({ model: new BookPaginationModel() });
-                this.toolbarView = new ToolbarView();
-                this.optionsView = new OptionsView();
-                this.bookmarksView = new BookmarksView({ hash: this.model.get('hash') });
-
-                this.waitingEl = waitingTemplate();
-
-                this.lastPinchAck = Date.now();
-
-                this.pageRequest = options.pageRequest;
-
+                // getting the book -> render it
                 this.model.fetch({
                     success: this.render.bind(this)
                 });
@@ -131,13 +132,6 @@ define('view/book/index',
                 return this;
             },
 
-            getFontSizeSample: function () {
-                if (!this.fontSample) {
-                    this.fontSample = this.$el.find(".book-font-size-sample");
-                }
-                return this.fontSample;
-            },
-
             backToBookcase: function () {
                 // saving position
                 this.sendMessageToSandbox({
@@ -169,9 +163,16 @@ define('view/book/index',
                 }
             },
 
+            getFontSizeSample: function () {
+                if (!this.fontSample) {
+                    this.fontSample = this.$el.find(".book-font-size-sample");
+                }
+                return this.fontSample;
+            },
+
             scaleFontSizeSample: function (data) {
                 var cssValues, fontSample;
-                if (Date.now() - this.lastPinchAck > 50) {
+                if (Date.now() - this.lastPinchAck > 250) { // min 250ms betwwen pinch gestures
                     cssValues = {
                         "font-size": data.fontSize + "%"
                     };
@@ -188,17 +189,24 @@ define('view/book/index',
             hideFontSizeSample: function () {
                 this.lastPinchAck = Date.now();
                 this.getFontSizeSample().hide();
-                this.isWorking();
+                this.displayBusyWheel();
+            },
+
+            changeFontSize: function (fontSize) {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.SET_FONT_SIZE,
+                    content: fontSize
+                });
             },
 
             pageChange: function () {
                 this.stopSpin();
-                this.notWorking();
+                this.hideBusyWheel();
             },
 
             settingsChanged: function () {
                 this.lastPinchAck = Date.now();
-                this.notWorking();
+                this.hideBusyWheel();
             },
 
             openChapter: function (chapter) {
@@ -226,19 +234,6 @@ define('view/book/index',
                     }
                 });
                 this.hideBookmarks();
-            },
-
-            bookmarkPage: function () {
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.BOOKMARK_PAGE
-                });
-            },
-
-            changeFontSize: function (fontSize) {
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.SET_FONT_SIZE,
-                    content: fontSize
-                });
             },
 
             changeTheme: function (theme) {
@@ -384,6 +379,12 @@ define('view/book/index',
                 this.toolbarView.hide();
             },
 
+            bookmarkPage: function () {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.BOOKMARK_PAGE
+                });
+            },
+
             showBookmarks: function (event) {
                 event.stopImmediatePropagation();
                 this.clearUiTempo();
@@ -447,11 +448,11 @@ define('view/book/index',
                 }
             },
 
-            isWorking: function () {
-                this.$el.append(this.waitingEl);
+            displayBusyWheel: function () {
+                this.$el.append(this.waitingTemplate);
             },
 
-            notWorking: function () {
+            hideBusyWheel: function () {
                 this.$el.find(".waiting").remove();
             },
 
