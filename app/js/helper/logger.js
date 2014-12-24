@@ -1,18 +1,31 @@
 /*global define, navigator, window, Teavents*/
-define("helper/logger", [ "backbone", "model/event"], function (Backbone, EventModel) {
+define("helper/logger", ["backbone", "collection/events", "model/event"], function (Backbone, EventCollection, EventModel) {
     "use strict";
 
     function createEvent(eventData) {
-        eventData.sent = false;
+        eventData.sent = "nope";
         eventData.timestamp = Date.now();
         return new EventModel(eventData);
     }
 
-    function log2db(eventData) {
+    function send2server() {
+        var events = new EventCollection();
+        events.fetch({ conditions: { sent: "nope" } }).done(function () {
+            events.models.forEach(function (event) {
+                console.info("Send event to server", event.attributes.name, event.attributes.timestamp);
+                //event.save({ sent: Date.now() });
+                event.destroy();
+            });
+        });
+    }
+
+    function log2db(eventData, send) {
         var event = createEvent(eventData);
         event.save(null, {
-            success: function (model) {
-                console.debug("Logged to indexed DB : ", model.attributes);
+            success: function () {
+                if (send && navigator.onLine) {
+                    send2server();
+                }
             }
         });
     }
@@ -23,7 +36,7 @@ define("helper/logger", [ "backbone", "model/event"], function (Backbone, EventM
             publisher: bookData.publisher,
             identifier: bookData.identifier,
             language: bookData.language,
-            authors: bookData.authors.join(", ")
+            authors: bookData.authors ? bookData.authors.join(", ") : ""
         };
 
         if (bookData.read && bookData.read > 1000000000) {
@@ -34,10 +47,11 @@ define("helper/logger", [ "backbone", "model/event"], function (Backbone, EventM
     }
 
     function handleVisibilityChange() {
+        var appClosed = window.document.hidden === true;
         log2db({
-            "name": window.document.hidden ? Teavents.Events.CLOSE_APP : Teavents.Events.OPEN_APP,
+            "name": appClosed ? Teavents.Events.CLOSE_APP : Teavents.Events.OPEN_APP,
             "data": { "online": navigator.onLine }
-        });
+        }, appClosed);
     }
 
     function logTap(center) {
@@ -47,7 +61,8 @@ define("helper/logger", [ "backbone", "model/event"], function (Backbone, EventM
         });
     }
 
-    window.document.addEventListener("visibilitychange", handleVisibilityChange, false);
+    Backbone.on(Teavents.VISIBILITY_VISIBLE, handleVisibilityChange);
+    Backbone.on(Teavents.VISIBILITY_HIDDEN, handleVisibilityChange);
     Backbone.on(Teavents.Readium.GESTURE_TAP, logTap);
 
     return {

@@ -1,4 +1,4 @@
-/*global describe, beforeEach, afterEach, should, it, curl, sinon, $, Backbone, Teavents*/
+/*global describe, beforeEach, afterEach, should, it, curl, sinon, $, Backbone, Teavents, Logger*/
 (function () {
     "use strict";
     describe('Book view', function () {

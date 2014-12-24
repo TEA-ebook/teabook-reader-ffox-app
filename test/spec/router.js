@@ -1,5 +1,5 @@
 /*global describe, beforeEach, afterEach, should, it, curl, sinon, Backbone*/
-(function() {
+(function () {
     "use strict";
     describe('Router', function () {
 
@@ -23,9 +23,12 @@
 
         describe('instance', function () {
             it('should have 5 routes', function (done) {
-                curl(['router'], function (appRouter) {
-                    appRouter.routes.should.have.keys(['', 'open', 'book/:hash', 'book/:hash/:chapter', 'book/:hash/:idref/:cfi']);
-                    done();
+                curl(['helper/logger'], function (Logger) {
+                    sandbox.stub(Logger, "startApp");
+                    curl(['router'], function (appRouter) {
+                        appRouter.routes.should.have.keys(['', 'open', 'book/:hash', 'book/:hash/:chapter', 'book/:hash/:idref/:cfi']);
+                        done();
+                    });
                 });
             });
         });

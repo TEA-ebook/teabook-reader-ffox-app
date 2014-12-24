@@ -39,6 +39,7 @@ define('database', function () {
 
                     events = transaction.db.createObjectStore("events", { keyPath: 'id', autoIncrement: true });
                     events.createIndex("name", "name");
+                    events.createIndex("sent", "sent");
                     events.createIndex("timestamp", "timestamp");
 
                     next();
