@@ -4,6 +4,7 @@ define('view/book/index',
     ['backbone',
         'helper/blobber',
         'helper/device',
+        'helper/logger',
         'model/book-toc',
         'model/book-pagination',
         'view/book/bookmarks',
@@ -17,6 +18,7 @@ define('view/book/index',
     function (Backbone,
               Blobber,
               Device,
+              Logger,
               BookTocModel,
               BookPaginationModel,
               BookmarksView,
@@ -129,10 +131,7 @@ define('view/book/index',
                     width: 12
                 });
 
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_BOOK, {
-                    author: this.model.get('authors').join(", "),
-                    title: this.model.get('title')
-                });
+                Logger.openBook(this.model.attributes);
 
                 return this;
             },
@@ -143,10 +142,7 @@ define('view/book/index',
                     action: Teavents.Actions.GET_POSITION
                 });
 
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CLOSE_BOOK, {
-                    author: this.model.get('authors').join(", "),
-                    title: this.model.get('title')
-                });
+                Logger.closeBook(this.model.attributes);
             },
 
             savePositionAndClose: function (data) {
@@ -171,8 +167,6 @@ define('view/book/index',
                     this.paginationView.hide();
                     this.clearUiTempo();
                 }
-
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.TAP);
             },
 
             getFontSizeSample: function () {
@@ -226,7 +220,7 @@ define('view/book/index',
                 this.lastPinchAck = Date.now();
                 this.hideBusyWheel();
 
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SETTINGS_CHANGED);
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SETTINGS_CHANGED, { fontSize: this.optionsView.fontSize });
             },
 
             openChapter: function (chapter) {

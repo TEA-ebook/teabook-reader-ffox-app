@@ -74,10 +74,12 @@ define('view/bookcase/options', ['backbone', 'model/setting', 'template/bookcase
 
             saveDisplayMode: function (event) {
                 this.saveSetting("view", event.target.value);
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_SETTING_VIEW, { view: event.target.value });
             },
 
             saveDisplaySort: function (event) {
                 this.saveSetting("sort", event.target.value);
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_SETTING_ORDER, { view: event.target.value });
             },
 
             saveSetting: function (name, value) {

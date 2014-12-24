@@ -35,7 +35,7 @@ define('gestures', ['jquery', 'hammer', 'underscore'], function ($, Hammer, _) {
             if (event.target.hasAttribute('href') || (event.target.parentNode.hasAttribute && event.target.parentNode.hasAttribute('href'))) {
                 $(event.target).click();
             } else {
-                reader.trigger(ReadiumSDK.Events.GESTURE_TAP);
+                reader.trigger(ReadiumSDK.Events.GESTURE_TAP, event.center);
             }
         };
 

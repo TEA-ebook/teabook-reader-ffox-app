@@ -12,7 +12,7 @@ define('router', ['backbone', 'helper/dom-events', 'helper/logger', 'route/bookc
                 window.document.l10n.ready(function () {
                     Backbone.history.start({ pushState: false, root: "/" });
                     Backbone.on(Teavents.Actions.LOG, Logger.log);
-                    Logger.log(Teavents.Events.START_APP);
+                    Logger.startApp();
                 });
             },
 

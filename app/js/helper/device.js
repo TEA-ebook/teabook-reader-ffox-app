@@ -1,6 +1,6 @@
 /*global define, Blob, FileReader, Worker, window, navigator, Uint8Array, Teavents*/
 /*jslint regexp: true, unparam: true*/
-define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (Backbone, BookModel, Resizer) {
+define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/logger'], function (Backbone, BookModel, Resizer, Logger) {
     "use strict";
 
     var device = {
@@ -114,6 +114,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer'], function (
                 'success': callback,
                 'error': callback
             });
+            Logger.addBook(data);
         },
 
         generateThumbnail: function (storage, thumbnail, fileName, callback) {

@@ -1,4 +1,4 @@
-/*global define, window*/
+/*global define, window, Teavents*/
 /*jslint unparam: true*/
 define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
     function (Backbone, template) {
@@ -47,6 +47,13 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
                     // in case of the user misses the a link, we trigger it
                     this.$el.find('a')[0].click();
                 }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CLICK_TOC_ITEM, {
+                    href: this.model.get('href'),
+                    label: this.model.get('label'),
+                    position: this.model.get('position'),
+                    level: this.model.get('level')
+                });
             },
 
             setCurrent: function (model, current) {

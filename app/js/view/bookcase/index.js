@@ -5,6 +5,7 @@ define('view/bookcase/index',
         'underscore',
         'helper/device',
         'helper/books-sort',
+        'helper/logger',
         'collection/settings',
         'view/bookcase/headerbar',
         'view/bookcase/footerbar',
@@ -14,7 +15,7 @@ define('view/bookcase/index',
         'template/bookcase/empty'
     ],
 
-    function (Backbone, underscore, DeviceHelper, BooksSort, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template, templateEmpty) {
+    function (Backbone, underscore, DeviceHelper, BooksSort, Logger, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template, templateEmpty) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -37,9 +38,7 @@ define('view/bookcase/index',
 
             initialize: function () {
                 this.listenTo(Backbone, 'destroy', this.close.bind(this));
-                this.listenTo(Backbone, Teavents.SCAN_FINISHED, this.scanFinished.bind(this));
 
-                this.ongoingScan = false;
                 this.searchText = "";
 
                 // We need the user display settings before rendering the books
@@ -125,6 +124,8 @@ define('view/bookcase/index',
                     });
                 });
 
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SEARCH, { search: searchText });
+
                 this.collection.reset(results);
                 this.renderBooks();
             },
@@ -170,6 +171,7 @@ define('view/bookcase/index',
                     this.setMode("empty");
                     this.booksEl.html(templateEmpty());
                     window.document.l10n.localizeNode(this.booksEl[0]);
+                    Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.EMPTY_BOOKCASE);
                 } else {
                     this.setMode(this.optionsView.settings.view);
                     this.collection.models.forEach(this.renderBook.bind(this));
@@ -205,14 +207,6 @@ define('view/bookcase/index',
                 }
             },
 
-            scanSdCard: function () {
-                if (!this.ongoingScan) {
-                    this.ongoingScan = true;
-                    this.collection.on('add', this.renderBooks.bind(this));
-                    DeviceHelper.scanSdCard(this.collection);
-                }
-            },
-
             /**
              * Open a file picker in Firefox OS
              * Or a hidden file input for desktop browsers
@@ -237,11 +231,6 @@ define('view/bookcase/index',
                 } else {
                     this.$el.find("input[type='file']").click();
                 }
-            },
-
-            scanFinished: function () {
-                this.ongoingScan = false;
-                this.collection.off('add');
             },
 
             showOptions: function () {
@@ -288,6 +277,7 @@ define('view/bookcase/index',
                     }
                 });
                 for (i = 0; i < toDelete.length; i += 1) {
+                    Logger.deleteBook(toDelete[i].attributes);
                     toDelete[i].destroy({ silent: true });
                 }
                 this.hideSelection();

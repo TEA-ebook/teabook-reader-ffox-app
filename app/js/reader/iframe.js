@@ -174,12 +174,19 @@ isReadiumReady = function () {
                 }, "*");
             });
 
+            // transfer tap events
+            window.readium.reader.on(ReadiumSDK.Events.GESTURE_TAP, function (center) {
+                window.parent.postMessage({
+                    type: ReadiumSDK.Events.GESTURE_TAP,
+                    data: center
+                }, "*");
+            });
+
             // transfer selected Readium events to the app
             [
                 ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START,
                 ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED,
-                ReadiumSDK.Events.GESTURE_PINCH,
-                ReadiumSDK.Events.GESTURE_TAP
+                ReadiumSDK.Events.GESTURE_PINCH
             ].forEach(function (event) {
                 window.readium.reader.on(event, function () {
                     window.parent.postMessage({
