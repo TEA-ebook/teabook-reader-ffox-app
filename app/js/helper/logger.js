@@ -1,4 +1,4 @@
-/*global define, navigator, window, Teavents*/
+/*global define, navigator, window, Teavents, Worker*/
 define("helper/logger", ["backbone", "collection/events", "model/event"], function (Backbone, EventCollection, EventModel) {
     "use strict";
 
@@ -9,13 +9,34 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
     }
 
     function send2server() {
-        var events = new EventCollection();
+        var events = new EventCollection(),
+            eventsData,
+            sendLogsWorker;
+
         events.fetch({ conditions: { sent: "nope" } }).done(function () {
+            eventsData = events.toJSON();
+
             events.models.forEach(function (event) {
-                console.info("Send event to server", event.attributes.name, event.attributes.timestamp);
-                //event.save({ sent: Date.now() });
-                event.destroy();
+                event.save({ sent: "yes" });
             });
+
+            sendLogsWorker = new Worker("sendLogs.js");
+            sendLogsWorker.postMessage(eventsData);
+        });
+    }
+
+    function clearPassedEvents() {
+        var eventCollection = new EventCollection(),
+            eventsToDestroy = [],
+            i;
+
+        eventCollection.fetch({ conditions: { sent: "yes" } }).done(function () {
+            eventCollection.models.forEach(function (event) {
+                eventsToDestroy.push(event);
+            });
+            for (i = 0; i < eventsToDestroy.length; i += 1) {
+                eventsToDestroy[i].destroy();
+            }
         });
     }
 
@@ -25,6 +46,8 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
             success: function () {
                 if (send && navigator.onLine) {
                     send2server();
+                } else if (send === false) {
+                    clearPassedEvents();
                 }
             }
         });

@@ -36,7 +36,7 @@ var paths = {
         './readium-js/out/Readium.embedded.js',
         './app/js/reader/gestures.js'
     ],
-    workers: [
+    importWorker: [
         './app/polyfill/*.js',
         './app/vendor/jszip/dist/jszip.js',
         './app/js/worker/sax.js',
@@ -195,9 +195,15 @@ gulp.task('copy-readium', function () {
         .pipe(gulp.dest(paths.dist.js));
 });
 
-gulp.task('copy-workers', function () {
-    return gulp.src(paths.workers)
+gulp.task('copy-importWorker', function () {
+    return gulp.src(paths.importWorker)
         .pipe(plugins.concat('importBook.js'))
+        .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(gulp.dest(paths.dist.html));
+});
+
+gulp.task('copy-logsWorker', function () {
+    return gulp.src('./app/js/worker/sendLogs.js')
         .pipe(gulpif(!debug, plugins.uglify()))
         .pipe(gulp.dest(paths.dist.html));
 });
@@ -246,14 +252,14 @@ gulp.task("open-browser", function () {
         .pipe(gulpif(openBrowser, plugins.open("", { url: "http://localhost:8080/" })));
 });
 
-gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-workers', 'copy-picker', 'copy-l20n', 'copy-locales', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
+gulp.task('build', ['process-images', 'process-html', 'copy-fonts', 'copy-manifest', 'copy-importWorker', 'copy-logsWorker', 'copy-picker', 'copy-l20n', 'copy-locales', 'copy-epubs', 'copy-readium', 'compile-less', 'compile-curl', 'compile-scripts']);
 
 gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
         gulp.watch(paths.less, ['compile-less']);
         gulp.watch(paths.templates, ['compile-scripts']);
         gulp.watch(paths.js, ['compile-scripts', 'copy-readium', 'copy-picker']);
-        gulp.watch(paths.workers, ['copy-workers']);
+        gulp.watch('./app/js/worker/*.js', ['copy-importWorker', 'copy-logsWorker']);
         gulp.watch(paths.images, ['process-images']);
         gulp.watch(paths.manifest, ['copy-manifest']);
         gulp.watch(paths.locales, ['copy-locales']);
@@ -300,7 +306,7 @@ gulp.task('check-code', ['jslint']);
 /******************* *****************/
 
 gulp.task('tests', function () {
-    runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'copy-workers', 'copy-l20n', 'copy-locales', 'mocha');
+    runSequence('copy-sinon-server', 'compile-templates', 'compile-curl', 'copy-test-resources', 'copy-importWorker', 'copy-logsWorker', 'copy-l20n', 'copy-locales', 'mocha');
 });
 
 gulp.task('watch-tests', function () {

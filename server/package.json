@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "compression": "^1.1.1",
-    "express": "^4.9.7"
+    "express": "^4.9.7",
+    "body-parser": "~1.4.3"
   }
 }
