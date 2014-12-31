@@ -22,11 +22,11 @@
         });
 
         describe('instance', function () {
-            it('should have 5 routes', function (done) {
+            it('should have 6 routes', function (done) {
                 curl(['helper/logger'], function (Logger) {
                     sandbox.stub(Logger, "startApp");
                     curl(['router'], function (appRouter) {
-                        appRouter.routes.should.have.keys(['', 'open', 'book/:hash', 'book/:hash/:chapter', 'book/:hash/:idref/:cfi']);
+                        appRouter.routes.should.have.keys(['', 'open', 'noconnection', 'book/:hash', 'book/:hash/:chapter', 'book/:hash/:idref/:cfi']);
                         done();
                     });
                 });

@@ -111,6 +111,11 @@ define('view/book/index',
                     this.$el.append(template(this.model.attributes));
                 }
 
+                // iframe timeout
+                this.iframeTimeout = setTimeout(function () {
+                    Backbone.history.navigate("noconnection", true);
+                }, 2000);
+
                 // render options
                 this.optionsView.render();
                 this.$el.append(this.optionsView.el);
@@ -152,6 +157,7 @@ define('view/book/index',
             },
 
             sendResourcesToReader: function () {
+                clearTimeout(this.iframeTimeout);
                 this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
             },
 

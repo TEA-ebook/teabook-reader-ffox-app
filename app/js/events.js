@@ -65,6 +65,8 @@ window.Teavents = {
         PAGE_CHANGED: "pagination-changed",
         SETTINGS_CHANGED: "settings-changed",
         PINCH: "pinch",
-        TAP: "tap"
+        TAP: "tap",
+        NO_CONNECTION: "no-connection",
+        OPEN_SETTINGS: "open-settings"
     }
 };

@@ -1,6 +1,6 @@
 /*global define, window, Teavents*/
-define('router', ['backbone', 'helper/dom-events', 'helper/logger', 'route/bookcase', 'route/book', 'route/open'],
-    function (Backbone, DomEvents, Logger, bookcaseRoute, bookRoute, openRoute) {
+define('router', ['backbone', 'helper/dom-events', 'helper/logger', 'route/bookcase', 'route/book', 'route/open', 'route/no-connection'],
+    function (Backbone, DomEvents, Logger, bookcaseRoute, bookRoute, openRoute, noConnectionRoute) {
         "use strict";
 
         var AppRouter = Backbone.Router.extend({
@@ -19,6 +19,7 @@ define('router', ['backbone', 'helper/dom-events', 'helper/logger', 'route/bookc
             routes: {
                 '': bookcaseRoute,
                 'open': openRoute,
+                'noconnection': noConnectionRoute,
                 'book/:hash': bookRoute,
                 'book/:hash/:chapter': bookRoute,
                 'book/:hash/:idref/:cfi': bookRoute

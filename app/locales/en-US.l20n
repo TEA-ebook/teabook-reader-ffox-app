@@ -59,3 +59,6 @@
 <useThePlusButton2 " button to add your own books right now!">
 
 <done "Done">
+
+<noValidConnection "You must have a valid internet connection in order to open your first book.">
+<goSettings "Go to the <strong>settings</strong> to configure a Wifi connection.">
