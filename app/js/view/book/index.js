@@ -12,6 +12,7 @@ define('view/book/index',
         'view/book/toc',
         'view/book/options',
         'view/book/pagination',
+        'view/book/font-size-sample',
         'template/book/index',
         'template/waiting',
         'spin'],
@@ -26,6 +27,7 @@ define('view/book/index',
               TocView,
               OptionsView,
               PaginationView,
+              FontSizeSampleView,
               template,
               waitingTemplate,
               Spinner) {
@@ -52,9 +54,9 @@ define('view/book/index',
                 this.optionsView = new OptionsView();
                 this.bookmarksView = new BookmarksView({ hash: this.model.get('hash') });
                 this.waitingTemplate = waitingTemplate();
+                this.fontSizeSampleView = new FontSizeSampleView();
 
                 // vars init
-                this.lastPinchAck = Date.now();
                 this.pageRequest = options.pageRequest;
 
                 // Backbone events
@@ -74,8 +76,7 @@ define('view/book/index',
                 Backbone.on(Teavents.Readium.GESTURE_TAP, this.displayUi.bind(this));
                 Backbone.on(Teavents.Readium.CONTENT_LOAD_START, this.spin.bind(this));
                 Backbone.on(Teavents.Readium.CONTENT_LOADED, this.stopSpin.bind(this));
-                Backbone.on(Teavents.Readium.GESTURE_PINCH_MOVE, this.scaleFontSizeSample.bind(this));
-                Backbone.on(Teavents.Readium.GESTURE_PINCH, this.hideFontSizeSample.bind(this));
+                Backbone.on(Teavents.Readium.GESTURE_PINCH, this.displayBusyWheel.bind(this));
                 Backbone.on(Teavents.Readium.PAGINATION_CHANGED, this.pageChange.bind(this));
                 Backbone.on(Teavents.Readium.SETTINGS_APPLIED, this.settingsChanged.bind(this));
 
@@ -93,6 +94,10 @@ define('view/book/index',
                 });
             },
 
+            /**
+             *
+             * @returns {BookView}
+             */
             render: function () {
                 // open book in fullscreen
                 this.requestFullScreen();
@@ -102,7 +107,7 @@ define('view/book/index',
                 this.$el.html(this.toolbarView.el);
 
                 // render sanboxed iframe
-                if (!this.model.has('coverUrl') && this.model.has('cover')) {
+                if (!this.model.has('coverUrl') && this.model.has('cover')) { // with cover
                     Device.readFile(this.model.get("cover"), function (file) {
                         this.model.set('coverUrl', window.URL.createObjectURL(file));
                         this.$el.append(template(this.model.attributes));
@@ -111,7 +116,7 @@ define('view/book/index',
                     this.$el.append(template(this.model.attributes));
                 }
 
-                // iframe timeout
+                // iframe timeout (no internet connection)
                 this.iframeTimeout = setTimeout(function () {
                     Backbone.history.navigate("noconnection", true);
                 }, 2000);
@@ -125,6 +130,10 @@ define('view/book/index',
 
                 // render bookmarks
                 this.$el.append(this.bookmarksView.el);
+
+                // render font size sample
+                this.fontSizeSampleView.render();
+                this.$el.append(this.fontSizeSampleView.el);
 
                 // spinning wheel : book is indeed long to load
                 this.spinner = new Spinner({
@@ -141,80 +150,51 @@ define('view/book/index',
                 return this;
             },
 
-            backToBookcase: function () {
-                // saving position
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.GET_POSITION
-                });
-
-                Logger.closeBook(this.model.attributes);
-            },
-
-            savePositionAndClose: function (data) {
-                this.savePosition(data);
-                this.close();
-                Backbone.history.navigate('/', true);
-            },
-
-            sendResourcesToReader: function () {
-                clearTimeout(this.iframeTimeout);
-                this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
-            },
-
+            /**
+             * Readium is ready in the iframe
+             */
             readerReady: function () {
                 this.$el.find(".book-loading-cover").remove();
             },
 
+            /**
+             * Displaying hidden UI (pagination, toolbar)
+             */
             displayUi: function () {
                 if (this.toolbarView.toggle()) {
                     this.paginationView.show();
-                    this.hideUiTempo();
+                    this.startUiTempo();
                 } else {
                     this.paginationView.hide();
                     this.clearUiTempo();
                 }
             },
 
-            getFontSizeSample: function () {
-                if (!this.fontSample) {
-                    this.fontSample = this.$el.find(".book-font-size-sample");
+            hideUi: function () {
+                this.toolbarView.hide();
+                this.optionsView.hide();
+                this.tocView.hide();
+                this.paginationView.hide();
+                this.bookmarksView.hide();
+            },
+
+            /**
+             * Hide UI after 5s
+             */
+            startUiTempo: function () {
+                this.uiTempo = setTimeout(this.hideUi.bind(this), this.autoHideTime);
+            },
+
+            clearUiTempo: function () {
+                if (this.uiTempo) {
+                    window.clearTimeout(this.uiTempo);
+                    this.uiTempo = null;
                 }
-                return this.fontSample;
             },
 
-            scaleFontSizeSample: function (data) {
-                var cssValues, fontSample;
-                if (Date.now() - this.lastPinchAck > 250) { // min 250ms betwwen pinch gestures
-                    cssValues = {
-                        "font-size": data.fontSize + "%"
-                    };
-                    fontSample = this.getFontSizeSample();
-                    if (fontSample.css("display") === "none") {
-                        cssValues.top = (data.center.y - (this.fontSample.height() / 2)) + "px";
-                        cssValues.left = (data.center.x - (this.fontSample.width() / 2)) + "px";
-                        fontSample.show();
-                    }
-                    fontSample.css(cssValues);
-                }
-            },
-
-            hideFontSizeSample: function () {
-                this.lastPinchAck = Date.now();
-                this.getFontSizeSample().hide();
-                this.displayBusyWheel();
-
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.PINCH);
-            },
-
-            changeFontSize: function (fontSize) {
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.SET_FONT_SIZE,
-                    content: fontSize
-                });
-
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_FONT_SIZE, { "fontSize": fontSize });
-            },
-
+            /**
+             * Pagination changed in Readium
+             */
             pageChange: function () {
                 this.stopSpin();
                 this.hideBusyWheel();
@@ -222,56 +202,118 @@ define('view/book/index',
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.PAGE_CHANGED);
             },
 
+            /**
+             * Settings applied in Readium
+             */
             settingsChanged: function () {
-                this.lastPinchAck = Date.now();
                 this.hideBusyWheel();
-
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SETTINGS_CHANGED, { fontSize: this.optionsView.fontSize });
             },
 
-            openChapter: function (chapter) {
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.OPEN_CHAPTER,
-                    content: chapter
-                });
-                this.hideToc();
+            /**
+             * Display / hide app options view
+             *
+             * @param event
+             */
+            showOptions: function (event) {
+                event.stopImmediatePropagation();
+                this.clearUiTempo();
+
+                if (this.optionsView.toggle()) {
+                    this.toolbarView.show();
+                    this.paginationView.show();
+                    this.tocView.hide();
+                    this.bookmarksView.hide();
+                }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_OPTIONS);
             },
 
-            openPage: function (percentage) {
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.OPEN_PAGE,
-                    content: percentage
-                });
-                this.hideToc();
-            },
+            /**
+             * Table of contents generation from book <nav> or .ncx
+             *
+             * @param tocXml
+             */
+            generateToc: function (tocXml) {
+                var toc = new BookTocModel();
+                toc.load(tocXml);
 
-            openPosition: function (idref, cfi) {
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.OPEN_POSITION,
-                    content: {
-                        'idref': idref,
-                        'cfi': cfi
-                    }
-                });
-                this.hideBookmarks();
-            },
+                this.tocView = new TocView({ model: toc, hash: this.model.get("hash") });
+                this.tocView.render();
 
-            changeTheme: function (theme) {
-                this.sendMessageToSandbox({
-                    action: Teavents.Actions.SET_THEME,
-                    content: theme
-                });
+                this.paginationView.setToc(toc);
 
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_THEME, { "theme": theme });
-            },
+                this.$el.append(this.tocView.el);
 
-            sendMessageToSandbox: function (message) {
-                var sandbox = this.getSandbox();
-                if (sandbox !== null) {
-                    sandbox.postMessage(message, "*");
+                // first access to the book, we trust the first item of the toc
+                if (!this.model.has('position')) {
+                    this.openChapter(toc.getFirstItem().get('href'));
                 }
             },
 
+            showToc: function (event) {
+                event.stopImmediatePropagation();
+                this.clearUiTempo();
+
+                if (this.tocView.toggle()) {
+                    this.toolbarView.show();
+                    this.optionsView.hide();
+                    this.bookmarksView.hide();
+                    this.paginationView.hide();
+                } else {
+                    this.hideToc();
+                }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_TOC);
+            },
+
+            hideToc: function () {
+                this.tocView.hide();
+                this.toolbarView.hide();
+            },
+
+            /**
+             * Bookmarks
+             *
+             * @param event
+             */
+            showBookmarks: function (event) {
+                event.stopImmediatePropagation();
+                this.clearUiTempo();
+
+                if (this.bookmarksView.toggle()) {
+                    this.toolbarView.show();
+                    this.optionsView.hide();
+                    this.tocView.hide();
+                    this.paginationView.hide();
+                } else {
+                    this.hideBookmarks();
+                }
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_BOOKMARKS);
+            },
+
+            hideBookmarks: function () {
+                this.bookmarksView.hide();
+                this.toolbarView.hide();
+            },
+
+            /**
+             * Bookmark page request in Readium to get CFI
+             */
+            bookmarkPage: function () {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.BOOKMARK_PAGE
+                });
+
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.BOOKMARK_PAGE);
+            },
+
+            /**
+             * Saving the CFI, current chapter label and page number in indexedDB
+             *
+             * @param bookmarkInfo
+             */
             saveBookmark: function (bookmarkInfo) {
                 var paginationInfo = this.paginationView.model.attributes,
                     tocItem = this.tocView.model.getCurrentItem().attributes;
@@ -290,6 +332,64 @@ define('view/book/index',
                 });
             },
 
+            /**
+             * User want to go back to bookcase :
+             *  - save reading position & reader settings (theme, font size)
+             *  - close view and Log event for analytics
+             */
+            backToBookcase: function () {
+                // saving reading position first
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.GET_POSITION
+                });
+
+                Logger.closeBook(this.model.attributes);
+            },
+
+            savePositionAndClose: function (data) {
+                this.savePosition(data);
+                this.close();
+                Backbone.history.navigate('/', true);
+            },
+
+            savePosition: function (currentPositionInfo) {
+                if (this.model.has("coverUrl") && this.model.get("coverUrl").startsWith("blob")) {
+                    this.model.unset("coverUrl", { silent: true });
+                }
+                this.model.set({
+                    "position": currentPositionInfo,
+                    "fontSize": this.optionsView.fontSize,
+                    "theme": this.optionsView.theme,
+                    "read": Date.now()
+                }, { silent: true });
+                this.model.save();
+            },
+
+            /**
+             * Little spinning wheel for long actions
+             */
+            displayBusyWheel: function () {
+                this.$el.append(this.waitingTemplate);
+            },
+
+            hideBusyWheel: function () {
+                this.$el.find(".waiting").remove();
+            },
+
+            /**
+             * Full screen when reading a book
+             */
+            requestFullScreen: function () {
+                Backbone.trigger(Teavents.FULLSCREEN_ENTER);
+            },
+
+            exitFullScreen: function () {
+                Backbone.trigger(Teavents.FULLSCREEN_EXIT);
+            },
+
+            /**
+             * Readium like spinner for book loading
+             */
             spin: function () {
                 this.spinner.spin(this.$el[0]);
             },
@@ -298,11 +398,35 @@ define('view/book/index',
                 this.spinner.stop();
             },
 
+
+            /** **********************************************************************************/
+            /** ********************** iFrame post message communication *************************/
+            /** **********************************************************************************/
+
             getSandbox: function () {
                 if (!this.sandbox) {
                     this.sandbox = this.$el.find('iframe')[0].contentWindow;
                 }
                 return this.sandbox;
+            },
+
+            sendMessageToSandbox: function (message) {
+                var sandbox = this.getSandbox();
+                if (sandbox !== null) {
+                    sandbox.postMessage(message, "*");
+                }
+            },
+
+            transferFile: function (filePath, fileType, dest) {
+                // transfer resource to iframe
+                Blobber.buffery(filePath, function (buffer) {
+                    var objData = {
+                        action: "transfer",
+                        type: fileType,
+                        content: buffer
+                    };
+                    dest.postMessage(objData, "*");
+                });
             },
 
             sendEpub: function () {
@@ -353,147 +477,63 @@ define('view/book/index',
                 };
             },
 
-            transferFile: function (filePath, fileType, dest) {
-                // transfer resource to iframe
-                Blobber.buffery(filePath, function (buffer) {
-                    var objData = {
-                        action: "transfer",
-                        type: fileType,
-                        content: buffer
-                    };
-                    dest.postMessage(objData, "*");
-                });
+            /**
+             * We send the js code to the iframe (with Readium inside)
+             */
+            sendResourcesToReader: function () {
+                clearTimeout(this.iframeTimeout);
+                this.transferFile("js/readium.js", "text/javascript", this.getSandbox());
             },
 
-            generateToc: function (tocXml) {
-                var toc = new BookTocModel();
-                toc.load(tocXml);
-
-                this.tocView = new TocView({ model: toc, hash: this.model.get("hash") });
-                this.tocView.render();
-
-                this.paginationView.setToc(toc);
-
-                this.$el.append(this.tocView.el);
-
-                // first access to the book, we trust the first item of the toc
-                if (!this.model.has('position')) {
-                    this.openChapter(toc.getFirstItem().get('href'));
-                }
-            },
-
-            showToc: function (event) {
-                event.stopImmediatePropagation();
-                this.clearUiTempo();
-
-                if (this.tocView.toggle()) {
-                    this.toolbarView.show();
-                    this.optionsView.hide();
-                    this.bookmarksView.hide();
-                    this.paginationView.hide();
-                } else {
-                    this.hideToc();
-                }
-
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_TOC);
-            },
-
-            hideToc: function () {
-                this.tocView.hide();
-                this.toolbarView.hide();
-            },
-
-            bookmarkPage: function () {
+            changeFontSize: function (fontSize) {
                 this.sendMessageToSandbox({
-                    action: Teavents.Actions.BOOKMARK_PAGE
+                    action: Teavents.Actions.SET_FONT_SIZE,
+                    content: fontSize
                 });
 
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.BOOKMARK_PAGE);
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_FONT_SIZE, { "fontSize": fontSize });
             },
 
-            showBookmarks: function (event) {
-                event.stopImmediatePropagation();
-                this.clearUiTempo();
-
-                if (this.bookmarksView.toggle()) {
-                    this.toolbarView.show();
-                    this.optionsView.hide();
-                    this.tocView.hide();
-                    this.paginationView.hide();
-                } else {
-                    this.hideBookmarks();
-                }
-
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_BOOKMARKS);
+            openChapter: function (chapter) {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.OPEN_CHAPTER,
+                    content: chapter
+                });
+                this.hideToc();
             },
 
-            hideBookmarks: function () {
-                this.bookmarksView.hide();
-                this.toolbarView.hide();
+            openPage: function (percentage) {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.OPEN_PAGE,
+                    content: percentage
+                });
+                this.hideToc();
             },
 
-            savePosition: function (currentPositionInfo) {
-                if (this.model.has("coverUrl") && this.model.get("coverUrl").startsWith("blob")) {
-                    this.model.unset("coverUrl", { silent: true });
-                }
-                this.model.set({
-                    "position": currentPositionInfo,
-                    "fontSize": this.optionsView.fontSize,
-                    "theme": this.optionsView.theme,
-                    "read": Date.now()
-                }, { silent: true });
-                this.model.save();
+            openPosition: function (idref, cfi) {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.OPEN_POSITION,
+                    content: {
+                        'idref': idref,
+                        'cfi': cfi
+                    }
+                });
+                this.hideBookmarks();
             },
 
-            showOptions: function (event) {
-                event.stopImmediatePropagation();
-                this.clearUiTempo();
+            changeTheme: function (theme) {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.SET_THEME,
+                    content: theme
+                });
 
-                if (this.optionsView.toggle()) {
-                    this.toolbarView.show();
-                    this.paginationView.show();
-                    this.tocView.hide();
-                    this.bookmarksView.hide();
-                }
-
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_OPTIONS);
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CHANGE_THEME, { "theme": theme });
             },
 
-            hideUi: function () {
-                this.toolbarView.hide();
-                this.optionsView.hide();
-                this.tocView.hide();
-                this.paginationView.hide();
-                this.bookmarksView.hide();
-            },
 
-            hideUiTempo: function () {
-                this.uiTempo = setTimeout(this.hideUi.bind(this), this.autoHideTime);
-            },
-
-            clearUiTempo: function () {
-                if (this.uiTempo) {
-                    window.clearTimeout(this.uiTempo);
-                    this.uiTempo = null;
-                }
-            },
-
-            displayBusyWheel: function () {
-                this.$el.append(this.waitingTemplate);
-            },
-
-            hideBusyWheel: function () {
-                this.$el.find(".waiting").remove();
-            },
-
-            requestFullScreen: function () {
-                Backbone.trigger(Teavents.FULLSCREEN_ENTER);
-            },
-
-            exitFullScreen: function () {
-                Backbone.trigger(Teavents.FULLSCREEN_EXIT);
-            },
-
+            /**
+             * Removing all event listeners & removing all UI
+             */
             close: function () {
                 Backbone.off(Teavents.SEND_RESOURCES);
                 Backbone.off(Teavents.EPUB_SEND);
@@ -505,7 +545,6 @@ define('view/book/index',
                 Backbone.off(Teavents.Readium.GESTURE_TAP);
                 Backbone.off(Teavents.Readium.CONTENT_LOAD_START);
                 Backbone.off(Teavents.Readium.CONTENT_LOADED);
-                Backbone.off(Teavents.Readium.GESTURE_PINCH_MOVE);
                 Backbone.off(Teavents.Readium.GESTURE_PINCH);
                 Backbone.off(Teavents.Readium.PAGINATION_CHANGED);
                 Backbone.off(Teavents.Readium.SETTINGS_APPLIED);
@@ -525,6 +564,7 @@ define('view/book/index',
 
                 this.exitFullScreen();
 
+                this.fontSizeSampleView.remove();
                 this.toolbarView.remove();
                 this.paginationView.close();
                 if (this.tocView) {
