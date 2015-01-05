@@ -15,7 +15,8 @@ define('view/book/index',
         'view/book/font-size-sample',
         'template/book/index',
         'template/waiting',
-        'spin'],
+        'template/spinner'
+        ],
     function (Backbone,
               Blobber,
               Device,
@@ -30,7 +31,7 @@ define('view/book/index',
               FontSizeSampleView,
               template,
               waitingTemplate,
-              Spinner) {
+              spinnerTemplate) {
         "use strict";
 
         var BookView = Backbone.View.extend({
@@ -136,14 +137,8 @@ define('view/book/index',
                 this.$el.append(this.fontSizeSampleView.el);
 
                 // spinning wheel : book is indeed long to load
-                this.spinner = new Spinner({
-                    hwaccel: true,
-                    lines: 12,
-                    length: 0,
-                    radius: 29,
-                    trail: 40,
-                    width: 12
-                });
+                this.$el.append(spinnerTemplate());
+                this.spinner = this.$el.find(".loader");
 
                 Logger.openBook(this.model.attributes);
 
@@ -391,11 +386,11 @@ define('view/book/index',
              * Readium like spinner for book loading
              */
             spin: function () {
-                this.spinner.spin(this.$el[0]);
+                this.spinner.css('visibility', 'visible');
             },
 
             stopSpin: function () {
-                this.spinner.stop();
+                this.spinner.css('visibility', 'hidden');
             },
 
 

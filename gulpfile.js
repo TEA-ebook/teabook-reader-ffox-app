@@ -16,6 +16,7 @@ var openBrowser = args['nobrowser'] ? false : true;
 
 var paths = {
     less: [
+        './app/less/loader.css',
         './app/less/teareader.css',
         './app/less/*.less'
     ],
@@ -270,6 +271,13 @@ gulp.task('watch-codebase', ['build'], function () {
 gulp.task('default', function () {
     runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
 });
+
+gulp.task('debug', function () {
+    debug = true;
+    openBrowser = false;
+    runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
+});
+
 
 
 /******************* *****************/
