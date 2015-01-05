@@ -27,8 +27,8 @@ define('view/book/font-size-sample', ['backbone'],
                     "font-size": data.fontSize + "%"
                 };
                 if (this.$el.css("display") === "none") {
-                    cssValues.top = (data.center.y - (this.fontSample.height() / 2)) + "px";
-                    cssValues.left = (data.center.x - (this.fontSample.width() / 2)) + "px";
+                    cssValues.top = (data.center.y - (this.$el.height() / 2)) + "px";
+                    cssValues.left = (data.center.x - (this.$el.width() / 2)) + "px";
                     this.$el.show();
                 }
                 this.$el.css(cssValues);
