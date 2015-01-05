@@ -82,7 +82,7 @@ function getImagePath(element) {
     return path;
 }
 
-function getCoverFilePath(opf) {
+function getCoverFilePath(opf, basePath) {
     var document, manifestItems, spineItems, i = 0,
         coverItem, file, coverPageDocument, coverPath = null;
 
@@ -121,7 +121,7 @@ function getCoverFilePath(opf) {
             for (i; i < Math.min(3, spineItems.length); i += 1) {
                 coverItem = document.childNamed("manifest").childWithAttribute("id", spineItems[i].attr.idref);
                 if (coverItem && coverItem.attr.href) {
-                    file = getFile(coverItem.attr.href);
+                    file = getFile(basePath + coverItem.attr.href);
                     coverPageDocument = new XmlDocument(file);
                     coverPath = getImagePath(coverPageDocument.childNamed("body"));
                     if (coverPath) {
@@ -136,7 +136,7 @@ function getCoverFilePath(opf) {
 }
 
 onmessage = function (event) {
-    var containerFile, opfFilePath, opfFile, coverFilePath, metadata;
+    var containerFile, opfFilePath, basePath, opfFile, coverFilePath, metadata;
 
     zip = new JSZip(event.data);
 
@@ -146,14 +146,15 @@ onmessage = function (event) {
     // then get the .opf file
     opfFilePath = getOpfFilePath(containerFile);
     opfFile = getFile(opfFilePath);
+    basePath = getBasePath(opfFilePath);
 
     // extract metadata
     metadata = getMetadata(opfFile);
 
     // extract the cover
-    coverFilePath = getCoverFilePath(opfFile);
+    coverFilePath = getCoverFilePath(opfFile, basePath);
     if (coverFilePath) {
-        metadata.cover = getFile(getBasePath(opfFilePath) + coverFilePath, "blob");
+        metadata.cover = getFile(basePath + coverFilePath, "blob");
     }
 
     // send book metadata to the caller

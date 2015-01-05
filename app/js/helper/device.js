@@ -77,6 +77,9 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
                 importBookWorker = new Worker("importBook.js");
                 importBookWorker.postMessage(e.target.result);
                 importBookWorker.onmessage = function (event) {
+                    // generate uuid
+                    event.data.uuid = Logger.generateUUID();
+
                     // generate search string
                     event.data.search = device.generateSearchString(event.data);
 

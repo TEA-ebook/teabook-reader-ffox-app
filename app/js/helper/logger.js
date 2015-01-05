@@ -1,8 +1,29 @@
 /*global define, navigator, window, Teavents, Worker*/
+/*jslint bitwise:true*/
 define("helper/logger", ["backbone", "collection/events", "model/event"], function (Backbone, EventCollection, EventModel) {
     "use strict";
 
+    var uuid, purgeTriggerLimit = 500, limit = Math.round(purgeTriggerLimit * 0.8);
+
+    function generateUUID() {
+        var now, random, id;
+        now = Date.now();
+        id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            random = (now + Math.random() * 16) % 16 | 0;
+            now = Math.floor(now / 16);
+            return (c === 'x' ? random : (random & 0x3 | 0x8)).toString(16);
+        });
+        return id;
+    }
+
+    uuid = window.localStorage.getItem("uuid");
+    if (!uuid) {
+        uuid = generateUUID();
+        window.localStorage.setItem("uuid", uuid);
+    }
+
     function createEvent(eventData) {
+        eventData.uuid = uuid;
         eventData.sent = "nope";
         eventData.timestamp = Date.now();
         return new EventModel(eventData);
@@ -16,12 +37,12 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         events.fetch({ conditions: { sent: "nope" } }).done(function () {
             eventsData = events.toJSON();
 
+            sendLogsWorker = new Worker("sendLogs.js");
+            sendLogsWorker.postMessage(eventsData);
+
             events.models.forEach(function (event) {
                 event.save({ sent: "yes" });
             });
-
-            sendLogsWorker = new Worker("sendLogs.js");
-            sendLogsWorker.postMessage(eventsData);
         });
     }
 
@@ -40,12 +61,49 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         });
     }
 
+    function compactEventsTable() {
+        var eventCollection = new EventCollection(), nbEvents, eventsToDestroy = [], i;
+        eventCollection.fetch().done(function () {
+            nbEvents = eventCollection.models.length;
+            console.debug(nbEvents + " events in DB");
+            if (nbEvents >= purgeTriggerLimit) {
+                // get events to purge
+                eventCollection.models.forEach(function (event) {
+                    if ((eventsToDestroy.length < (nbEvents - limit)) && event.get('name') !== Teavents.Events.PURGE) {
+                        eventsToDestroy.push(event);
+                    }
+                });
+
+                // remember that we purged it
+                createEvent({
+                    name: Teavents.Events.PURGE,
+                    data: {
+                        from: eventsToDestroy[0].get('timestamp'),
+                        to: eventsToDestroy[eventsToDestroy.length - 1].get('timestamp'),
+                        number: eventsToDestroy.length
+                    }
+                }).save().done(function () {
+                    console.info(eventsToDestroy.length + " events were removed from indexedDB.");
+                });
+
+                // do it
+                for (i = 0; i < eventsToDestroy.length; i += 1) {
+                    eventsToDestroy[i].destroy();
+                }
+            }
+        });
+    }
+
     function log2db(eventData, send) {
         var event = createEvent(eventData);
         event.save(null, {
             success: function () {
-                if (send && navigator.onLine) {
-                    send2server();
+                if (send) {
+                    if (navigator.onLine) {
+                        send2server();
+                    } else {
+                        compactEventsTable();
+                    }
                 } else if (send === false) {
                     clearPassedEvents();
                 }
@@ -55,6 +113,7 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
 
     function filterBookData(bookData) {
         var data = {
+            uuid: bookData.uuid,
             title: bookData.title,
             publisher: bookData.publisher,
             identifier: bookData.identifier,
@@ -149,6 +208,8 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
                     online: navigator.onLine
                 }
             });
-        }
+        },
+
+        generateUUID: generateUUID
     };
 });

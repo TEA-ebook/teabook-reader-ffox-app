@@ -67,6 +67,7 @@ window.Teavents = {
         PINCH: "pinch",
         TAP: "tap",
         NO_CONNECTION: "no-connection",
-        OPEN_SETTINGS: "open-settings"
+        OPEN_SETTINGS: "open-settings",
+        PURGE: "purge-events"
     }
 };
