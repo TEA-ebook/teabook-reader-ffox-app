@@ -17,7 +17,7 @@ function listDir(directory, callback) {
         cursor.onsuccess = function () {
             if (!this.done) {
                 var file = this.result;
-                if (file && !/\.Trashes/.test(file.name) && /.*\/[\w\-_\., ']*\.epub$/.test(file.name)) {
+                if (file && !/\.Trashes/.test(file.name) && /.*\/[^\.][\w\-_\., ']*\.epub$/.test(file.name)) {
                     files.push(file.name);
                 }
                 this.continue();
