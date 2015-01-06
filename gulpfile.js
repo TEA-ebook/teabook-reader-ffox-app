@@ -11,8 +11,14 @@ var amd = require('amd-optimize');
 var addsrc = require('gulp-add-src');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
 
-var debug = args.debug ? true : false;
 var openBrowser = args['nobrowser'] ? false : true;
+var debug = false;
+var env = args.env;
+
+if (env === undefined) {
+    env = 'local';
+    debug = true;
+}
 
 var paths = {
     less: [
@@ -59,6 +65,7 @@ var paths = {
         locales: './dist/locales'
     },
     curl: [
+        './app/conf/' + env + '.js',
         './app/polyfill/*.js',
         './app/vendor/curl/src/curl.js'
     ],
@@ -204,7 +211,8 @@ gulp.task('copy-importWorker', function () {
 });
 
 gulp.task('copy-logsWorker', function () {
-    return gulp.src('./app/js/worker/sendLogs.js')
+    return gulp.src(['./app/conf/' + env + '.js', './app/js/worker/sendLogs.js'])
+        .pipe(plugins.concat('sendLogs.js'))
         .pipe(gulpif(!debug, plugins.uglify()))
         .pipe(gulp.dest(paths.dist.html));
 });
@@ -259,6 +267,7 @@ gulp.task('watch-codebase', ['build'], function () {
     if (debug) {
         gulp.watch(paths.less, ['compile-less']);
         gulp.watch(paths.templates, ['compile-scripts']);
+        gulp.watch(paths.curl, ['compile-curl']);
         gulp.watch(paths.js, ['compile-scripts', 'copy-readium', 'copy-picker']);
         gulp.watch('./app/js/worker/*.js', ['copy-importWorker', 'copy-logsWorker']);
         gulp.watch(paths.images, ['process-images']);

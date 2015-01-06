@@ -108,13 +108,18 @@ define('view/book/index',
                 this.$el.html(this.toolbarView.el);
 
                 // render sanboxed iframe
+                var attributes = {
+                    host: window.Conf.host
+                };
                 if (!this.model.has('coverUrl') && this.model.has('cover')) { // with cover
                     Device.readFile(this.model.get("cover"), function (file) {
                         this.model.set('coverUrl', window.URL.createObjectURL(file));
-                        this.$el.append(template(this.model.attributes));
+                        attributes.book = this.model.attributes;
+                        this.$el.append(template(attributes));
                     }.bind(this));
                 } else {
-                    this.$el.append(template(this.model.attributes));
+                    attributes.book = this.model.attributes;
+                    this.$el.append(template(attributes));
                 }
 
                 // iframe timeout (no internet connection)
