@@ -6,16 +6,18 @@ define('view/bookcase/index',
         'helper/device',
         'helper/books-sort',
         'helper/logger',
+        'collection/books',
         'collection/settings',
         'view/bookcase/headerbar',
         'view/bookcase/footerbar',
         'view/bookcase/options',
         'view/bookcase/book',
+        'view/bookcase/added-books',
         'template/bookcase/index',
         'template/bookcase/empty'
     ],
 
-    function (Backbone, underscore, DeviceHelper, BooksSort, Logger, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, template, templateEmpty) {
+    function (Backbone, underscore, DeviceHelper, BooksSort, Logger, BookCollection, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, AddedBooksView, template, templateEmpty) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -32,7 +34,7 @@ define('view/bookcase/index',
                 "click .cancel": "showDelete",
                 "click .confirm": "deleteSelectedBooks",
                 "click .sort": "showOptions",
-                "change input#book-upload": "handleFile",
+                "change input#book-upload": "handleFiles",
                 "keyup input[type=search]": "searchFor"
             },
 
@@ -69,6 +71,10 @@ define('view/bookcase/index',
                 this.searchText = "";
             },
 
+            /**
+             *
+             * @param mode
+             */
             setMode: function (mode) {
                 this.booksEl.removeClass("cover");
                 this.booksEl.removeClass("detail");
@@ -186,8 +192,13 @@ define('view/bookcase/index',
                 this.booksEl.append(book.el);
             },
 
-            handleFile: function (event) {
-                var files;
+            /**
+             * Handle file(s) form file picker : add book(s) to bookcase
+             *
+             * @param event
+             */
+            handleFiles: function (event) {
+                var files, nbSelectedFiles = 0, nbProcessedFiles = 0, addedBooks = [];
 
                 if (window.MozActivity && event.target instanceof window.MozActivity) {
                     files = event.target.result.files;
@@ -196,14 +207,36 @@ define('view/bookcase/index',
                 }
 
                 if (files) {
+                    nbSelectedFiles = files.length;
                     this.collection.on('add', this.renderBooks.bind(this));
                     underscore.each(files, function (file) {
                         DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
-                            console.info(book.get('title') + " was successfully uploaded");
-                            this.$el.find("input#book-upload").val("");
-                            this.collection.off('add');
+                            if (book.get('id') !== undefined) {
+                                addedBooks.push(book);
+                                console.info(book.get('title') + " was successfully uploaded");
+                            }
+                            nbProcessedFiles += 1;
+                            if (nbProcessedFiles === nbSelectedFiles) {
+                                this.collection.off('add');
+                                this.renderAddedBooks(addedBooks);
+                            }
                         }.bind(this));
                     }.bind(this));
+
+                    this.$el.find("input#book-upload").val("");
+                }
+            },
+
+            /**
+             * Display a popup with added books covers
+             *
+             * @param books
+             */
+            renderAddedBooks: function (addedBooks) {
+                if (addedBooks.length > 0) {
+                    this.addedBooksView = new AddedBooksView();
+                    this.addedBooksView.render(addedBooks);
+                    this.$el.append(this.addedBooksView.el);
                 }
             },
 
@@ -223,7 +256,7 @@ define('view/bookcase/index',
                         }
                     });
 
-                    activity.onsuccess = this.handleFile.bind(this);
+                    activity.onsuccess = this.handleFiles.bind(this);
 
                     activity.onerror = function () {
                         console.warn(this.error);

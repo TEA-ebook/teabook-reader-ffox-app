@@ -1,6 +1,6 @@
 /*global define, window, Uint8Array, Blob*/
 define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/book'],
-    function (Backbone, Device, bookTemplate) {
+    function (Backbone, Device, template) {
         "use strict";
 
         var BookView = Backbone.View.extend({
@@ -21,13 +21,19 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
             },
 
             render: function () {
+                if (!this.model.has('uuid')) {
+                    this.$el.addClass('loading');
+                } else {
+                    this.$el.removeClass('loading');
+                }
+
                 if (!this.model.has('coverUrl') && this.model.has('cover')) {
                     Device.readFile(this.model.get("cover"), function (file) {
                         this.model.set('coverUrl', window.URL.createObjectURL(file));
-                        this.$el.html(bookTemplate(this.model.attributes));
+                        this.$el.html(template(this.model.attributes));
                     }.bind(this));
                 } else {
-                    this.$el.html(bookTemplate(this.model.attributes));
+                    this.$el.html(template(this.model.attributes));
                 }
             },
 

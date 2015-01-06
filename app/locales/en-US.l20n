@@ -6,6 +6,7 @@
 
 <plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
 <rand($n) { $n == 0 ? "zero" : $n == 1 ? "one" : $n == 2 ? "two" : $n == 3 ? "three" : "four" }>
+<maxThree($n) { $n == 1 ? "one" : $n <= 3 ? "some" : "many" }>
 
 <toc "Table of contents">
 <chapter "Chapter">
@@ -62,3 +63,9 @@
 
 <noValidConnection "You must have a valid internet connection in order to open your first book.">
 <goSettings "Go to the <strong>settings</strong> to configure a Wifi connection.">
+
+<yourNewBooks[maxThree($total)] {
+ one: "Yay! you just added this book :",
+ some: "Your {{ $total }} new books !",
+ many: "You just added {{ $total }} books, there are 3:"
+}>

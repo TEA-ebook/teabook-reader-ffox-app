@@ -39,12 +39,15 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
 
         addBookToBookcase: function (file, collection, callback) {
             var book = new BookModel(), path, title;
+
             path = window.decodeURIComponent(file.name);
             if (!navigator.mozSetMessageHandler) {
                 path = "books/" + path;
             }
+
             title = path.match(/\/([\w\-_\., ']*)\.epub$/);
             title = title ? title[1] : path;
+
             book.save({
                 'title': title,
                 'path': path,

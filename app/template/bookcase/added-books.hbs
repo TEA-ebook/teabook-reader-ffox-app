@@ -1,0 +1,11 @@
+<div class="added-books-content">
+    <span class="added-books-text" data-l10n-id="yourNewBooks">Vos {{total}} nouveaux livres :</span>
+
+    <div class="added-books-covers">
+    {{#each books}}
+        <a href="#/book/{{this.hash}}">
+            <img src="{{this.coverUrl}}" alt="{{this.title}}"/>
+        </a>
+    {{/each}}
+    </div>
+</div>
