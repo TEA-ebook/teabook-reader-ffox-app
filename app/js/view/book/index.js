@@ -1,4 +1,4 @@
-/*global define, navigator, FileReader, window, Teavents*/
+/*global define, navigator, FileReader, window, alert, Teavents*/
 /*jslint stupid: true*/
 define('view/book/index',
     ['backbone',
@@ -473,8 +473,10 @@ define('view/book/index',
 
                 // we need to better handle that
                 request.onerror = function () {
-                    console.error(this.error);
-                };
+                    alert(this.model.get('title') + window.document.l10n.getSync('fileNotOnSdCardError'));
+                    this.model.destroy();
+                    Backbone.history.navigate('/', true);
+                }.bind(this);
             },
 
             /**

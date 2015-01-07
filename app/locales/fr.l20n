@@ -69,3 +69,5 @@
  some: "Bravo ! Voilà vos {{ $total }} nouveaux livres :",
  many: "Voici 3 livres parmi les {{ $total }} ajoutés :"
 }>
+
+<fileNotOnSdCardError " n'est plus présent sur votre téléphone, le livre va être supprimé de votre bibliothèque.">

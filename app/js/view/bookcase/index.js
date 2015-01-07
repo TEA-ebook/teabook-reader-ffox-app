@@ -6,7 +6,6 @@ define('view/bookcase/index',
         'helper/device',
         'helper/books-sort',
         'helper/logger',
-        'collection/books',
         'collection/settings',
         'view/bookcase/headerbar',
         'view/bookcase/footerbar',
@@ -17,7 +16,7 @@ define('view/bookcase/index',
         'template/bookcase/empty'
     ],
 
-    function (Backbone, underscore, DeviceHelper, BooksSort, Logger, BookCollection, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, AddedBooksView, template, templateEmpty) {
+    function (Backbone, underscore, DeviceHelper, BooksSort, Logger, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, AddedBooksView, template, templateEmpty) {
         "use strict";
 
         var IndexView = Backbone.View.extend({

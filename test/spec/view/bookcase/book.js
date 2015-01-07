@@ -28,7 +28,7 @@
                     // When the view is created and rendered
                     bookView = new BookView({ model: bookModel });
 
-                    // The cover of the book should be visible with an alt attribute
+                    // The cover of the book should be visible
                     bookView.$el.find("img").attr("src").should.match(/cover\.jpeg$/);
 
                     done();

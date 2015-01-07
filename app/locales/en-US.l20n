@@ -69,3 +69,5 @@
  some: "Your {{ $total }} new books !",
  many: "You just added {{ $total }} books, there are 3:"
 }>
+
+<fileNotOnSdCardError " is not on your phone anymore, it will be removed from your bookcase.">

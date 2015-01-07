@@ -75,9 +75,14 @@ if (!navigator.getDeviceStorage) {
         xhr.responseType = 'arraybuffer';
 
         xhr.onload = function () {
-            request.result = new File([xhr.response], fileName);
-            if (request.onsuccess) {
-                request.onsuccess();
+            if (xhr.status === 200) {
+                request.result = new File([xhr.response], fileName);
+                if (request.onsuccess) {
+                    request.onsuccess();
+                }
+            } else {
+                request.error = "Error getting " + fileName + " : " + xhr.statusText + " (" + xhr.status + ")";
+                request.onerror();
             }
         };
 

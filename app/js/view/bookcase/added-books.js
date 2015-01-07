@@ -1,6 +1,6 @@
 /*global define, window*/
-define('view/bookcase/added-books', ['backbone', 'helper/device', 'template/bookcase/added-books'],
-    function (Backbone, Device, template) {
+define('view/bookcase/added-books', ['backbone', 'template/bookcase/added-books'],
+    function (Backbone, template) {
         "use strict";
 
         var AddedBooksView = Backbone.View.extend({
