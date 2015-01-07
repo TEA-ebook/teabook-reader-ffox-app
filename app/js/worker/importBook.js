@@ -83,7 +83,7 @@ function getImagePath(element) {
 }
 
 function getCoverFilePath(opf, basePath) {
-    var document, manifestItems, spineItems, i = 0,
+    var document, guide, manifestItems, spineItems, i = 0,
         coverItem, file, coverPageDocument, coverPath = null;
 
     document = new XmlDocument(opf);
@@ -106,11 +106,14 @@ function getCoverFilePath(opf, basePath) {
 
     // method 3 : search for a reference in the guide
     if (!coverPath) {
-        coverItem = document.childNamed("guide").childWithAttribute("type", "cover");
-        if (coverItem) {
-            file = getFile(coverItem.attr.href);
-            coverPageDocument = new XmlDocument(file);
-            coverPath = getImagePath(coverPageDocument.childNamed("body"));
+        guide = document.childNamed("guide");
+        if (guide) {
+            coverItem = guide.childWithAttribute("type", "cover");
+            if (coverItem) {
+                file = getFile(coverItem.attr.href);
+                coverPageDocument = new XmlDocument(file);
+                coverPath = getImagePath(coverPageDocument.childNamed("body"));
+            }
         }
     }
 
