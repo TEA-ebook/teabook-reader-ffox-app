@@ -33,6 +33,7 @@ define('view/bookcase/index',
                 "click .cancel": "showDelete",
                 "click .confirm": "deleteSelectedBooks",
                 "click .sort": "showOptions",
+                "click .book": "openBookEffect",
                 "change input#book-upload": "handleFiles",
                 "keyup input[type=search]": "searchFor"
             },
@@ -124,9 +125,9 @@ define('view/bookcase/index',
 
                 results = this.collection.filter(function (book) {
                     var search = book.get('search');
-                    return searchTokens.every(function (token) {
+                    return search ? searchTokens.every(function (token) {
                         return search.indexOf(token) >= 0;
-                    });
+                    }) : false;
                 });
 
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SEARCH, { search: searchText });
@@ -265,6 +266,10 @@ define('view/bookcase/index',
                 }
             },
 
+            openBookEffect: function () {
+                this.$el.addClass("open");
+            },
+
             showOptions: function () {
                 if (this.optionsView.toggle()) {
                     this.hideSelection();
@@ -327,12 +332,12 @@ define('view/bookcase/index',
             searchFor: function (event) {
                 this.optionsView.hide();
                 var text = event.target.value.trim().toLowerCase().removeDiacritics();
-                if (text.length > 0) {
+                if (text.length > 1) {
                     if (text !== this.searchText) {
                         this.fetchBooks(text);
                         this.searchText = text;
                     }
-                } else {
+                } else if ((text.length === 0) && this.searchText.length > 0) {
                     this.fetchBooks();
                 }
             },

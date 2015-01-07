@@ -44,7 +44,7 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
                     this.ell.classList.add("open");
                     setTimeout(function () {
                         Backbone.history.navigate("book/" + this.model.get("hash"), true);
-                    }.bind(this), 200);
+                    }.bind(this), 300);
                 }
             },
 

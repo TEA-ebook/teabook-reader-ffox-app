@@ -42,6 +42,7 @@ button {
   border: none;
   border-radius: 0px;
   outline: none;
+  padding: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -246,16 +247,10 @@ input[type="radio"]:checked + label:before {
   margin-top: 50%;
 }
 
-.bookcase .books.cover .book.open img {
-  transition-property: height;
-  transition-duration: 0.2s;
-  height: @bookcase-book-height - 0.3rem;
-}
-
-.bookcase .books.detail .book.open .book-cover {
-  transition-property: width;
-  transition-duration: 0.2s;
-  width: 13%;
+.bookcase.open .book:not(.open) {
+  opacity: 0.2;
+  transition-duration: 0.3s;
+  transition-property: opacity;
 }
 
 
@@ -483,12 +478,26 @@ input#book-upload {
   top: 0;
 }
 
+.headerbar .menu {
+  height: 100%;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  transition-property: left;
+  transition-duration: 0.5s;
+}
+
 .headerbar .title {
+  font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: italic;
   left: @toolbar-back-width;
   margin-left: 0px;
   position: absolute;
+  text-align: center;
   transition-property: left;
   transition-duration: 0.5s;
+  width: 80%;
 }
 
 .headerbar button {
@@ -501,7 +510,7 @@ input#book-upload {
   height: @toolbar-height;
   justify-content: flex-start;
   overflow-x: hidden;
-  padding: 0 0 0 1rem;
+  padding: 0 0 0 0.6rem;
   position: absolute;
   right: 0;
   top: 0;
@@ -570,8 +579,13 @@ input#book-upload {
   color: @search-text-color;
 }
 
+.searchbar .menu {
+  left: -11 * @toolbar-back-width;
+  position: absolute;
+}
+
 .searchbar .title {
-  left: -5 * @toolbar-back-width;
+  left: -10 * @toolbar-back-width;
   position: absolute;
 }
 

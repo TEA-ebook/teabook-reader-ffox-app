@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'teareader';
-  src: url('../font/teareader.eot?68882827');
-  src: url('../font/teareader.eot?68882827#iefix') format('embedded-opentype'),
-       url('../font/teareader.woff?68882827') format('woff'),
-       url('../font/teareader.ttf?68882827') format('truetype'),
-       url('../font/teareader.svg?68882827#teareader') format('svg');
+  src: url('../font/teareader.eot?72214071');
+  src: url('../font/teareader.eot?72214071#iefix') format('embedded-opentype'),
+       url('../font/teareader.woff?72214071') format('woff'),
+       url('../font/teareader.ttf?72214071') format('truetype'),
+       url('../font/teareader.svg?72214071#teareader') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'teareader';
-    src: url('../font/teareader.svg?68882827#teareader') format('svg');
+    src: url('../font/teareader.svg?72214071#teareader') format('svg');
   }
 }
 */
@@ -61,3 +61,4 @@
 .icon-close:before { content: '\e808'; } /* '' */
 .icon-loading:before { content: '\e809'; } /* '' */
 .icon-warning:before { content: '\e80a'; } /* '' */
+.icon-menu:before { content: '\e80b'; } /* '' */
