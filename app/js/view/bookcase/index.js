@@ -210,17 +210,21 @@ define('view/bookcase/index',
                     nbSelectedFiles = files.length;
                     this.collection.on('add', this.renderBooks.bind(this));
                     underscore.each(files, function (file) {
-                        DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
-                            if (book.get('id') !== undefined) {
-                                addedBooks.push(book);
-                                console.info(book.get('title') + " was successfully uploaded");
-                            }
-                            nbProcessedFiles += 1;
-                            if (nbProcessedFiles === nbSelectedFiles) {
-                                this.collection.off('add');
-                                this.renderAddedBooks(addedBooks);
-                            }
-                        }.bind(this));
+                        if (/\.epub$/.test(file.name)) {
+                            DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
+                                if (book.get('id') !== undefined) {
+                                    addedBooks.push(book);
+                                    console.info(book.get('title') + " was successfully uploaded");
+                                }
+                                nbProcessedFiles += 1;
+                                if (nbProcessedFiles === nbSelectedFiles) {
+                                    this.collection.off('add');
+                                    this.renderAddedBooks(addedBooks);
+                                }
+                            }.bind(this));
+                        } else {
+                            nbSelectedFiles -= 1;
+                        }
                     }.bind(this));
 
                     this.$el.find("input#book-upload").val("");
