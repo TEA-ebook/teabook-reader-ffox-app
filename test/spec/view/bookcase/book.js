@@ -30,7 +30,6 @@
 
                     // The cover of the book should be visible with an alt attribute
                     bookView.$el.find("img").attr("src").should.match(/cover\.jpeg$/);
-                    bookView.$el.find("img").attr("alt").should.match(/^mybook$/);
 
                     done();
                 });

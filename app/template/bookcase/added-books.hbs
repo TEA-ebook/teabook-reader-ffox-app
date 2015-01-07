@@ -4,7 +4,11 @@
     <div class="added-books-covers">
     {{#each books}}
         <a href="#/book/{{this.hash}}">
+        {{#if this.coverUrl}}
             <img src="{{this.coverUrl}}" alt="{{this.title}}"/>
+        {{else}}
+            <i class="icon-bookcase"></i>
+        {{/if}}
         </a>
     {{/each}}
     </div>
