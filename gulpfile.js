@@ -3,10 +3,9 @@ var plugins = require('gulp-load-plugins')();
 var del = require('del');
 var args = require('yargs').argv;
 var path = require('path');
-var map = require('map-stream');
 var runSequence = require('run-sequence');
 var gulpif = require('gulp-if');
-var pngcrush = require('imagemin-pngcrush');
+var pngquant = require('imagemin-pngquant');
 var amd = require('amd-optimize');
 var addsrc = require('gulp-add-src');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
@@ -145,7 +144,7 @@ gulp.task('process-images', function () {
             svgoPlugins: [
                 { removeViewBox: false }
             ],
-            use: [pngcrush()]
+            use: [pngquant()]
         }))
         .pipe(gulp.dest(paths.dist.images))
         .pipe(plugins.connect.reload());
