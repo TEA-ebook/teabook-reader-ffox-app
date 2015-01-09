@@ -4,9 +4,7 @@ define('helper/activity-handler', ['backbone', 'helper/device'], function (Backb
 
     if (navigator.mozSetMessageHandler) {
         navigator.mozSetMessageHandler('activity', function (activityRequest) {
-
-            if (activityRequest.source.name === 'open' || activityRequest.source.name === 'view') {
-
+            if (activityRequest.source.name === 'open') {
                 // display waiting screen
                 Backbone.history.navigate("open", true);
 

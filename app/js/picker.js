@@ -1,9 +1,9 @@
 /*global window, navigator, FileReader, document*/
-/*jslint regexp: true*/
+/*jslint regexp: true, stupid: true*/
 
 var currentDirectory = ".", activityRequest;
 
-function listDir(directory, callback) {
+function listDir(directory, callback, errorCb) {
     "use strict";
 
     var sdCard, cursor, files = [];
@@ -29,10 +29,25 @@ function listDir(directory, callback) {
         };
 
         cursor.onerror = function () {
-            console.warn("No epub file found in " + directory, this.error);
+            if (this.error && this.error.name) {
+                if (errorCb) {
+                    errorCb(this.error);
+                    return;
+                }
+                console.warn(this.error);
+            } else {
+                console.warn("No epub file found in " + directory, this.error);
+            }
+
+            if (callback) {
+                callback();
+            }
         };
     } else {
         console.error("no device storage");
+        if (callback) {
+            callback();
+        }
     }
 }
 
@@ -96,7 +111,7 @@ function displayFiles(files) {
 
     removeWaitingWheel();
 
-    if (files) {
+    if (files && files.length > 0) {
         files = files.sort(function (a, b) {
             return a.toLowerCase().localeCompare(b.toLowerCase(), navigator.language);
         });
@@ -110,7 +125,34 @@ function displayFiles(files) {
 
         document.querySelector(".picker-list-files").addEventListener("click", selectFile);
         document.querySelector(".picker-ok").addEventListener("click", sendFiles);
+    } else {
+        fileEl = document.createElement('li');
+        fileEl.classList.add('empty');
+        fileEl.innerHTML = '<span class="picker-file-title">' + window.document.l10n.getSync('noEpubOnPhone') + '</span><span class="picker-file-path">' + window.document.l10n.getSync('thatsSad') + '</span>';
+        listFilesEl.appendChild(fileEl);
+        document.querySelector(".picker-ok").remove();
     }
+}
+
+function displayError(error) {
+    "use strict";
+    var listFilesEl, errorEl, message;
+    listFilesEl = document.querySelector(".picker-list-files");
+
+    removeWaitingWheel();
+
+    errorEl = document.createElement('li');
+    errorEl.classList.add('error');
+    message = '<span class="picker-file-title">';
+    if (error && error.name === "SecurityError") {
+        message += window.document.l10n.getSync('permissionRefusedToSdCard');
+    } else {
+        message += window.document.l10n.getSync('unknownError');
+    }
+    errorEl.innerHTML = message + '</span>';
+    listFilesEl.appendChild(errorEl);
+
+    document.querySelector(".picker-ok").remove();
 }
 
 function cancelActivity() {
@@ -125,7 +167,7 @@ function cancelActivity() {
 (function () {
     "use strict";
 
-    listDir(currentDirectory, displayFiles);
+    listDir(currentDirectory, displayFiles, displayError);
 
     window.document.l10n.ready(function () {
         document.l10n.localizeNode(document.querySelector('body'));

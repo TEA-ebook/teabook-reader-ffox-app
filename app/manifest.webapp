@@ -16,33 +16,26 @@
   "installs_allowed_from": ["https://marketplace.firefox.com", "*"],
   "permissions": {
       "device-storage:sdcard":{ "access": "readwrite" },
-      "browser": {}
+      "storage": {}
   },
   "precompile": [
     "js/readium.js",
     "js/curl.js",
     "js/l20n.js",
     "js/app.js",
-    "importBook.js"
+    "importBook.js",
+    "sendlogs.js"
   ],
   "activities": {
     "pick": {
       "href": "./picker.html",
       "disposition": "inline",
       "filters": {
-          "type": [ "application/epub+zip" ]
+        "type": [ "application/epub+zip" ]
       },
       "returnValue": true
     },
     "open": {
-      "filters": {
-        "type": [ "application/epub+zip", "text/plain" ]
-      },
-      "href": "./index.html",
-      "disposition": "window",
-      "returnValue": false
-    },
-    "view": {
       "filters": {
         "type": [ "application/epub+zip", "text/plain" ]
       },

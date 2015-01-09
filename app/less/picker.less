@@ -30,10 +30,12 @@
   color: @ivory;
   display: flex;
   justify-content: center;
+  height: 100%;
   margin-top: @header-height;
 }
 
 .picker-list-files {
+  height: 100%;
   list-style: none;
   margin: 0;
   padding: 0.5rem 0 0 0;
@@ -47,6 +49,11 @@
   flex-direction: column;
   padding: 0;
   position: relative;
+}
+
+.picker-list-files li.empty, .picker-list-files li.error {
+  height: 80%;
+  justify-content: center;
 }
 
 .picker-list-files li.selected:before {
@@ -83,6 +90,12 @@
   padding: 0 6%;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.picker-list-files li.error .picker-file-title {
+  overflow: auto;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .picker-list-files .picker-file-path {
