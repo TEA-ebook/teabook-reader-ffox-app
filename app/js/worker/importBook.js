@@ -98,7 +98,7 @@ function getCoverFilePath(opf, basePath) {
     manifestItems = document.childNamed("manifest").children;
     if (manifestItems.length > 0) {
         manifestItems.forEach(function (item) {
-            if (item.attr.properties && (item.attr.properties.indexOf("cover-image") != -1)) {
+            if (item.attr.properties && (item.attr.properties.indexOf("cover-image") !== -1)) {
                 coverPath = item.attr.href;
             }
         });
@@ -138,7 +138,7 @@ function getCoverFilePath(opf, basePath) {
     return coverPath;
 }
 
-onmessage = function (event) {
+self.onmessage = function (event) {
     var containerFile, opfFilePath, basePath, opfFile, coverFilePath, metadata;
 
     zip = new JSZip(event.data);

@@ -163,8 +163,8 @@ gulp.task('compile-templates', function () {
         .pipe(plugins.handlebars())
         .pipe(plugins.wrapper({
             header: function (file) {
-                var templateName = file.path.match(/template\/([\w\-\/]*)/);
-                return 'define("template/' + templateName[1] + '", ["handlebars"], function(Handlebars) {\nreturn Handlebars.default.template(';
+                var templateName = file.path.match(/template[\/\\]([\w\-\/\\]*)/);
+                return 'define("template/' + templateName[1].replace(/\\/, '/', 'g') + '", ["handlebars"], function(Handlebars) {\nreturn Handlebars.default.template(';
             },
             footer: '); });\n'
         }))
@@ -184,7 +184,6 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
                 "jquery": "../vendor/jquery/dist/jquery",
                 "underscore": "../vendor/underscore/underscore",
                 "handlebars": "../vendor/handlebars/handlebars.amd",
-                "spin": "../vendor/spin.js/spin",
                 "indexeddb": "../vendor/indexeddb-backbonejs-adapter/backbone-indexeddb"
             }
         }))
@@ -308,7 +307,9 @@ gulp.task('readium', ['clean-readium'], function () {
 gulp.task('jslint', function () {
     return gulp.src(paths.js)
         .pipe(plugins.ignore.exclude(/template\/.*/))
+        .pipe(plugins.ignore.exclude(/template\\.*/))
         .pipe(plugins.ignore.exclude(/js\/worker\/.*/))
+        .pipe(plugins.ignore.exclude(/js\\worker\\.*/))
         .pipe(plugins.jslint({
             node: true
         }));
