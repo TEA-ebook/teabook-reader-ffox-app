@@ -23,9 +23,10 @@ var paths = {
     less: [
         './app/less/loader.css',
         './app/less/teareader.css',
+        './app/less/gaia-icons.css',
         './app/less/*.less'
     ],
-    fonts: ['./app/font/*'],
+    fonts: ['./app/font/*', './app/vendor/gaia-icons/fonts/*'],
     js: ['./app/js/**/*.js'],
     images: ['./app/images/*'],
     html: ['./app/*.html'],
@@ -53,16 +54,6 @@ var paths = {
         './app/polyfill/deviceStorage.js',
         './app/js/picker.js'
     ],
-    dist: {
-        css: './dist/css/',
-        fonts: './dist/font/',
-        js: './dist/js/',
-        templates: './app/js/template/',
-        images: './dist/images/',
-        html: './dist/',
-        epubs: './dist/books/',
-        locales: './dist/locales'
-    },
     curl: [
         './app/conf/' + env + '.js',
         './app/polyfill/*.js',
@@ -78,6 +69,16 @@ var paths = {
         dist: {
             images: './test/images/'
         }
+    },
+    dist: {
+        css: './dist/css/',
+        fonts: './dist/font/',
+        js: './dist/js/',
+        templates: './app/js/template/',
+        images: './dist/images/',
+        html: './dist/',
+        epubs: './dist/books/',
+        locales: './dist/locales'
     }
 };
 

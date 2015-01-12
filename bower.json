@@ -12,6 +12,7 @@
     "jbone": "~1.0.19",
     "l20n": "~1.0.1",
     "indexeddb-backbonejs-adapter": "*",
-    "jszip": "Stuk/jszip#~2.4.0"
+    "jszip": "Stuk/jszip#~2.4.0",
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.5"
   }
 }
