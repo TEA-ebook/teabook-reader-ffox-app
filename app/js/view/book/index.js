@@ -40,7 +40,7 @@ define('view/book/index',
 
             events: {
                 "click button.back": "backToBookcase",
-                "click button.bookcase": "backToBookcase",
+                "click button.book": "backToBookcase",
                 "click button.table-of-contents": "showToc",
                 "click button.bookmark": "showBookmarks",
                 "click button.options": "showOptions"

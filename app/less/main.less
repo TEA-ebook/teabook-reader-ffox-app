@@ -102,6 +102,12 @@ input[type="radio"]:checked + label:before {
 }
 
 /** Bookcase **/
+.bookcase {
+  background-color: @ivory;
+  position: relative;
+  z-index: 10;
+}
+
 .books .book {
   cursor: pointer;
   position: relative;
@@ -125,7 +131,8 @@ input[type="radio"]:checked + label:before {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: (@toolbar-height + 0.5rem) 0.7rem @footerbar-height 0.7rem;
+  margin: 0 0.7rem @footerbar-height 0.7rem;
+  padding-top: (@toolbar-height + 0.5rem);
 }
 
 .books.cover .book {
@@ -164,7 +171,8 @@ input[type="radio"]:checked + label:before {
 
 .books.detail {
   background-color: @white;
-  margin: @toolbar-height 0 @footerbar-height 0;
+  margin: 0 0 @footerbar-height 0;
+  padding-top: @toolbar-height;
 }
 
 .books.detail .book {
@@ -253,6 +261,14 @@ input[type="radio"]:checked + label:before {
   transition-property: opacity;
 }
 
+.bookcase {
+  transition: transform 0.25s ease;
+}
+
+.bookcase.withDrawer {
+  transform: translateX(@drawer-width);
+  transition: transform 0.25s ease;
+}
 
 input#book-upload {
   height: 100%;
@@ -399,7 +415,6 @@ input#book-upload {
   box-shadow: 0px 1px 1px #aaaaaa;
   color: @font-secondary-color;
   display: flex;
-  font-family: Fira Sans Regular;
   height: @toolbar-height;
   justify-content: flex-start;
   overflow: hidden;
@@ -415,6 +430,7 @@ input#book-upload {
   margin-left: @toolbar-back-width;
   line-height: @toolbar-height;
   opacity: 1;
+  transition: transform 0.5s ease;
 }
 
 .warning .bar .title {
@@ -481,23 +497,20 @@ input#book-upload {
 .headerbar .menu {
   height: 100%;
   left: 0;
-  opacity: 0.5;
   position: absolute;
   top: 0;
-  transition-property: left;
-  transition-duration: 0.5s;
+  transition: transform 0.5s ease;
+  width: 3rem;
 }
 
 .headerbar .title {
   font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: italic;
   left: @toolbar-back-width;
-  margin-left: 0px;
+  margin-left: 1rem;
   position: absolute;
   text-align: center;
-  transition-property: left;
-  transition-duration: 0.5s;
-  width: 80%;
+  width: 75%;
 }
 
 .headerbar button {
@@ -520,7 +533,7 @@ input#book-upload {
 }
 
 .headerbar button.search-display {
-  min-width: 40px;
+  min-width: 30px;
   height: 100%;
   left: 0;
   padding: 0;
@@ -580,13 +593,13 @@ input#book-upload {
 }
 
 .searchbar .menu {
-  left: -11 * @toolbar-back-width;
-  position: absolute;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
 }
 
 .searchbar .title {
-  left: -10 * @toolbar-back-width;
-  position: absolute;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
 }
 
 .searchbar .search {
@@ -689,8 +702,8 @@ input#book-upload {
 .panel {
   background-color: #ffffff;
   height: 100%;
-  margin-top: @toolbar-height;
   overflow-y: auto;
+  padding-top: @toolbar-height;
   width: 100%;
   z-index: 50;
 }
@@ -714,7 +727,7 @@ input#book-upload {
 .book-toc.panel, .book-bookmarks.panel {
   top: 0;
   position: absolute;
-  transition: top 0.2s;
+  transition: top 0.25s;
 }
 
 .book-toc.panel.hidden, .book-bookmarks.panel.hidden {
@@ -1151,4 +1164,63 @@ input[type=range]:focus::-webkit-slider-thumb {
   font-size: 1.6rem;
   padding: 2rem;
   text-align: center;
+}
+
+
+/*** Bookcase drawer ***/
+.drawer {
+  background-color: @warm-gray;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: @drawer-width;
+  z-index: 1;
+}
+
+.drawer > .bar {
+  background-color: @warm-gray;
+  box-shadow: 0px 1px 2px #181818;
+}
+
+.drawer ul {
+  color: @white;
+  list-style: none;
+  margin: 0;
+  padding: @toolbar-height 0 0 0;
+  width: 100%;
+}
+
+.drawer ul > li {
+  align-items: center;
+  border-bottom: 0.1rem solid #596068;
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  justify-content: space-between;
+  min-height: 3rem;
+  padding-left: 2rem;
+  padding-right: 0.5rem;
+}
+
+.drawer ul > li > i {
+  min-width: 1.5rem;
+}
+
+.drawer ul > li > label {
+  height: 22px;
+  width: 28px;
+}
+
+.drawer ul > li > label:before {
+  border-color: @blue-pastel;
+}
+
+.drawer ul > li > input:checked + label:before {
+  background-color: @blue-pastel;
+  font-weight: normal;
+}
+
+.drawer ul > li > a {
+  line-height: 3rem;
 }

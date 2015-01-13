@@ -57,6 +57,7 @@ window.Teavents = {
         SHOW_BOOKMARKS: "show-bookmarks",
         SHOW_OPTIONS: "show-options",
         SHOW_TOC: "show-toc",
+        SHOW_DRAWER: "show-drawer",
         CHANGE_FONT_SIZE: "change-font-size",
         CHANGE_ORIENTATION: "orientation-change",
         CHANGE_SETTING_VIEW: "change-setting-view",
@@ -69,5 +70,7 @@ window.Teavents = {
         NO_CONNECTION: "no-connection",
         OPEN_SETTINGS: "open-settings",
         PURGE: "purge-events"
-    }
+    },
+
+    SEND_USAGE_REPORTS: "sendUsageReports"
 };

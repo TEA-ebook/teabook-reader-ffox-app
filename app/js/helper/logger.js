@@ -3,7 +3,10 @@
 define("helper/logger", ["backbone", "collection/events", "model/event"], function (Backbone, EventCollection, EventModel) {
     "use strict";
 
-    var uuid, purgeTriggerLimit = 500, limit = Math.round(purgeTriggerLimit * 0.8);
+    var uuid,
+        purgeTriggerLimit = 500,
+        limit = Math.round(purgeTriggerLimit * 0.8),
+        sendUsageReports = window.localStorage.getItem(Teavents.SEND_USAGE_REPORTS) === "true";
 
     function generateUUID() {
         var now, random, id;
@@ -22,6 +25,10 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         window.localStorage.setItem("uuid", uuid);
     }
 
+    function onStorageEvent() {
+        sendUsageReports = window.localStorage.getItem(Teavents.SEND_USAGE_REPORTS) === "true";
+    }
+
     function createEvent(eventData) {
         eventData.uuid = uuid;
         eventData.sent = "nope";
@@ -30,20 +37,22 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
     }
 
     function send2server() {
-        var events = new EventCollection(),
-            eventsData,
-            sendLogsWorker;
+        if (sendUsageReports) {
+            var events = new EventCollection(),
+                eventsData,
+                sendLogsWorker;
 
-        events.fetch({ conditions: { sent: "nope" } }).done(function () {
-            eventsData = events.toJSON();
+            events.fetch({ conditions: { sent: "nope" } }).done(function () {
+                eventsData = events.toJSON();
 
-            sendLogsWorker = new Worker("sendLogs.js");
-            sendLogsWorker.postMessage(eventsData);
+                sendLogsWorker = new Worker("sendLogs.js");
+                sendLogsWorker.postMessage(eventsData);
 
-            events.models.forEach(function (event) {
-                event.save({ sent: "yes" });
+                events.models.forEach(function (event) {
+                    event.save({ sent: "yes" });
+                });
             });
-        });
+        }
     }
 
     function clearPassedEvents() {
@@ -95,20 +104,22 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
     }
 
     function log2db(eventData, send) {
-        var event = createEvent(eventData);
-        event.save(null, {
-            success: function () {
-                if (send) {
-                    if (navigator.onLine) {
-                        send2server();
-                    } else {
-                        compactEventsTable();
+        if (sendUsageReports) {
+            var event = createEvent(eventData);
+            event.save(null, {
+                success: function () {
+                    if (send) {
+                        if (navigator.onLine) {
+                            send2server();
+                        } else {
+                            compactEventsTable();
+                        }
+                    } else if (send === false) {
+                        clearPassedEvents();
                     }
-                } else if (send === false) {
-                    clearPassedEvents();
                 }
-            }
-        });
+            });
+        }
     }
 
     function filterBookData(bookData) {
@@ -146,6 +157,7 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
     Backbone.on(Teavents.VISIBILITY_VISIBLE, handleVisibilityChange);
     Backbone.on(Teavents.VISIBILITY_HIDDEN, handleVisibilityChange);
     Backbone.on(Teavents.Readium.GESTURE_TAP, logTap);
+    Backbone.on(Teavents.SEND_USAGE_STATS, onStorageEvent, false);
 
     return {
         log: function (name, data) {
