@@ -96,7 +96,7 @@ define('view/bookcase/index',
                     this.booksEl.addClass(mode);
                     if (mode === "empty") {
                         this.$el.addClass(mode);
-                        this.headerBar.$el.find("button").attr("disabled", "disabled");
+                        this.headerBar.$el.find("button.search-display").attr("disabled", "disabled");
                         this.footerBar.$el.find("button.remove").attr("disabled", "disabled");
                         this.footerBar.$el.find("button.sort").attr("disabled", "disabled");
                     } else {
