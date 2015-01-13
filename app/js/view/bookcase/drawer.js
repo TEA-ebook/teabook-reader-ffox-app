@@ -36,14 +36,17 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
 
             openLicenses: function () {
                 window.open("http://reader.tea-ebook.com/licenses");
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_LICENSES);
             },
 
             openUsageReports: function () {
                 window.open("http://reader.tea-ebook.com/usage-reports");
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_USAGE_REPORTS);
             },
 
             openTea: function () {
                 window.open("http://www.tea-ebook.com");
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_TEA);
             }
         });
 

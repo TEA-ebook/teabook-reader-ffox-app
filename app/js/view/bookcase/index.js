@@ -297,6 +297,7 @@ define('view/bookcase/index',
                     this.$el.removeClass("withDrawer");
                 } else {
                     this.$el.addClass("withDrawer");
+                    Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_DRAWER);
                 }
             },
 
