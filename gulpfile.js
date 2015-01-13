@@ -52,6 +52,7 @@ var paths = {
     ],
     picker: [
         './app/polyfill/deviceStorage.js',
+        './app/polyfill/arrayIncludes.js',
         './app/js/picker.js'
     ],
     curl: [

@@ -1,7 +1,7 @@
 /*global window, navigator, FileReader, document*/
 /*jslint regexp: true, stupid: true*/
 
-var currentDirectory = ".", activityRequest;
+var currentDirectory = ".", activityRequest, excludedFilesList = [];
 
 function listDir(directory, callback, errorCb) {
     "use strict";
@@ -17,7 +17,9 @@ function listDir(directory, callback, errorCb) {
         cursor.onsuccess = function () {
             if (!this.done) {
                 var file = this.result;
-                if (file && !/\.Trashes/.test(file.name) && /.*\/[^\.][\w\-_\., ']*\.epub$/.test(file.name)) {
+                if (file && !/\.Trashes/.test(file.name)
+                        && /.*\/[^\.][\w\-_\., ']*\.epub$/.test(file.name)
+                        && !excludedFilesList.includes(file.name)) {
                     files.push(file.name);
                 }
                 this.continue();
@@ -55,10 +57,16 @@ function updateTitle(nbSelected) {
     "use strict";
     document.l10n.updateData({ number: nbSelected });
     document.l10n.localizeNode(document.querySelector('header'));
+
+    if (nbSelected > 0) {
+        document.querySelector("footer").classList.remove("disabled");
+    } else {
+        document.querySelector("footer").classList.add("disabled");
+    }
 }
 
 function selectFile(event) {
-    "use strict"
+    "use strict";
     var el, input;
     el = event.target;
 
@@ -86,41 +94,44 @@ function selectAll() {
     updateTitle(files.length);
 }
 
-function sendFiles() {
+function sendFiles(event) {
     "use strict";
-    var sdCard, request, fileName, i, selectedFiles, onReadSuccess, onError, errors = [], files = [];
 
-    onReadSuccess = function () {
-        files.push(this.result);
+    if (!event.target.classList.contains("disabled")) {
+        var sdCard, request, fileName, i, selectedFiles, onReadSuccess, onError, errors = [], files = [];
 
-        if (selectedFiles.length === files.length) {
-            if (errors.length > 0) {
-                activityRequest.postError(errors.join(", "));
+        onReadSuccess = function () {
+            files.push(this.result);
+
+            if (selectedFiles.length === files.length) {
+                if (errors.length > 0) {
+                    activityRequest.postError(errors.join(", "));
+                }
+
+                activityRequest.postResult({
+                    files: files
+                });
             }
+        };
 
-            activityRequest.postResult({
-                files: files
-            });
-        }
-    };
+        onError = function () {
+            errors.push("can't pick the epub " + fileName);
+        };
 
-    onError = function () {
-        errors.push("can't pick the epub " + fileName);
-    };
-
-    if (activityRequest && navigator.getDeviceStorage) {
-        sdCard = navigator.getDeviceStorage('sdcard');
-        selectedFiles = document.querySelectorAll("input:checked");
-        for (i = 0; i < selectedFiles.length; i += 1) {
-            fileName = selectedFiles[i].getAttribute("id");
-            if (activityRequest && navigator.getDeviceStorage) {
-                request = sdCard.get(fileName);
-                request.onsuccess = onReadSuccess;
-                request.onerror = onError;
+        if (activityRequest && navigator.getDeviceStorage) {
+            sdCard = navigator.getDeviceStorage('sdcard');
+            selectedFiles = document.querySelectorAll("input:checked");
+            for (i = 0; i < selectedFiles.length; i += 1) {
+                fileName = selectedFiles[i].getAttribute("id");
+                if (activityRequest && navigator.getDeviceStorage) {
+                    request = sdCard.get(fileName);
+                    request.onsuccess = onReadSuccess;
+                    request.onerror = onError;
+                }
             }
+        } else {
+            console.warn("you're not in a Firefox OS phone or simulator");
         }
-    } else {
-        console.warn("you're not in a Firefox OS phone or simulator");
     }
 }
 
@@ -210,6 +221,7 @@ function cancelActivity() {
         if (navigator.mozSetMessageHandler) {
             navigator.mozSetMessageHandler('activity', function (activityReq) {
                 activityRequest = activityReq;
+                excludedFilesList = activityReq.source.data.exclude;
             });
         } else {
             console.warn("you are not in a Firefox OS phone or simulator");
