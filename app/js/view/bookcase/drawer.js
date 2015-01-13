@@ -9,7 +9,7 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
             className: "drawer",
 
             events: {
-                "click .sendStatistics": "toggleSendUsageReportsInput",
+                "click .sendUsageReports": "toggleSendUsageReportsInput",
                 "click input": "saveSendUsageReportsState",
                 "click .whyUsageReports": "openUsageReports",
                 "click .licenses": "openLicenses",
