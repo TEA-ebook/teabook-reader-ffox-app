@@ -1,4 +1,5 @@
 /*global define, window, Teavents*/
+/*jslint unparam: true*/
 define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
     function (Backbone, template) {
         "use strict";
@@ -35,18 +36,32 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
             },
 
             openLicenses: function () {
-                window.open("http://reader.tea-ebook.com/licenses");
+                this.openBrowser("http://reader.tea-ebook.com/licenses");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_LICENSES);
             },
 
             openUsageReports: function () {
-                window.open("http://reader.tea-ebook.com/usage-reports");
+                this.openBrowser("http://reader.tea-ebook.com/usage-reports");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_USAGE_REPORTS);
             },
 
             openTea: function () {
-                window.open("http://www.tea-ebook.com");
+                this.openBrowser("http://www.tea-ebook.com");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_TEA);
+            },
+
+            openBrowser: function (url) {
+                if (window.hasOwnProperty('MozActivity')) {
+                    this.browserActivity = new window.MozActivity({
+                        name: "view",
+                        data: {
+                            type: "url",
+                            url: url
+                        }
+                    });
+                } else {
+                    window.open(url);
+                }
             }
         });
 
