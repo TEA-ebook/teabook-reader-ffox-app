@@ -1,16 +1,17 @@
-<scanSdCard "Chercher des livres sur mon téléphone">
-<emptyShelf "Vider la bibliothèque">
-<uploadFile "Ouvrir un livre depuis mon téléphone">
+<plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
+<rand($n) { $n == 0 ? "zero" : $n == 1 ? "one" : $n == 2 ? "two" : $n == 3 ? "three" : "four" }>
+<maxThree($n) { $n == 1 ? "one" : $n <= 3 ? "some" : "many" }>
 
-<selectEpub "Sélectionner un livre">
+<selectEpub[plural($number)] {
+  zero: "Choisir",
+  one: "1 sélectionné",
+  many: "{{ $number }} sélectionnés"
+}>
+<selectAll "Tout choisir">
 <noEpubOnPhone "Il n'y a aucun epub ici...">
 <thatsSad "C'est triste.">
 <permissionRefusedToSdCard "Vous avez refusé la permission d'accéder à la carte mémoire de votre téléphone. <br><br> L'application a besoin de cette permission pour fonctionner correctement. Merci d'accepter cette permission pour pouvoir lire vos livres électroniques avec cette application.">
 <unknownError "L'application ne peut accéder à votre carte mémoire. Vous pouvez essayer de redémarrer le téléphone et/ou contacter le fournisseur de l'application.">
-
-<plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
-<rand($n) { $n == 0 ? "zero" : $n == 1 ? "one" : $n == 2 ? "two" : $n == 3 ? "three" : "four" }>
-<maxThree($n) { $n == 1 ? "one" : $n <= 3 ? "some" : "many" }>
 
 <toc "Table des matières">
 <chapter "Chapitre">
@@ -62,8 +63,6 @@
 <noBookHere "... qui est désespérément vide.">
 <useThePlusButton1 "Utiliser le bouton ">
 <useThePlusButton2 " pour ajouter vos livres !">
-
-<done "OK">
 
 <noValidConnection "Votre téléphone doit être connecté à Internet afin d'ouvrir votre premier livre.">
 <goSettings "Vous pouvez configurer une connexion Wifi dans les <strong>paramètres</strong>.">

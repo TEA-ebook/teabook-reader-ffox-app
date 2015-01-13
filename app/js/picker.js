@@ -51,14 +51,39 @@ function listDir(directory, callback, errorCb) {
     }
 }
 
-function selectFile(event) {
+function updateTitle(nbSelected) {
     "use strict";
-    var fileEl = event.target.hasAttribute("data-filename") ? event.target : event.target.parentNode;
-    if (fileEl.classList.contains("selected")) {
-        fileEl.classList.remove("selected");
+    document.l10n.updateData({ number: nbSelected });
+    document.l10n.localizeNode(document.querySelector('header'));
+}
+
+function selectFile(event) {
+    "use strict"
+    var el, input;
+    el = event.target;
+
+    if (el.tagName.toLowerCase() === 'input') {
+        input = el;
     } else {
-        fileEl.classList.add("selected");
+        while (el.tagName.toLowerCase() !== 'li') {
+            el = el.parentNode;
+        }
+        input = el.querySelector("input");
     }
+
+    input.checked = !input.checked;
+
+    updateTitle(document.querySelectorAll(".picker-list-files input:checked").length);
+}
+
+function selectAll() {
+    "use strict";
+    var files, index = 0;
+    files = document.querySelectorAll(".picker-list-files input");
+    for (index; index < files.length; index += 1) {
+        files[index].checked = true;
+    }
+    updateTitle(files.length);
 }
 
 function sendFiles() {
@@ -85,9 +110,9 @@ function sendFiles() {
 
     if (activityRequest && navigator.getDeviceStorage) {
         sdCard = navigator.getDeviceStorage('sdcard');
-        selectedFiles = document.querySelectorAll("li.selected");
+        selectedFiles = document.querySelectorAll("input:checked");
         for (i = 0; i < selectedFiles.length; i += 1) {
-            fileName = selectedFiles[i].getAttribute("data-filename");
+            fileName = selectedFiles[i].getAttribute("id");
             if (activityRequest && navigator.getDeviceStorage) {
                 request = sdCard.get(fileName);
                 request.onsuccess = onReadSuccess;
@@ -119,18 +144,19 @@ function displayFiles(files) {
             filename = file.split('/');
             fileEl = document.createElement('li');
             fileEl.setAttribute("data-filename", file);
-            fileEl.innerHTML = '<span class="picker-file-title">' + filename.pop() + '</span><span class="picker-file-path">' + filename.join("/") + '</span><hr>';
+            fileEl.innerHTML = '<input type="checkbox" id="' + file + '" /><label for="' + file + '"></label><div class="file-title"><span class="picker-file-title">' + filename.pop() + '</span><span class="picker-file-path">' + filename.join("/") + '</span></div>';
             listFilesEl.appendChild(fileEl);
         });
 
-        document.querySelector(".picker-list-files").addEventListener("click", selectFile);
-        document.querySelector(".picker-ok").addEventListener("click", sendFiles);
+        document.querySelector(".picker-list-files").addEventListener("click", selectFile, true);
+        document.querySelector(".picker-all").addEventListener("click", selectAll, false);
+        document.querySelector("footer").addEventListener("click", sendFiles, false);
     } else {
         fileEl = document.createElement('li');
         fileEl.classList.add('empty');
         fileEl.innerHTML = '<span class="picker-file-title">' + window.document.l10n.getSync('noEpubOnPhone') + '</span><span class="picker-file-path">' + window.document.l10n.getSync('thatsSad') + '</span>';
         listFilesEl.appendChild(fileEl);
-        document.querySelector(".picker-ok").remove();
+        document.querySelector("footer").classList.add("disabled");
     }
 }
 
@@ -170,6 +196,7 @@ function cancelActivity() {
     listDir(currentDirectory, displayFiles, displayError);
 
     window.document.l10n.ready(function () {
+        document.l10n.updateData({ number: 0 });
         document.l10n.localizeNode(document.querySelector('body'));
 
         if (navigator.mozSetMessageHandler) {
