@@ -62,6 +62,7 @@
   height: 100%;
   margin-top: @header-height;
   margin-bottom: @footer-height;
+  overflow: auto;
 }
 
 .picker-list-files {
@@ -105,17 +106,6 @@
   justify-content: center;
 }
 
-
-@media (orientation: landscape) {
-  .picker-list-files li.selected:after {
-    right: 2%;
-  }
-}
-
-.picker-list-files li:last-child hr {
-  display: none;
-}
-
 .picker-list-files .picker-file-title {
   overflow: hidden;
   padding: 0 6%;
@@ -138,20 +128,19 @@
   white-space: nowrap;
 }
 
-.picker-list-files hr {
-  background: @gray;
-  border: 0;
-  height: 1px;
-  margin-left: 4%;
-  margin-top: 0.6rem;
-  width: 90%;
+.picker-list-files h2 {
+  border-bottom: 1px solid @picker-header-text-color;
+  color: @picker-header-text-color;
+  font-size: 1rem;
+  margin: 0 1rem;
+  padding: 0 0 0.1rem 0;
 }
 
 .picker .waiting {
   background: none;
   height: auto;
   left: 49%;
-  top: 50%;
+  top: 47%;
   width: auto;
 }
 

@@ -131,7 +131,7 @@ function removeWaitingWheel() {
 
 function displayFiles(files) {
     "use strict";
-    var listFilesEl, fileEl, filename;
+    var listFilesEl, fileEl, letterEl, filename, filePathParts, lastLetter = '';
     listFilesEl = document.querySelector(".picker-list-files");
 
     removeWaitingWheel();
@@ -141,10 +141,18 @@ function displayFiles(files) {
             return a.toLowerCase().localeCompare(b.toLowerCase(), navigator.language);
         });
         files.forEach(function (file) {
-            filename = file.split('/');
+            filePathParts = file.split('/');
+            filename = filePathParts.pop();
+
+            if (lastLetter !== filename.substring(0, 1).toUpperCase()) {
+                lastLetter = filename.substring(0, 1).toUpperCase();
+                letterEl = document.createElement("h2");
+                letterEl.innerHTML = lastLetter;
+                listFilesEl.appendChild(letterEl);
+            }
             fileEl = document.createElement('li');
             fileEl.setAttribute("data-filename", file);
-            fileEl.innerHTML = '<input type="checkbox" id="' + file + '" /><label for="' + file + '"></label><div class="file-title"><span class="picker-file-title">' + filename.pop() + '</span><span class="picker-file-path">' + filename.join("/") + '</span></div>';
+            fileEl.innerHTML = '<input type="checkbox" id="' + file + '" /><label for="' + file + '"></label><div class="file-title"><span class="picker-file-title">' + filename + '</span><span class="picker-file-path">' + filePathParts.join("/") + '</span></div>';
             listFilesEl.appendChild(fileEl);
         });
 
