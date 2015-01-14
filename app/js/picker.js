@@ -1,14 +1,19 @@
 /*global window, navigator, FileReader, document*/
 /*jslint regexp: true, stupid: true*/
 
-var currentDirectory = ".", activityRequest, excludedFilesList = [];
+var activityRequest, excludedFilesList = [];
 
-function listDir(directory, callback, errorCb) {
+/**
+ * List all .epub files in the SD card
+ *
+ * @param directory
+ * @param callback
+ * @param errorCb
+ */
+function listDir(callback, errorCb) {
     "use strict";
 
     var sdCard, cursor, files = [];
-
-    directory = directory || ".";
 
     if (navigator.getDeviceStorage) {
         sdCard = navigator.getDeviceStorage('sdcard');
@@ -38,7 +43,7 @@ function listDir(directory, callback, errorCb) {
                 }
                 console.warn(this.error);
             } else {
-                console.warn("No epub file found in " + directory, this.error);
+                console.warn("No epub file found", this.error);
             }
 
             if (callback) {
@@ -53,6 +58,11 @@ function listDir(directory, callback, errorCb) {
     }
 }
 
+/**
+ * Update file piicker title with l20n
+ *
+ * @param nbSelected
+ */
 function updateTitle(nbSelected) {
     "use strict";
     document.l10n.updateData({ number: nbSelected });
@@ -65,6 +75,11 @@ function updateTitle(nbSelected) {
     }
 }
 
+/**
+ * Mark file as checked and update file picker title
+ *
+ * @param event
+ */
 function selectFile(event) {
     "use strict";
     var el, input;
@@ -84,6 +99,9 @@ function selectFile(event) {
     updateTitle(document.querySelectorAll(".picker-list-files input:checked").length);
 }
 
+/**
+ * Mark all files as checked and update title
+ */
 function selectAll() {
     "use strict";
     var files, index = 0;
@@ -94,6 +112,11 @@ function selectAll() {
     updateTitle(files.length);
 }
 
+/**
+ * Send files to the activity caller
+ *
+ * @param event
+ */
 function sendFiles(event) {
     "use strict";
 
@@ -135,50 +158,84 @@ function sendFiles(event) {
     }
 }
 
+/**
+ *
+ */
 function removeWaitingWheel() {
     "use strict";
     document.querySelector(".waiting").remove();
 }
 
+/**
+ * Display file in the picker
+ *
+ * @param files
+ */
 function displayFiles(files) {
     "use strict";
-    var listFilesEl, fileEl, letterEl, filename, filePathParts, lastLetter = '';
-    listFilesEl = document.querySelector(".picker-list-files");
+
+    var listFilesEl = document.querySelector(".picker-list-files"),
+        fileEl,
+        letterEl,
+        lastLetter = '';
 
     removeWaitingWheel();
 
+    // files were found on the phone
     if (files && files.length > 0) {
-        files = files.sort(function (a, b) {
-            return a.toLowerCase().localeCompare(b.toLowerCase(), navigator.language);
+        // exploding file path in 4 parts
+        files = files.map(function (file) {
+            var parts = file.split('/'), name;
+            name = parts.pop();
+            return {
+                fullPath: file,
+                path: parts.join('/'),
+                name: name,
+                letter: name.substring(0, 1).toUpperCase()
+            };
         });
-        files.forEach(function (file) {
-            filePathParts = file.split('/');
-            filename = filePathParts.pop();
 
-            if (lastLetter !== filename.substring(0, 1).toUpperCase()) {
-                lastLetter = filename.substring(0, 1).toUpperCase();
+        // alphabetical sorting (without case and accent)
+        files = files.sort(function (a, b) {
+            return a.name.toLowerCase().localeCompare(b.name.toLowerCase(), navigator.language);
+        });
+
+        // display files in DOM
+        files.forEach(function (file) {
+            // alaphabet letter subtitle
+            if (lastLetter !== file.letter) {
+                lastLetter = file.letter;
                 letterEl = document.createElement("h2");
                 letterEl.innerHTML = lastLetter;
                 listFilesEl.appendChild(letterEl);
             }
+
+            // filename and path
             fileEl = document.createElement('li');
-            fileEl.setAttribute("data-filename", file);
-            fileEl.innerHTML = '<input type="checkbox" id="' + file + '" /><label for="' + file + '"></label><div class="file-title"><span class="picker-file-title">' + filename + '</span><span class="picker-file-path">' + filePathParts.join("/") + '</span></div>';
+            fileEl.setAttribute("data-filename", file.fullPath);
+            fileEl.innerHTML = '<input type="checkbox" id="' + file.fullPath + '" /><label for="' + file.fullPath + '"></label><div class="file-title"><span class="picker-file-title">' + file.name + '</span><span class="picker-file-path">' + file.path + '</span></div>';
             listFilesEl.appendChild(fileEl);
         });
 
+        // add event listeners
         document.querySelector(".picker-list-files").addEventListener("click", selectFile, true);
         document.querySelector(".picker-all").addEventListener("click", selectAll, false);
         document.querySelector("footer").addEventListener("click", sendFiles, false);
     } else {
+        // no epup file on the phone
         fileEl = document.createElement('li');
         fileEl.classList.add('empty');
-        fileEl.innerHTML = '<span class="picker-file-title">' + window.document.l10n.getSync('noEpubOnPhone') + '</span><span class="picker-file-path">' + window.document.l10n.getSync('thatsSad') + '</span>';
+        fileEl.innerHTML = '<div class="file-title"><span class="picker-file-title">' + window.document.l10n.getSync('noEpubOnPhone') + '</span><span class="picker-file-path">' + window.document.l10n.getSync('thatsSad') + '</span></div>';
         listFilesEl.appendChild(fileEl);
-        document.querySelector("footer").classList.add("disabled");
+        document.querySelector(".picker-all").remove();
     }
 }
 
+/**
+ * Display the error in the picker (ie: permission refused)
+ *
+ * @param error
+ */
 function displayError(error) {
     "use strict";
     var listFilesEl, errorEl, message;
@@ -188,18 +245,21 @@ function displayError(error) {
 
     errorEl = document.createElement('li');
     errorEl.classList.add('error');
-    message = '<span class="picker-file-title">';
+    message = '<div class="file-title"><span class="picker-file-title">';
     if (error && error.name === "SecurityError") {
         message += window.document.l10n.getSync('permissionRefusedToSdCard');
     } else {
         message += window.document.l10n.getSync('unknownError');
     }
-    errorEl.innerHTML = message + '</span>';
+    errorEl.innerHTML = message + '</span></div>';
     listFilesEl.appendChild(errorEl);
 
-    document.querySelector(".picker-ok").remove();
+    document.querySelector(".picker-all").remove();
 }
 
+/**
+ * User clicked on the close button : back to the caller
+ */
 function cancelActivity() {
     "use strict";
     if (activityRequest) {
@@ -209,12 +269,18 @@ function cancelActivity() {
     }
 }
 
+/**
+ * Start activity:
+ *  - init l20n
+ *  - list files
+ *  - display files
+ */
 (function () {
     "use strict";
 
-    listDir(currentDirectory, displayFiles, displayError);
-
     window.document.l10n.ready(function () {
+        listDir(displayFiles, displayError);
+
         document.l10n.updateData({ number: 0 });
         document.l10n.localizeNode(document.querySelector('body'));
 
