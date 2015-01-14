@@ -281,7 +281,8 @@ define('view/bookcase/index',
                     var activity = new MozActivity({
                         name: "pick",
                         data: {
-                            type: "application/epub+zip"
+                            type: "application/epub+zip",
+                            exclude: this.collection.models.map(function (book) { return book.get('path'); })
                         }
                     });
 

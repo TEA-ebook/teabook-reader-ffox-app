@@ -1,16 +1,18 @@
-<scanSdCard "Look for books in my phone">
-<emptyShelf "Empty shelf">
-<uploadFile "Pick a book from my phone">
+<plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
+<rand($n) { $n == 0 ? "zero" : $n == 1 ? "one" : $n == 2 ? "two" : $n == 3 ? "three" : "four" }>
+<maxThree($n) { $n == 1 ? "one" : $n <= 3 ? "some" : "many" }>
 
-<selectEpub "Select a book">
+<selectEpub[plural($number)] {
+  zero: "Select",
+  one: "1 selected",
+  many: "{{ $number }} selected"
+}>
+<selectAll "All">
 <noEpubOnPhone "There is no epub on the phone...">
 <thatsSad "That's sad.">
 <permissionRefusedToSdCard "You refused the permission to access your memory card. <br><br> The application needs this permission to work properly. <br><br> Please accept this permission in order to read you ebooks with this application.">
 <unknownError "The application can't access your memory card. You can try to reboot the phone and/or contact the maker of the application.">
-
-<plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
-<rand($n) { $n == 0 ? "zero" : $n == 1 ? "one" : $n == 2 ? "two" : $n == 3 ? "three" : "four" }>
-<maxThree($n) { $n == 1 ? "one" : $n <= 3 ? "some" : "many" }>
+<done "Done">
 
 <toc "Table of contents">
 <chapter "Chapter">
@@ -62,8 +64,6 @@
 <noBookHere "... which is desperately empty.">
 <useThePlusButton1 "Use the ">
 <useThePlusButton2 " button to add your own books right now!">
-
-<done "Done">
 
 <noValidConnection "You must have a valid internet connection in order to open your first book.">
 <goSettings "Go to the <strong>settings</strong> to configure a Wifi connection.">
