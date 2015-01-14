@@ -75,3 +75,8 @@
 }>
 
 <fileNotOnSdCardError " is not on your phone anymore, it will be removed from your bookcase.">
+
+<drawerTitle "About">
+<licenses "Licenses">
+<sendUsageReports "Send usage reports">
+<whyUsageReports "Usage reports: what for?">

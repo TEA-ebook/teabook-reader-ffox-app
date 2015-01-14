@@ -16,7 +16,19 @@ define('view/bookcase/index',
         'template/bookcase/empty'
     ],
 
-    function (Backbone, underscore, DeviceHelper, BooksSort, Logger, SettingCollection, HeaderBarView, FooterBarView, OptionsView, BookView, AddedBooksView, template, templateEmpty) {
+    function (Backbone,
+              underscore,
+              DeviceHelper,
+              BooksSort,
+              Logger,
+              SettingCollection,
+              HeaderBarView,
+              FooterBarView,
+              OptionsView,
+              BookView,
+              AddedBooksView,
+              template,
+              templateEmpty) {
         "use strict";
 
         var IndexView = Backbone.View.extend({
@@ -28,6 +40,7 @@ define('view/bookcase/index',
 
             events: {
                 "click .search-cancel": "fetchBooks",
+                "click .menu": "showDrawer",
                 "click .add": "openPicker",
                 "click .remove": "showDelete",
                 "click .cancel": "showDelete",
@@ -83,7 +96,7 @@ define('view/bookcase/index',
                     this.booksEl.addClass(mode);
                     if (mode === "empty") {
                         this.$el.addClass(mode);
-                        this.headerBar.$el.find("button").attr("disabled", "disabled");
+                        this.headerBar.$el.find("button.search-display").attr("disabled", "disabled");
                         this.footerBar.$el.find("button.remove").attr("disabled", "disabled");
                         this.footerBar.$el.find("button.sort").attr("disabled", "disabled");
                     } else {
@@ -162,6 +175,10 @@ define('view/bookcase/index',
                 this.booksEl = this.$el.find(".books");
 
                 this.fetchBooks();
+
+                // need to invert event bubbling direction :
+                // capture click on the entire view if the drawer is dsplayed in order to close it
+                this.el.addEventListener("click", this.hideDrawer.bind(this), true);
 
                 window.document.l10n.localizeNode(this.el);
             },
@@ -272,6 +289,23 @@ define('view/bookcase/index',
 
             openBookEffect: function () {
                 this.$el.addClass("open");
+            },
+
+            showDrawer: function (event) {
+                event.stopImmediatePropagation();
+                if (this.$el.hasClass("withDrawer")) {
+                    this.$el.removeClass("withDrawer");
+                } else {
+                    this.$el.addClass("withDrawer");
+                    Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.SHOW_DRAWER);
+                }
+            },
+
+            hideDrawer: function (event) {
+                if (this.$el.hasClass("withDrawer")) {
+                    event.stopImmediatePropagation();
+                    this.$el.removeClass("withDrawer");
+                }
             },
 
             showOptions: function () {

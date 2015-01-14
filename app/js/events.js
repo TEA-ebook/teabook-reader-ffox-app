@@ -57,6 +57,7 @@ window.Teavents = {
         SHOW_BOOKMARKS: "show-bookmarks",
         SHOW_OPTIONS: "show-options",
         SHOW_TOC: "show-toc",
+        SHOW_DRAWER: "show-drawer",
         CHANGE_FONT_SIZE: "change-font-size",
         CHANGE_ORIENTATION: "orientation-change",
         CHANGE_SETTING_VIEW: "change-setting-view",
@@ -68,6 +69,11 @@ window.Teavents = {
         TAP: "tap",
         NO_CONNECTION: "no-connection",
         OPEN_SETTINGS: "open-settings",
-        PURGE: "purge-events"
-    }
+        PURGE: "purge-events",
+        OPEN_LICENSES: "open-licenses",
+        OPEN_USAGE_REPORTS: "open-usage-reports",
+        OPEN_TEA: "open-tea"
+    },
+
+    SEND_USAGE_REPORTS: "sendUsageReports"
 };

@@ -1,11 +1,17 @@
 /*global define*/
-define('route/bookcase', ['jquery', 'collection/books', 'view/bookcase/index'],
-    function ($, BookCollection, BookcaseView) {
+define('route/bookcase', ['jquery', 'collection/books', 'view/bookcase/index', 'view/bookcase/drawer'],
+    function ($, BookCollection, BookcaseView, DrawerView) {
         "use strict";
         return function () {
             console.info("route to bookcase");
 
-            var view = new BookcaseView({ collection: new BookCollection() });
-            $("#content").html(view.el);
+            var bookcaseView, drawerView;
+
+            bookcaseView = new BookcaseView({ collection: new BookCollection() });
+            $("#content").html(bookcaseView.el);
+
+            drawerView = new DrawerView();
+            drawerView.render();
+            $("#content").append(drawerView.el);
         };
     });
