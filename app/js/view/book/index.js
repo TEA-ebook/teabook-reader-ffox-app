@@ -116,10 +116,12 @@ define('view/book/index',
                         this.model.set('coverUrl', window.URL.createObjectURL(file));
                         attributes.book = this.model.attributes;
                         this.$el.append(template(attributes));
+                        window.document.l10n.localizeNode(this.el);
                     }.bind(this));
                 } else {
                     attributes.book = this.model.attributes;
                     this.$el.append(template(attributes));
+                    window.document.l10n.localizeNode(this.el);
                 }
 
                 // iframe timeout (no internet connection)

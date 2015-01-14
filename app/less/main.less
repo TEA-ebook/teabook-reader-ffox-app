@@ -1098,10 +1098,12 @@ input[type=range]:focus::-webkit-slider-thumb {
 
 /** book misc **/
 .book-loading-cover {
+  align-items: center;
   background-color: @white;
   display: flex;
+  flex-direction: column;
   font-size: 5em;
-  justify-content: center;
+  justify-content: space-around;
   height: 100%;
   left: 0;
   position: absolute;
@@ -1114,6 +1116,14 @@ input[type=range]:focus::-webkit-slider-thumb {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-top: 4rem;
+}
+
+.book-loading-cover .loading {
+  color: @gray-m1;
+  font-size: 1rem;
+  font-style: italic;
+  padding-bottom: 4rem;
 }
 
 .book-font-size-sample {
