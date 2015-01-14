@@ -55,6 +55,7 @@ define('view/bookcase/index',
                 this.listenTo(Backbone, 'destroy', this.close.bind(this));
 
                 this.searchText = "";
+                this.importing = false;
 
                 // We need the user display settings before rendering the books
                 this.settings = new SettingCollection();
@@ -96,16 +97,35 @@ define('view/bookcase/index',
                     this.booksEl.addClass(mode);
                     if (mode === "empty") {
                         this.$el.addClass(mode);
-                        this.headerBar.$el.find("button.search-display").attr("disabled", "disabled");
-                        this.footerBar.$el.find("button.remove").attr("disabled", "disabled");
-                        this.footerBar.$el.find("button.sort").attr("disabled", "disabled");
+                        this.freezeUiButtons();
                     } else {
                         this.$el.removeClass("empty");
-                        this.headerBar.$el.find("button").removeAttr("disabled");
-                        this.footerBar.$el.find("button.remove").removeAttr("disabled");
-                        this.footerBar.$el.find("button.sort").removeAttr("disabled");
+                        if (!this.importing) {
+                            this.unfreezeUiButtons();
+                        }
                     }
                 }
+            },
+
+            /**
+             *
+             */
+            freezeUiButtons: function (all) {
+                this.headerBar.$el.find("button.search-display").attr("disabled", "disabled");
+                this.footerBar.$el.find("button.remove").attr("disabled", "disabled");
+                this.footerBar.$el.find("button.sort").attr("disabled", "disabled");
+
+                if (all) {
+                    this.footerBar.$el.find("button.add").attr("disabled", "disabled");
+                }
+            },
+
+            /**
+             *
+             */
+            unfreezeUiButtons: function () {
+                this.headerBar.$el.find("button").removeAttr("disabled");
+                this.footerBar.$el.find("button").removeAttr("disabled");
             },
 
             /**
@@ -224,6 +244,8 @@ define('view/bookcase/index',
                 }
 
                 if (files) {
+                    this.importing = true;
+                    this.freezeUiButtons(true);
                     this.collection.on('add', this.renderBooks.bind(this));
                     this.handleFile(underscore.toArray(files), []);
                     this.$el.find("input#book-upload").val("");
@@ -231,6 +253,7 @@ define('view/bookcase/index',
             },
 
             /**
+             * Handle one file and import it
              *
              * @param files
              * @param addedBooks
@@ -249,6 +272,8 @@ define('view/bookcase/index',
                         } else {
                             this.collection.off('add');
                             this.renderAddedBooks(addedBooks);
+                            this.importing = false;
+                            this.unfreezeUiButtons();
                         }
                     }.bind(this));
                 } else {
@@ -282,7 +307,9 @@ define('view/bookcase/index',
                         name: "pick",
                         data: {
                             type: "application/epub+zip",
-                            exclude: this.collection.models.map(function (book) { return book.get('path'); })
+                            exclude: this.collection.models.map(function (book) {
+                                return book.get('path');
+                            })
                         }
                     });
 
