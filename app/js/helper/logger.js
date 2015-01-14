@@ -31,10 +31,6 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         window.localStorage.setItem("uuid", uuid);
     }
 
-    function onStorageEvent() {
-        sendUsageReports = window.localStorage.getItem(Teavents.SEND_USAGE_REPORTS) === "true";
-    }
-
     function createEvent(eventData) {
         eventData.uuid = uuid;
         eventData.sent = "nope";
@@ -61,12 +57,12 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         }
     }
 
-    function clearPassedEvents() {
+    function clearEvents(conditions) {
         var eventCollection = new EventCollection(),
             eventsToDestroy = [],
             i;
 
-        eventCollection.fetch({ conditions: { sent: "yes" } }).done(function () {
+        eventCollection.fetch(conditions).done(function () {
             eventCollection.models.forEach(function (event) {
                 eventsToDestroy.push(event);
             });
@@ -74,6 +70,10 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
                 eventsToDestroy[i].destroy();
             }
         });
+    }
+
+    function clearPassedEvents() {
+        clearEvents({ conditions: { sent: "yes" } });
     }
 
     function compactEventsTable() {
@@ -160,10 +160,17 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         });
     }
 
+    function onStorageEvent() {
+        sendUsageReports = window.localStorage.getItem(Teavents.SEND_USAGE_REPORTS) === "true";
+        if (sendUsageReports === false) {
+            clearEvents();
+        }
+    }
+
     Backbone.on(Teavents.VISIBILITY_VISIBLE, handleVisibilityChange);
     Backbone.on(Teavents.VISIBILITY_HIDDEN, handleVisibilityChange);
     Backbone.on(Teavents.Readium.GESTURE_TAP, logTap);
-    Backbone.on(Teavents.SEND_USAGE_STATS, onStorageEvent, false);
+    Backbone.on(Teavents.SEND_USAGE_REPORTS, onStorageEvent, false);
 
     return {
         log: function (name, data) {
