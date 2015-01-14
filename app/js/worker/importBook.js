@@ -40,7 +40,7 @@ function getMetadata(opf) {
     document = new XmlDocument(opf);
     metadataNode = document.childNamed("metadata");
 
-    metadata.title = metadataNode.childNamed("dc:title").val;
+    metadata.title = metadataNode.childNamed("dc:title").val.trim();
 
     publisherNode = metadataNode.childNamed("dc:publisher");
     metadata.publisher = publisherNode ? publisherNode.val : "";
@@ -56,7 +56,7 @@ function getMetadata(opf) {
     metadataNode.childrenNamed("dc:creator").forEach(function (authorNode) {
         var author = authorNode.val;
         if (author && author.length > 0) {
-            metadata.authors.push(author);
+            metadata.authors.push(author.trim());
         }
     });
 
