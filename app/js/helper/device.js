@@ -4,35 +4,6 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
     "use strict";
 
     var device = {
-        scanSdCard: function (collection) {
-            var cursor, sdcard;
-
-            if (navigator && navigator.getDeviceStorage) {
-                sdcard = navigator.getDeviceStorage('sdcard');
-
-                // Let's browse all the books available
-                cursor = sdcard.enumerate();
-                cursor.onsuccess = function () {
-                    if (!this.done) {
-                        var file = this.result;
-                        if (file && !/\.Trashes/.test(file.name) && /.*\/[\w\-_\., ']*\.epub$/.test(file.name)) {
-                            device.addBookToBookcase(file, collection, this.continue.bind(this));
-                        } else {
-                            this.continue();
-                        }
-                    } else {
-                        Backbone.trigger(Teavents.SCAN_FINISHED);
-                    }
-                };
-
-                cursor.onerror = function () {
-                    console.warn("No book file found: " + this.error);
-                };
-            } else {
-                console.warn("You have no SD card access");
-            }
-        },
-
         addBook: function (file, callback) {
             device.addBookToBookcase(file, null, callback);
         },
