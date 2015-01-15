@@ -48,7 +48,8 @@ define('view/bookcase/index',
                 "click .sort": "showOptions",
                 "click .book": "openBookEffect",
                 "change input#book-upload": "handleFiles",
-                "keyup input[type=search]": "searchFor"
+                "keyup input[type=search]": "searchFor",
+                "touchmove": "noSlide"
             },
 
             initialize: function () {
@@ -413,6 +414,12 @@ define('view/bookcase/index',
                     }
                 } else if ((text.length === 0) && this.searchText.length > 0) {
                     this.fetchBooks();
+                }
+            },
+
+            noSlide: function (event) {
+                if (this.$el.hasClass("withDrawer")) {
+                    event.preventDefault();
                 }
             },
 

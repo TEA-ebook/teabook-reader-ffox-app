@@ -13,7 +13,8 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
                 "click input": "saveSendUsageReportsState",
                 "click .whyUsageReports": "openUsageReports",
                 "click .licenses": "openLicenses",
-                "click .tea": "openTea"
+                "click .tea": "openTea",
+                "touchmove": "noSlide"
             },
 
             render: function () {
@@ -62,6 +63,10 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
                 } else {
                     window.open(url);
                 }
+            },
+
+            noSlide: function (event) {
+                event.preventDefault();
             }
         });
 
