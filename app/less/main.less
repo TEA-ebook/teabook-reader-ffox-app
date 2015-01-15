@@ -108,6 +108,10 @@ input[type="radio"]:checked + label:before {
   z-index: 10;
 }
 
+.bar.actionbar ~ .books {
+  margin-bottom: (@footerbar-height + @actionbar-height);
+}
+
 .books .book {
   cursor: pointer;
   position: relative;
@@ -181,7 +185,6 @@ input[type="radio"]:checked + label:before {
   display: flex;
   width: 100%;
 }
-
 
 .books.detail .book .book-cover {
   margin: 0 0 -3px 0;
