@@ -157,6 +157,7 @@ define('view/book/index',
              */
             readerReady: function () {
                 this.$el.find(".book-loading-cover").remove();
+                this.hideUi();
             },
 
             /**

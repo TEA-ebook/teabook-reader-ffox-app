@@ -1,0 +1,603 @@
+@import "variables.less";
+@import "animations.less";
+@import "mixins.less";
+
+
+.bookcase {
+  background-color: @ivory;
+  height: 100%;
+  position: relative;
+  transition: transform 0.25s ease;
+  z-index: 10;
+}
+
+.bookcase.withDrawer {
+  overflow: hidden;
+  transform: translateX(@drawer-width);
+  transition: transform 0.25s ease;
+}
+
+/**** Books section ****/
+.books {
+  position: relative;
+  z-index: 10;
+}
+
+.books.empty {
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+
+.books.cover {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 1rem @footerbar-height 1rem;
+  padding-top: (@toolbar-height + 0.5rem);
+}
+
+.books.detail {
+  background-color: @white;
+  margin: 0 0 @footerbar-height 0;
+  padding-top: @toolbar-height;
+}
+
+.bar.actionbar ~ .books {
+  margin-bottom: (@footerbar-height + @actionbar-height);
+}
+
+
+/**** Book in books section ****/
+.books .book {
+  cursor: pointer;
+  position: relative;
+}
+
+.books .book-select {
+  display: none;
+}
+
+.books.selection .book-select {
+  display: block;
+}
+
+.books.cover .book {
+  background-color: @light-gray;
+  height: @bookcase-book-height;
+  min-width: 5rem;
+  margin: 0.3rem 0;
+  text-align: center;
+}
+
+.books.cover .book.loading {
+  border: 0.1rem solid @white;
+  .vendors(animation-name, borderload);
+  .vendors(animation-duration, 1s);
+  .vendors(animation-iteration-count, infinite);
+  .vendors(animation-timing-function, ease-in);
+}
+
+.books.cover .book-cover > img {
+  height: @bookcase-book-height;
+}
+
+.books.cover .book-details {
+  .hide();
+}
+
+.books.cover.selection .book-cover {
+  opacity: 0.7;
+}
+
+.books.cover .book-select {
+  position: absolute;
+  left: 40%;
+  top: 40%;
+}
+
+.books.detail .book {
+  align-items: center;
+  border-bottom: 0.15rem solid @ivory;
+  display: flex;
+  width: 100%;
+}
+
+.books.detail .book-cover {
+  margin: 0 0 -3px 0;
+  padding: 0;
+  width: 15%;
+}
+
+.books.detail .book-cover > img {
+  max-width: 100%;
+}
+
+.books.detail .book.loading {
+  border-bottom: 0.2rem solid @white;
+  .vendors(animation-name, borderload);
+  .vendors(animation-duration, 1s);
+  .vendors(animation-iteration-count, infinite);
+  .vendors(animation-timing-function, ease-in);
+}
+
+.books.detail .book-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 0 0.2rem 0 1rem;
+  width: 70%;
+}
+
+@media (orientation: landscape) {
+  .books.detail .book-cover {
+    width: 10%;
+  }
+
+  .books.detail .book-details {
+    width: 75%;
+  }
+}
+
+.books.detail .book-select {
+  position: absolute;
+  right: 1rem;
+  top: 32%;
+}
+
+.books.detail .book-details > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-details .book-details-title {
+  font-size: 6vmin;
+  font-weight: bold;
+  margin-bottom: 0.1rem;
+}
+
+.book-details .book-details-authors {
+  color: @gray-m2;
+  font-size: 5vmin;
+  margin-bottom: 0.3rem;
+}
+
+/* book with no cover */
+.bookcase .book > i {
+  color: @gray-m1;
+  display: block;
+  font-size: 2rem;
+  min-height: 3rem;
+  margin-top: 0.5rem;
+}
+
+.books.cover .book > i {
+  margin-top: 50%;
+}
+
+/* hide books except one that will be opened */
+.bookcase.open .book:not(.open) {
+  opacity: 0.2;
+  transition-duration: 0.3s;
+  transition-property: opacity;
+}
+
+/* hide upload input, used a button instead */
+.bookcase input#book-upload {
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 556;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+
+/*** Bookcase options ***/
+.panel.bookcase-options {
+  position: fixed;
+}
+
+.panel.bookcase-options.hidden {
+  .hide();
+}
+
+.bookcase-options hr {
+  background: @blue-pastel;
+  border: 0;
+  height: 1px;
+  width: 80%;
+}
+
+.bookcase-options-list {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (orientation: landscape) {
+  .bookcase-options-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .bookcase-options hr {
+    display: none;
+  }
+
+  .bookcase-option:last-child {
+    border-left: 1px solid @blue-pastel;
+  }
+
+  .bookcase-option ul {
+    display: flex;
+    flex-flow: wrap row;
+  }
+
+  .bookcase-option ul li {
+    width: 10rem;
+  }
+}
+
+.panel .bookcase-option {
+  margin-top: 1rem;
+}
+
+.panel .bookcase-option ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.panel .bookcase-option li {
+  height: 2rem;
+  line-height: 2rem;
+  position: relative;
+}
+
+.bookcase-option-title {
+  color: @blue-pastel;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+  text-transform: uppercase;
+}
+
+
+/** Added books notification **/
+.added-books {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 556;
+}
+
+.added-books-content {
+  align-items: center;
+  background-color: white;
+  border: 1px solid @ivory;
+  border-radius: 3px;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
+  height: 33%;
+  margin-left: 4%;
+  margin-top: 60%;
+  position: absolute;
+  top: 0;
+  width: 92%;
+}
+
+.added-books-text {
+  background-color: @ivory;
+  width: 100%;
+  text-align: center;
+  padding: 2px 0;
+  height: 15%;
+}
+
+.added-books-covers {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  height: 85%;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.added-books-covers i {
+  font-size: 4em;
+}
+
+.added-books-covers img {
+  max-height: 8em;
+  max-width: 6em;
+}
+
+@media (orientation: landscape) {
+  .added-books-content {
+    height: 60%;
+    margin-left: 20%;
+    margin-top: 10%;
+    width: 60%;
+  }
+}
+
+
+/*** Header bar ***/
+.bar.headerbar {
+  top: 0;
+}
+
+.bar.headerbar .menu {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: transform 0.5s ease;
+  width: 3rem;
+}
+
+.bar.headerbar .title {
+  font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: italic;
+  left: @toolbar-back-width;
+  margin-left: 1rem;
+  position: absolute;
+  text-align: center;
+  width: 75%;
+}
+
+.bar.headerbar button {
+  color: @search-text-color;
+}
+
+.bar.headerbar .search {
+  color: @search-text-color;
+  display: flex;
+  height: @toolbar-height;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  padding: 0 0 0 0.6rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition-property: width;
+  transition-duration: 0.5s;
+  width: 45px;
+}
+
+.bar.headerbar button.search-display {
+  min-width: 30px;
+  height: 100%;
+  left: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+}
+
+.bar.headerbar button.search-display .icon-search:before {
+  margin-left: 0;
+}
+
+.bar.headerbar .search-input-wrap {
+  width: 100%;
+}
+
+.bar.headerbar .search-input-wrap input {
+  -webkit-appearance: none;
+  background-color: @search-bg-color;
+  background-image: none;
+  border: 0px;
+  border-radius: 0px;
+  color: @search-text-color;
+  display: block;
+  font-family: "Fira Sans Light";
+  font-size: 1.2rem;
+  height: @toolbar-height;
+  outline: 0;
+  padding: 0;
+  visibility: hidden;
+  width: 105%;
+}
+
+.bar.headerbar .search-input-wrap input::-webkit-input-placeholder {
+  color: @search-text-color;
+  opacity: 0.5;
+}
+
+.bar.headerbar .search-input-wrap input::-moz-placeholder {
+  color: @search-text-color;
+}
+
+.bar.headerbar button.search-cancel {
+  font-size: 1rem;
+  min-width: 5rem;
+  text-transform: capitalize;
+  visibility: hidden;
+}
+
+.bar.headerbar [class^="icon-"]:before {
+  font-size: 2rem;
+}
+
+.bar.headerbar button.search-display:disabled {
+  opacity: 0.5;
+}
+
+
+/*** Search bar ***/
+.bar.searchbar {
+  background-color: @search-bg-color;
+  color: @search-text-color;
+}
+
+.bar.searchbar .menu {
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+}
+
+.bar.searchbar .title {
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+}
+
+.bar.searchbar .search {
+  width: 100%;
+}
+
+.bar.searchbar .search-input-wrap input {
+  visibility: visible;
+}
+
+.bar.searchbar button.search-display {
+  position: relative;
+}
+
+.bar.searchbar button.search-cancel {
+  padding: 0 0.5rem;
+  visibility: visible;
+}
+
+
+/*** Footer bar ***/
+.bar.footerbar {
+  background-color: @footerbar-color;
+  bottom: 0;
+  height: @footerbar-height;
+}
+
+.bar.footerbar button {
+  color: @font-secondary-color;
+  padding: 0;
+  width: 20%;
+}
+
+.bar.footerbar button:last-child {
+  margin-left: 40%;
+}
+
+.bar.footerbar button.selected {
+  background-color: @blue;
+}
+
+.bar.footerbar [class^="icon-"]:before {
+  font-size: 1.5rem;
+}
+
+.bar.footerbar button:disabled {
+  color: @gray-m1;
+}
+
+.empty .bar.footerbar button.add {
+  .vendors(animation-name, glow);
+  .vendors(animation-duration, 1.8s);
+  .vendors(animation-iteration-count, 5);
+  .vendors(animation-timing-function, ease-in);
+}
+
+
+/*** Empty bookcase ***/
+.bookcase-empty {
+  font-size: 1.5rem;
+  padding: 0 1rem;
+  text-align: center;
+  width: 100%;
+}
+
+
+/*** Action bar ***/
+.bar.actionbar {
+  align-items: center;
+  background-color: @actionbar-color;
+  bottom: @footerbar-height;
+  height: @actionbar-height;
+  justify-content: space-around;
+  padding: 0 0.5rem;
+}
+
+.bar.actionbar button {
+  background-color: @light-gray;
+  border-radius: 3px;
+  font-size: 1rem;
+  height: 2.4rem;
+  width: 46%;
+}
+
+.bar.actionbar button:active {
+  background-color: @darkblue;
+}
+
+.bar.actionbar button.confirm {
+  background-color: @red;
+  color: @white;
+}
+
+.bar.actionbar button.confirm:active {
+  background-color: @darkred;
+}
+
+
+/*** Drawer ***/
+.drawer {
+  background-color: @warm-gray;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: @drawer-width;
+  z-index: 1;
+}
+
+.drawer > .bar {
+  background-color: @warm-gray;
+  box-shadow: 0px 1px 2px #181818;
+}
+
+.drawer ul {
+  color: @white;
+  list-style: none;
+  margin: 0;
+  padding: @toolbar-height 0 0 0;
+  width: 100%;
+}
+
+.drawer li {
+  align-items: center;
+  border-bottom: 0.1rem solid #596068;
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  justify-content: space-between;
+  min-height: 3rem;
+  padding-left: 2rem;
+  padding-right: 0.5rem;
+}
+
+.drawer li > i {
+  min-width: 1.5rem;
+}
+
+.drawer li > label {
+  height: 22px;
+  width: 22px;
+}
+
+.drawer li > input + label:before {
+  border-color: @blue-pastel;
+}
+
+.drawer li > input:checked + label:before {
+  background-color: @blue-pastel;
+  font-weight: normal;
+}
+
+.drawer li > a {
+  line-height: 3rem;
+}

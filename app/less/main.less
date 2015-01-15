@@ -47,6 +47,16 @@ button {
   -moz-appearance: none;
 }
 
+.hidden {
+  .hide();
+}
+
+#content, .readium {
+  height: 100%;
+}
+
+
+/**** Form elements ****/
 input[type="checkbox"], input[type="radio"] {
   display: none;
 }
@@ -91,892 +101,6 @@ input[type="radio"] + label:before {
 
 input[type="radio"]:checked + label:before {
   content: "\25CF";
-}
-
-.hidden {
-  .hide();
-}
-
-#content, .readium, .bookcase {
-  height: 100%;
-}
-
-/** Bookcase **/
-.bookcase {
-  background-color: @ivory;
-  position: relative;
-  z-index: 10;
-}
-
-.bar.actionbar ~ .books {
-  margin-bottom: (@footerbar-height + @actionbar-height);
-}
-
-.books .book {
-  cursor: pointer;
-  position: relative;
-}
-
-.books .book .book-select {
-  display: none;
-}
-
-.books.selection .book .book-select {
-  display: block;
-}
-
-.books.empty {
-  align-items: center;
-  display: flex;
-  height: 100%;
-}
-
-.books.cover {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 0 1rem @footerbar-height 1rem;
-  padding-top: (@toolbar-height + 0.5rem);
-}
-
-.books.cover .book {
-  background-color: @light-gray;
-  height: @bookcase-book-height;
-  min-width: 5rem;
-  margin: 0.3rem 0;
-  text-align: center;
-}
-
-.books.cover .book.loading {
-  border: 0.1rem solid @white;
-  .vendors(animation-name, borderload);
-  .vendors(animation-duration, 1s);
-  .vendors(animation-iteration-count, infinite);
-  .vendors(animation-timing-function, ease-in);
-}
-
-.books.cover .book img {
-  height: @bookcase-book-height;
-}
-
-.books.cover .book span {
-  .hide();
-}
-
-.books.selection.cover .book .book-cover {
-  opacity: 0.7;
-}
-
-.books.cover .book .book-select {
-  position: absolute;
-  left: 40%;
-  top: 40%;
-}
-
-.books.detail {
-  background-color: @white;
-  margin: 0 0 @footerbar-height 0;
-  padding-top: @toolbar-height;
-}
-
-.books.detail .book {
-  align-items: center;
-  border-bottom: 0.15rem solid @ivory;
-  display: flex;
-  width: 100%;
-}
-
-.books.detail .book .book-cover {
-  margin: 0 0 -3px 0;
-  padding: 0;
-  width: 15%;
-}
-
-.books.detail .book .book-cover img {
-  max-width: 100%;
-}
-
-.books.detail .book.loading {
-  border-bottom: 0.2rem solid @white;
-  .vendors(animation-name, borderload);
-  .vendors(animation-duration, 1s);
-  .vendors(animation-iteration-count, infinite);
-  .vendors(animation-timing-function, ease-in);
-}
-
-.books.detail .book .book-details {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  margin: 0 0.2rem 0 1rem;
-  width: 70%;
-}
-
-@media (orientation: landscape) {
-  .books.detail .book .book-cover {
-    width: 10%;
-  }
-
-  .books.detail .book .book-details {
-    width: 75%;
-  }
-}
-
-.books.detail .book .book-select {
-  position: absolute;
-  right: 1rem;
-  top: 32%;
-}
-
-.books.detail .book .book-details > * {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.book-details .book-details-title {
-  font-size: 6vmin;
-  font-weight: bold;
-  margin-bottom: 0.1rem;
-}
-
-.book-details .book-details-authors {
-  color: @gray-m2;
-  font-size: 5vmin;
-  margin-bottom: 0.3rem;
-}
-
-.bookcase .book > i {
-  color: @gray-m1;
-  display: block;
-  font-size: 2rem;
-  min-height: 3rem;
-  margin-top: 0.5rem;
-}
-
-.bookcase .books.cover .book > i {
-  margin-top: 50%;
-}
-
-.bookcase.open .book:not(.open) {
-  opacity: 0.2;
-  transition-duration: 0.3s;
-  transition-property: opacity;
-}
-
-.bookcase {
-  transition: transform 0.25s ease;
-}
-
-.bookcase.withDrawer {
-  overflow: hidden;
-  transform: translateX(@drawer-width);
-  transition: transform 0.25s ease;
-}
-
-input#book-upload {
-  height: 100%;
-  left: 0;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 556;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-}
-
-
-/*** Bookcase options ***/
-.bookcase-options-list {
-  display: flex;
-  flex-direction: column;
-}
-
-@media (orientation: landscape) {
-  .bookcase-options-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-  }
-
-  .bookcase-options hr {
-    display: none;
-  }
-
-  .bookcase-option:last-child {
-    border-left: 1px solid @blue-pastel;
-  }
-
-  .bookcase-option ul {
-    display: flex;
-    flex-flow: wrap row;
-  }
-
-  .bookcase-option ul li {
-    width: 10rem;
-  }
-}
-
-.bookcase-option {
-  font-family: "Fira Sans Light";
-  margin-top: 1rem;
-}
-
-.bookcase-option ul {
-  list-style: none;
-  margin: 0;
-  padding-left: 1rem;
-}
-
-.bookcase-option ul li {
-  height: 2rem;
-  line-height: 2rem;
-  position: relative;
-}
-
-.bookcase-option-title {
-  color: @blue-pastel;
-  font-size: 1.5rem;
-  padding-left: 1rem;
-  text-transform: uppercase;
-}
-
-.bookcase-options hr {
-  background: @blue-pastel;
-  border: 0;
-  height: 1px;
-  width: 80%;
-}
-
-
-/** Added books notification **/
-.added-books {
-  background-color: rgba(0, 0, 0, 0.5);
-  height: 100%;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 556;
-}
-
-.added-books-content {
-  align-items: center;
-  background-color: white;
-  border: 1px solid @ivory;
-  border-radius: 3px;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: space-between;
-  height: 33%;
-  margin-left: 4%;
-  margin-top: 60%;
-  position: absolute;
-  top: 0;
-  width: 92%;
-}
-
-.added-books-text {
-  background-color: @ivory;
-  width: 100%;
-  text-align: center;
-  padding: 2px 0;
-  height: 15%;
-}
-
-.added-books-covers {
-  align-items: center;
-  display: flex;
-  flex-flow: row wrap;
-  height: 85%;
-  justify-content: space-around;
-  width: 100%;
-}
-
-.added-books-covers i {
-  font-size: 4em;
-}
-
-.added-books-covers img {
-  max-height: 8em;
-  max-width: 6em;
-}
-
-@media (orientation: landscape) {
-  .added-books-content {
-    height: 60%;
-    margin-left: 20%;
-    margin-top: 10%;
-    width: 60%;
-  }
-}
-
-
-/** Gerneric Firefox bar **/
-.bar {
-  background-color: @toolbar-color;
-  box-shadow: 0px 1px 1px #aaaaaa;
-  color: @font-secondary-color;
-  display: flex;
-  height: @toolbar-height;
-  justify-content: flex-start;
-  overflow: hidden;
-  position: fixed;
-  transition: height 0.5s ease;
-  width: 100%;
-  will-change: height;
-  z-index: 100;
-}
-
-.bar .title {
-  font-size: 1.5rem;
-  margin-left: @toolbar-back-width;
-  line-height: @toolbar-height;
-  opacity: 1;
-  transition: transform 0.5s ease;
-}
-
-.warning .bar .title {
-  margin-left: 0;
-}
-
-/***** Book toolbar *****/
-.toolbar {
-  left: 0;
-  top: 0;
-}
-
-.toolbar.hidden {
-  height: 0px;
-  transition: height 0.5s ease;
-}
-
-.toolbar button {
-  color: @font-secondary-color;
-  float: right;
-  line-height: inherit;
-  margin: 0;
-  padding: 0;
-  z-index: 500;
-}
-
-.toolbar button:last-child {
-  margin-left: auto;
-  padding: 0;
-}
-
-.toolbar > .back {
-  background: none transparent;
-  border: 0px;
-  border-radius: 0px;
-  color: @font-secondary-color;
-  height: 100%;
-  line-height: inherit;
-  width: @toolbar-back-width;
-  z-index: 500;
-}
-
-.toolbar button.bookmark.on {
-  color: @blue-pastel;
-}
-
-.toolbar-buttons {
-  display: flex;
-  justify-content: flex-start;
-  margin-left: 16px;
-  width: 100%;
-}
-
-.toolbar [class^="icon-"]:before {
-  font-size: 1.8rem;
-}
-
-
-/*** Bookcase header bar ***/
-.headerbar {
-  top: 0;
-}
-
-.headerbar .menu {
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  transition: transform 0.5s ease;
-  width: 3rem;
-}
-
-.headerbar .title {
-  font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-style: italic;
-  left: @toolbar-back-width;
-  margin-left: 1rem;
-  position: absolute;
-  text-align: center;
-  width: 75%;
-}
-
-.headerbar button {
-  color: @search-text-color;
-}
-
-.headerbar .search {
-  color: @search-text-color;
-  display: flex;
-  height: @toolbar-height;
-  justify-content: flex-start;
-  overflow-x: hidden;
-  padding: 0 0 0 0.6rem;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition-property: width;
-  transition-duration: 0.5s;
-  width: 45px;
-}
-
-.headerbar button.search-display {
-  min-width: 30px;
-  height: 100%;
-  left: 0;
-  padding: 0;
-  position: absolute;
-  top: 0;
-}
-
-.headerbar button.search-display .icon-search:before {
-  margin-left: 0;
-}
-
-.headerbar .search-input-wrap {
-  width: 100%;
-}
-
-.headerbar .search-input-wrap input {
-  -webkit-appearance: none;
-  background-color: @search-bg-color;
-  background-image: none;
-  border: 0px;
-  border-radius: 0px;
-  color: @search-text-color;
-  display: block;
-  font-family: "Fira Sans Light";
-  font-size: 1.2rem;
-  height: @toolbar-height;
-  outline: 0;
-  padding: 0;
-  visibility: hidden;
-  width: 105%;
-}
-
-.headerbar .search-input-wrap input::-webkit-input-placeholder {
-  color: @search-text-color;
-  opacity: 0.5;
-}
-
-.headerbar .search-input-wrap input::-moz-placeholder {
-  color: @search-text-color;
-}
-
-.headerbar button.search-cancel {
-  font-size: 1rem;
-  min-width: 5rem;
-  text-transform: capitalize;
-  visibility: hidden;
-}
-
-.headerbar [class^="icon-"]:before {
-  font-size: 2rem;
-}
-
-/*** Bookcase search bar ***/
-.searchbar {
-  background-color: @search-bg-color;
-  color: @search-text-color;
-}
-
-.searchbar .menu {
-  transform: translateX(-100%);
-  transition: transform 0.25s ease;
-}
-
-.searchbar .title {
-  transform: translateX(-100%);
-  transition: transform 0.25s ease;
-}
-
-.searchbar .search {
-  width: 100%;
-}
-
-.searchbar .search-input-wrap input {
-  visibility: visible;
-}
-
-.searchbar button.search-display {
-  position: relative;
-}
-
-.searchbar button.search-cancel {
-  padding: 0 0.5rem;
-  visibility: visible;
-}
-
-/*** Bookcase footer bar ***/
-.footerbar {
-  background-color: @footerbar-color;
-  bottom: 0;
-  height: @footerbar-height;
-}
-
-.footerbar button {
-  color: @font-secondary-color;
-  padding: 0;
-  width: 20%;
-}
-
-.footerbar button:last-child {
-  margin-left: 40%;
-}
-
-.footerbar button.selected {
-  background-color: @blue;
-}
-
-.footerbar [class^="icon-"]:before {
-  font-size: 1.5rem;
-}
-
-/***** empty bookcase *****/
-.bookcase-empty {
-  font-size: 1.5rem;
-  padding: 0 1rem;
-  text-align: center;
-  width: 100%;
-}
-
-.empty .footerbar button.add {
-  .vendors(animation-name, glow);
-  .vendors(animation-duration, 1.8s);
-  .vendors(animation-iteration-count, 5);
-  .vendors(animation-timing-function, ease-in);
-}
-
-.headerbar button.search-display:disabled {
-  opacity: 0.5;
-}
-
-.footerbar button:disabled {
-  color: @gray-m1;
-}
-
-/*** Bookcase action bar ***/
-.actionbar {
-  align-items: center;
-  background-color: @actionbar-color;
-  bottom: @footerbar-height;
-  height: @actionbar-height;
-  justify-content: space-around;
-  padding: 0 0.5rem;
-}
-
-.actionbar button {
-  background-color: @light-gray;
-  border-radius: 3px;
-  font-size: 1rem;
-  height: 2.4rem;
-  width: 46%;
-}
-
-.actionbar button:active {
-  background-color: @darkblue;
-}
-
-.actionbar button.confirm {
-  background-color: @red;
-  color: @white;
-}
-
-.actionbar button.confirm:active {
-  background-color: @darkred;
-}
-
-/**** Generic panel ****/
-.panel {
-  background-color: #ffffff;
-  height: 100%;
-  overflow-y: auto;
-  padding-top: @toolbar-height;
-  width: 100%;
-  z-index: 50;
-}
-
-.panel .panel-title {
-  background-color: @ivory;
-  box-shadow: 1px 1px 1px #ccc;
-  display: block;
-  height: 2rem;
-  line-height: 2rem;
-  margin: 0;
-  padding-left: @toolbar-back-width;
-  width: 100%;
-}
-
-.panel.hidden {
-  .hide();
-}
-
-/** Table Of Contents **/
-.book-toc.panel, .book-bookmarks.panel {
-  top: 0;
-  position: absolute;
-  transition: top 0.25s;
-}
-
-.book-toc.panel.hidden, .book-bookmarks.panel.hidden {
-  top: 100%;
-  display: block;
-}
-
-.book-toc ul, .book-bookmarks ul {
-  font-size: 1rem;
-  list-style: none;
-  padding: 0;
-}
-
-.book-toc > ul, .book-bookmarks > ul {
-  margin-bottom: @toolbar-height + 2rem;
-}
-
-.book-toc a, .book-bookmarks a {
-  color: @font-primary-color;
-  display: block;
-  margin-top: 0.6rem;
-  margin-bottom: 0.2rem;
-  padding-left: 1rem;
-  text-decoration: none;
-  width: 90%;
-}
-
-.book-toc a.level-2 {
-  padding-left: 2rem;
-}
-
-.book-toc a.level-3 {
-  padding-left: 3rem;
-}
-
-.book-toc-item ul {
-  background-color: @toc-sub-entry-color;
-  background-origin: padding-box;
-  border-width: 1px 0;
-  border-style: solid;
-  border-color: @toc-sub-entry-border-color;
-}
-
-.book-toc-item ul:empty {
-  border: none;
-}
-
-.book-toc-item-label {
-  padding: 0.1rem 0 0.3rem 0;
-}
-
-.book-toc-item.current {
-  background-color: #B2F2FF;
-  background-origin: padding-box;
-}
-
-/** Bookmarks **/
-.book-bookmarks .panel-title {
-  display: flex;
-  justify-content: space-between;
-}
-
-button.book-bookmark-add {
-  font-size: 1rem;
-  padding: 0.5rem;
-}
-
-.book-bookmark-label {
-  display: flex;
-  justify-content: space-between;
-}
-
-.book-bookmark-label button {
-  padding: 0.3rem 1rem 0.3rem 0.5rem;
-}
-
-/** Pagination **/
-.book-pagination {
-  bottom: 0;
-  color: @pagination-text-color;
-  display: flex;
-  flex-direction: column;
-  font-size: 0.8rem;
-  font-style: italic;
-  height: @pagination-bar-height;
-  position: absolute;
-  width: 100%;
-  will-change: height;
-  transition: height 0.5s ease;
-}
-
-.book-pagination.expanded {
-  height: @pagination-bar-expanded-height;
-  transition: height 0.5s ease;
-}
-
-.book-pagination-chapters {
-  text-align: center;
-  visibility: hidden;
-  width: 100%;
-}
-
-.expanded .book-pagination-chapters, .expanded .book-pagination-title {
-  visibility: visible;
-}
-
-.book-pagination-pages {
-  text-align: center;
-  width: 100%;
-}
-
-.book-pagination .book-pagination-pages progress {
-  background-color: @progress-bar-background;
-  border: none;
-  height: 0.4rem;
-  width: 100%;
-  -webkit-appearance: none;
-  transition: height 0.5s ease;
-}
-
-.book-pagination.expanded .book-pagination-pages progress {
-  height: 1.1rem;
-  transition: height 0.5s ease;
-}
-
-.book-pagination-pages progress::-moz-progress-bar {
-  background-color: @progress-bar-color;
-}
-
-.book-pagination-pages progress::-webkit-progress-bar {
-  background: @progress-bar-background;
-}
-
-.book-pagination-pages progress::-webkit-progress-value {
-  background: @progress-bar-color;
-}
-
-.book-pagination-title {
-  height: 100%;
-  line-height: 1rem;
-  overflow: hidden;
-  padding: 0.2rem 0.5rem;
-  text-align: center;
-  text-overflow: ellipsis;
-  visibility: hidden;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.book-pagination-page-destination {
-  background-color: rgb(250, 250, 250);
-  bottom: 1.5 * @pagination-bar-height;
-  box-shadow: 2px 2px 8px 0 black;
-  border-radius: 5px;
-  color: @font-primary-color;
-  .hide();
-  padding: 1rem;
-  position: absolute;
-  z-index: 5000;
-}
-
-/** book Options **/
-.book-options {
-  background-color: rgba(0, 0, 0, 0.20);
-  height: 100%;
-  opacity: 1;
-  overflow-y: auto;
-  position: absolute;
-  top: @toolbar-height;
-  width: 100%;
-  transition: opacity 0.3s ease;
-}
-
-.book-options.hidden {
-  opacity: 0;
-  overflow: hidden;
-  z-index: -2;
-  transition: opacity 0.3s ease;
-}
-
-.book-options.hidden > .book-options-content {
-  height: 0;
-  transition: height 0.5s ease;
-}
-
-.book-options-content {
-  background-color: @options-panel-color;
-  height: 45%;
-  transition: opacity 0.5s ease;
-}
-
-.book-options-footer {
-  background-color: @options-panel-footer-color;
-  height: 2rem;
-}
-
-.waiting {
-  background-color: @waiting-background-color;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-}
-
-.wheel {
-  color: @white;
-  height: 2rem;
-  text-align: center;
-}
-
-.book-options.working .wheel, .waiting .wheel {
-  .vendors(animation-name, spin);
-  .vendors(animation-duration, 2000ms);
-  .vendors(animation-iteration-count, infinite);
-  .vendors(animation-timing-function, linear);
-}
-
-.waiting .wheel {
-  margin-top: 80%;
-}
-
-.book-option-title {
-  font-family: "Fira Sans Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1rem;
-  text-transform: uppercase;
-  margin: 0;
-  padding: 0.2rem 0.5rem;
-}
-
-.book-option {
-  align-items: center;
-  display: flex;
-  justify-content: space-around;
-  padding: 0 1rem 0.5rem 1rem;
-  width: 100%;
-}
-
-.book-option.font-size > span:first-child {
-  font-size: 1.5rem;
-}
-
-.book-option.font-size > span:last-child {
-  font-size: 2rem;
 }
 
 input[type=range] {
@@ -1028,6 +152,141 @@ input[type=range]:focus::-webkit-slider-thumb {
   border: 0.1rem solid @slider-color;
 }
 
+
+/** Gerneric Firefox bar **/
+.bar {
+  background-color: @toolbar-color;
+  box-shadow: 0px 1px 1px #aaaaaa;
+  color: @font-secondary-color;
+  display: flex;
+  height: @toolbar-height;
+  justify-content: flex-start;
+  overflow: hidden;
+  position: fixed;
+  transition: height 0.5s ease;
+  width: 100%;
+  will-change: height;
+  z-index: 100;
+}
+
+.bar .title {
+  font-size: 1.5rem;
+  margin-left: @toolbar-back-width;
+  line-height: @toolbar-height;
+  opacity: 1;
+  transition: transform 0.5s ease;
+}
+
+.warning .bar .title {
+  margin-left: 0;
+}
+
+
+/**** Generic panel ****/
+.panel {
+  background-color: #ffffff;
+  height: 100%;
+  overflow-y: auto;
+  padding-top: @toolbar-height;
+  position: absolute;
+  transition: top 0.25s;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+}
+
+.panel .panel-title {
+  background-color: @ivory;
+  box-shadow: 1px 1px 1px #ccc;
+  display: block;
+  height: 2rem;
+  line-height: 2rem;
+  margin: 0;
+  padding-left: @toolbar-back-width;
+  width: 100%;
+}
+
+.panel.hidden {
+  display: block;
+  top: 100%;
+}
+
+.panel ul {
+  font-size: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+.panel > ul {
+  margin-bottom: @toolbar-height + 2rem;
+}
+
+.panel a {
+  color: @font-primary-color;
+  display: block;
+  margin-top: 0.6rem;
+  margin-bottom: 0.2rem;
+  padding-left: 1rem;
+  text-decoration: none;
+  width: 90%;
+}
+
+
+/**** Waiting screen ****/
+.waiting {
+  background-color: @waiting-background-color;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.wheel {
+  color: @white;
+  height: 2rem;
+  text-align: center;
+}
+
+.working .wheel, .waiting .wheel {
+  .vendors(animation-name, spin);
+  .vendors(animation-duration, 2000ms);
+  .vendors(animation-iteration-count, infinite);
+  .vendors(animation-timing-function, linear);
+}
+
+.waiting .wheel {
+  margin-top: 80%;
+}
+
+
+/**** Warning screen ****/
+.warning {
+  align-items: center;
+  background-color: @white;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-around;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.warning .icon-warning {
+  font-size: 3rem;
+}
+
+.warning .warning-content {
+  font-size: 1.6rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+
+/**** Animations ****/
 @-webkit-keyframes spin {
   .transformKeyframes(webkit);
 }
@@ -1054,188 +313,4 @@ input[type=range]:focus::-webkit-slider-thumb {
 @-moz-keyframes borderload {
   0%, 100% { border-color: @ivory; }
   50% { border-color: @blue-pastel; }
-}
-
-.book-option.theme {
-  flex-direction: column;
-}
-
-@media (orientation: landscape) {
-  .book-option.theme {
-    flex-direction: row;
-  }
-
-  .book-option.theme button {
-    margin: 0 0.5rem;
-  }
-}
-
-.book-option.theme button {
-  border-radius: 4px;
-  border: 1px solid #777;
-  cursor: pointer;
-  font-size: 1rem;
-  height: 2rem;
-  padding: 3px;
-  margin-bottom: 0.5rem;
-  text-align: center;
-  width: 90%;
-}
-
-.author-theme {
-  background-color: #ffffff;
-  border-style: dashed !important;
-  color: @font-primary-color;
-  font-style: italic;
-}
-
-.night-theme {
-  background-color: #141414;
-  color: #d7d7d7;
-}
-
-.grey-theme {
-  background-color: #c4c4c4;
-  color: #292929;
-}
-
-/** book misc **/
-.book-loading-cover {
-  align-items: center;
-  background-color: @white;
-  display: flex;
-  flex-direction: column;
-  font-size: 5em;
-  justify-content: space-around;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 2000000001;
-}
-
-.book-loading-cover-v {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: 4rem;
-}
-
-.book-loading-cover .loading {
-  color: @gray-m1;
-  font-size: 1rem;
-  font-style: italic;
-  padding-bottom: 4rem;
-}
-
-.book-font-size-sample {
-  display: none;
-  position: absolute;
-  width: auto;
-  z-index: 555;
-}
-
-.book-font-size-sample:after {
-  background-color: rgba(255, 255, 255, 0.85);
-  border-radius: 50%;
-  box-shadow: 2px 2px 8px 0 black;
-  content: "";
-  display: block;
-  height: 0;
-  padding-bottom: 100%;
-  width: 100%;
-  z-index: 555;
-}
-
-.book-font-size-sample div {
-  color: black;
-  float: left;
-  line-height: 1em;
-  margin-top: -0.5em;
-  padding: 50% 0.5rem;
-  text-align: center;
-  width: 100%;
-}
-
-.warning {
-  align-items: center;
-  background-color: @white;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: space-around;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-.warning .icon-warning {
-  font-size: 3rem;
-}
-
-.warning .warning-content {
-  font-size: 1.6rem;
-  padding: 2rem;
-  text-align: center;
-}
-
-
-/*** Bookcase drawer ***/
-.drawer {
-  background-color: @warm-gray;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: @drawer-width;
-  z-index: 1;
-}
-
-.drawer > .bar {
-  background-color: @warm-gray;
-  box-shadow: 0px 1px 2px #181818;
-}
-
-.drawer ul {
-  color: @white;
-  list-style: none;
-  margin: 0;
-  padding: @toolbar-height 0 0 0;
-  width: 100%;
-}
-
-.drawer ul > li {
-  align-items: center;
-  border-bottom: 0.1rem solid #596068;
-  display: flex;
-  flex-direction: row;
-  font-weight: bold;
-  justify-content: space-between;
-  min-height: 3rem;
-  padding-left: 2rem;
-  padding-right: 0.5rem;
-}
-
-.drawer ul > li > i {
-  min-width: 1.5rem;
-}
-
-.drawer ul > li > label {
-  height: 22px;
-  width: 22px;
-}
-
-.drawer ul > li > label:before {
-  border-color: @blue-pastel;
-}
-
-.drawer ul > li > input:checked + label:before {
-  background-color: @blue-pastel;
-  font-weight: normal;
-}
-
-.drawer ul > li > a {
-  line-height: 3rem;
 }
