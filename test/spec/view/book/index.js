@@ -62,9 +62,9 @@
                     sandbox.useFakeTimers();
 
                     // Given a book view with a loaded epub
-                    var bookView = new BookView({ model: new BookModel() });
-                    Backbone.trigger(Teavents.READY_TO_READ);
+                    var bookView = new BookView({ model: new BookModel({ hash: "fsf56f4sd54fsdf4sd5" }) });
                     Backbone.trigger(Teavents.TOC, fakeTocNcx);
+                    Backbone.trigger(Teavents.READY_TO_READ);
 
                     // When the user tap once the screen and waits for 5s
                     triggerTap();
@@ -191,16 +191,16 @@
                 });
             });
 
-            it('readyToRead -> toolbar hidden', function (done) {
+            it('readyToRead -> book cover removed', function (done) {
                 curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
                     // Given a book view
                     var bookView = new BookView({ model: new BookModel() });
 
                     // When the epub is loaded
-                    Backbone.trigger(Teavents.MESSAGE, { type: Teavents.READY_TO_READ });
+                    Backbone.trigger(Teavents.READY_TO_READ);
 
-                    // The toolbar should be hidden
-                    bookView.$el.find(".toolbar").hasClass("hidden").should.be.true;
+                    // The cover must be removed
+                    bookView.$el.find(".book-loading-cover").should.have.length(0);
 
                     bookView.close();
                     done();
