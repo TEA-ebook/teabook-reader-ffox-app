@@ -157,7 +157,6 @@ define('view/book/index',
              */
             readerReady: function () {
                 this.$el.find(".book-loading-cover").remove();
-                console.debug('REMOVE COVER');
                 this.hideUi();
             },
 
@@ -274,6 +273,7 @@ define('view/book/index',
             },
 
             hideToc: function () {
+                this.clearUiTempo();
                 this.tocView.hide();
                 this.toolbarView.hide();
             },
