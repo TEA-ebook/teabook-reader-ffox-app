@@ -1,4 +1,7 @@
 <div class="book-toc-item-label">
     <a href="#/book/{{hash}}/{{href}}" class="level-{{level}}">{{label}}</a>
+{{#if hasChildren}}
+    <button class="book-toc-item-toggle">-</button>
+{{/if}}
 </div>
 <ul></ul>

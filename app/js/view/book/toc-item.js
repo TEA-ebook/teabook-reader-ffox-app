@@ -10,6 +10,7 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
             className: 'book-toc-item',
 
             events: {
+                "click .book-toc-item-toggle": "toggleChildren",
                 "click": "highlightItem"
             },
 
@@ -18,18 +19,33 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
             },
 
             render: function (hash) {
+                var children = this.model.get("items");
+
                 this.hash = hash;
                 this.$el.html(template({
                     label: this.model.get('label'),
                     href: window.encodeURIComponent(this.model.get('href')),
                     level: this.model.get('level'),
                     hash: hash,
-                    current: this.model.get('current')
+                    current: this.model.get('current'),
+                    hasChildren: children.length > 0
                 }));
+
                 this.childrenEl = this.$el.find('ul');
                 this.model.get("items").forEach(this.renderChild.bind(this));
 
                 return this;
+            },
+
+            toggleChildren: function (event) {
+                event.stopImmediatePropagation();
+                if (this.childrenEl.hasClass('hidden')) {
+                    this.$(event.target).html('-');
+                    this.childrenEl.removeClass('hidden');
+                } else {
+                    this.$(event.target).html('+');
+                    this.childrenEl.addClass('hidden');
+                }
             },
 
             renderChild: function (child) {
