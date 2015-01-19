@@ -5,8 +5,6 @@ define('route/open', ['jquery', 'template/waiting'],
 
         return function () {
             var contentEl = $("#content");
-
-            console.info("route to open");
             contentEl.html(template());
         };
     });

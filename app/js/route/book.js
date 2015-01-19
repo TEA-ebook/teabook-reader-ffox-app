@@ -8,14 +8,6 @@ define('route/book', ['jquery', 'backbone', 'model/book', 'view/book/index'],
                 book,
                 view;
 
-            console.info("route to book " + hash);
-            if (chapter) {
-                console.info("and chapter " + window.decodeURIComponent(chapter));
-                if (cfi) {
-                    console.info("and CFI " + window.decodeURIComponent(cfi));
-                }
-            }
-
             if (contentEl.find("iframe").length > 0) {
                 if (cfi) {
                     Backbone.trigger(Teavents.Actions.OPEN_POSITION, chapter, cfi);

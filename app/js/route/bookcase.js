@@ -3,8 +3,6 @@ define('route/bookcase', ['jquery', 'collection/books', 'view/bookcase/index', '
     function ($, BookCollection, BookcaseView, DrawerView) {
         "use strict";
         return function () {
-            console.info("route to bookcase");
-
             var bookcaseView, drawerView;
 
             bookcaseView = new BookcaseView({ collection: new BookCollection() });

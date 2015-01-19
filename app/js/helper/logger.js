@@ -80,7 +80,6 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         var eventCollection = new EventCollection(), nbEvents, eventsToDestroy = [], i;
         eventCollection.fetch().done(function () {
             nbEvents = eventCollection.models.length;
-            console.debug(nbEvents + " events in DB");
             if (nbEvents >= purgeTriggerLimit) {
                 // get events to purge
                 eventCollection.models.forEach(function (event) {

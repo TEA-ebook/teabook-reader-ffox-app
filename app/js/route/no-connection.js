@@ -7,8 +7,6 @@ define('route/no-connection', ['jquery', 'view/no-connection'],
             var contentEl = $("#content"),
                 view = new NoConnectionView();
 
-            console.info("route to no-connection");
-
             view.render();
             contentEl.html(view.el);
         };
