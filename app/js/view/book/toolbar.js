@@ -8,6 +8,10 @@ define('view/book/toolbar', ['backbone', 'template/book/toolbar'],
             tagName: 'div',
             className: 'bar toolbar',
 
+            events: {
+                "click button": "highlightButton"
+            },
+
             render: function () {
                 this.$el.html(template());
                 return this;
@@ -27,7 +31,21 @@ define('view/book/toolbar', ['backbone', 'template/book/toolbar'],
 
             hide: function () {
                 this.$el[0].classList.add("hidden");
+                this.clearHighlight();
                 return false;
+            },
+
+            highlightButton: function (event) {
+                var button = event.currentTarget;
+                if (button.classList.contains("active")) {
+                    button.classList.remove("active");
+                } else {
+                    button.classList.add("active");
+                }
+            },
+
+            clearHighlight: function () {
+                this.$el.find("button.active").removeClass("active");
             }
         });
 
