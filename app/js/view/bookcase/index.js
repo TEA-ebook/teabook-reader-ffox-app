@@ -325,7 +325,11 @@ define('view/bookcase/index',
             },
 
             openBookEffect: function () {
-                this.$el.addClass("open");
+                if (!this.booksEl.hasClass("selection")) {
+                    this.$el.addClass("open");
+                } else {
+                    this.updateHeaderbar();
+                }
             },
 
             showDrawer: function (event) {
@@ -360,6 +364,7 @@ define('view/bookcase/index',
                     this.showSelection();
                 } else {
                     this.hideSelection();
+                    this.headerBar.reset();
                 }
             },
 
@@ -369,6 +374,7 @@ define('view/bookcase/index',
                     this.collection.forEach(function (book) {
                         book.set({ "selection": true }, { "silent": true });
                     });
+                    this.updateHeaderbar();
                 }
             },
 
@@ -378,7 +384,12 @@ define('view/bookcase/index',
                     this.collection.forEach(function (book) {
                         book.set({ "selection": false }, { "silent": true });
                     });
+                    this.headerBar.reset();
                 }
+            },
+
+            updateHeaderbar: function () {
+                this.headerBar.selectionMode(this.booksEl.find("input[type='checkbox']:checked").length);
             },
 
             deleteSelectedBooks: function () {
@@ -394,14 +405,6 @@ define('view/bookcase/index',
                 }
                 this.hideSelection();
                 this.footerBar.hideDelete();
-            },
-
-            resetBookcase: function () {
-                Backbone.sync("delete", this.collection, {
-                    success: function () {
-                        this.collection.reset();
-                    }.bind(this)
-                });
             },
 
             searchFor: function (event) {

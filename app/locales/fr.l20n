@@ -52,6 +52,12 @@
 <titleAsc "Titre A->Z">
 <titleDesc "Titre Z->A">
 
+<selectToDelete[plural($number)] {
+  zero: "Sélectionner",
+  one: "1 sélectionné",
+  many: "{{ $number }} sélectionnés"
+}>
+
 <cancel "Annuler">
 <searchTip[rand($random)] {
  zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"vous cherchez un livre ?\" />",

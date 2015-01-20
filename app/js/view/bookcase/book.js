@@ -50,7 +50,6 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
 
             toggleSelection: function (event) {
                 event.preventDefault();
-                event.stopImmediatePropagation();
 
                 var checkbox = this.ell.querySelector("input[type=checkbox]"),
                     selected = !checkbox.getAttribute("checked");

@@ -41,6 +41,17 @@ define('view/bookcase/headerbar', ['backbone', 'template/bookcase/headerbar'],
                 if (event.keyCode === 13) {
                     this.$el.find("input").blur();
                 }
+            },
+
+            selectionMode: function (nbSelected) {
+                window.document.l10n.updateData({ number: nbSelected });
+                this.$el.find(".title").html(window.document.l10n.getSync('selectToDelete'));
+                this.$el.addClass("selection");
+            },
+
+            reset: function () {
+                this.$el.find(".title").html(window.document.l10n.getSync('bookcase'));
+                this.$el.removeClass("selection");
             }
         });
 

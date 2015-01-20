@@ -40,6 +40,7 @@ define('view/book/toolbar', ['backbone', 'template/book/toolbar'],
                 if (button.classList.contains("active")) {
                     button.classList.remove("active");
                 } else {
+                    this.$el.find('button.active').removeClass("active");
                     button.classList.add("active");
                 }
             },
