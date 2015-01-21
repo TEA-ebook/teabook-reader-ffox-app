@@ -1,2 +1,3 @@
 var Conf = {};
-Conf.host = 'http://192.168.100.16:1339';
+Conf.host = 'http://reader.jops-dev.com';
+Conf.logsEndPoint = false;
