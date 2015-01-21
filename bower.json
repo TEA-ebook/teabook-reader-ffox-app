@@ -8,8 +8,6 @@
     "handlebars": "~2.0.0",
     "requirejs": "~2.1.15",
     "keymaster": "~1.6.2",
-    "zepto": "~1.1.4",
-    "jbone": "~1.0.19",
     "l20n": "~1.0.1",
     "indexeddb-backbonejs-adapter": "*",
     "jszip": "Stuk/jszip#~2.4.0",
