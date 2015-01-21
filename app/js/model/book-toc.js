@@ -65,8 +65,9 @@ define("model/book-toc", ["backbone", "model/book-toc-item"], function (Backbone
         },
 
         extractNavPointInfos: function (item, parent) {
+            var navLabel = item.querySelector("navLabel");
             return {
-                label: item.querySelector("navLabel").textContent.trim(),
+                label: navLabel ? navLabel.textContent.trim() : item.getAttribute("id"),
                 href: item.querySelector("content").getAttribute("src").trim(),
                 parent: parent ? { href: parent.get('href'), label: parent.get('label')} : false
             };

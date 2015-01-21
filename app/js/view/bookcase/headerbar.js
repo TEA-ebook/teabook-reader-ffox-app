@@ -1,4 +1,5 @@
 /*global define, window*/
+/*jslint stupid:true*/
 define('view/bookcase/headerbar', ['backbone', 'template/bookcase/headerbar'],
     function (Backbone, template) {
         "use strict";
@@ -44,8 +45,8 @@ define('view/bookcase/headerbar', ['backbone', 'template/bookcase/headerbar'],
             },
 
             selectionMode: function (nbSelected) {
-                window.document.l10n.updateData({ number: nbSelected });
-                this.$el.find(".title").html(window.document.l10n.getSync('selectToDelete'));
+                //window.document.l10n.updateData();
+                this.$el.find(".title").html(window.document.l10n.getSync('selectToDelete', { number: nbSelected }));
                 this.$el.addClass("selection");
             },
 
