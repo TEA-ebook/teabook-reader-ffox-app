@@ -14,7 +14,7 @@
 //  used to endorse or promote products derived from this software without specific
 //  prior written permission.
 
-define('gestures', ['jquery', 'hammer', 'underscore'], function ($, Hammer, _) {
+define('gestures', ['jquery', 'hammer'], function ($, Hammer) {
     "use strict";
 
     var gesturesHandler, onSwipe, onPinch, onPinchMove, onTap, computeFontSize, isGestureHandled, setupHammer;
@@ -39,13 +39,13 @@ define('gestures', ['jquery', 'hammer', 'underscore'], function ($, Hammer, _) {
             }
         };
 
-        onPinchMove = _.throttle(function (event) {
+        onPinchMove = function (event) {
             reader.trigger(ReadiumSDK.Events.GESTURE_PINCH_MOVE, {
                 "fontSize": computeFontSize(event.scale),
                 "center": event.center,
                 "timestamp": Date.now().toString()
             });
-        }, 10);
+        };
 
         onPinch = function (event) {
             if (event.eventType === Hammer.INPUT_END) {
