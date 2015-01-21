@@ -33,7 +33,7 @@ define('view/book/pagination', ['backbone', 'template/book/pagination'],
                         }
                     }
 
-                    chapterCurrent = position || (data.pageInfo.spineItemIndex);
+                    chapterCurrent = (item && item.get("endPoint")) ? (position || (data.pageInfo.spineItemIndex)) : false;
 
                     if (chapterCurrent > chapterTotal) {
                         chapterTotal = false;

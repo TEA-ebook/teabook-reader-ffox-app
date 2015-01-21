@@ -1,7 +1,7 @@
 /*global window, Teavents, Blob, ReadiumSDK, readiumReady, $*/
 "use strict";
 
-var readiumReadyTest, isReadiumReady, handleMessage, openEpub, sendCurrentPageInfo, setFontSize, setTheme, themes;
+var readiumReadyTest, isReadiumReady, handleMessage, openEpub, sendCurrentPageInfo, setFontSize, setTheme, themes, lastSpineHref, lastElementId;
 
 themes = {
     author: {
@@ -146,14 +146,26 @@ isReadiumReady = function () {
 
             // transfer pagination info to the app
             window.readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
+                var href = window.readium.reader.getLoadedSpineItems()[0].href,
+                    elementId = pageChangeData.elementId;
+
+                if (!elementId) {
+                    if (lastSpineHref && href === lastSpineHref) {
+                        elementId = lastElementId;
+                    }
+                } else {
+                    lastElementId = elementId;
+                }
+
                 window.parent.postMessage({
                     type: ReadiumSDK.Events.PAGINATION_CHANGED,
                     data: {
                         pageInfo: pageChangeData.paginationInfo.openPages[0],
                         spineTotal: pageChangeData.paginationInfo.spineItemCount,
-                        spineHref: window.readium.reader.getLoadedSpineItems()[0].href + (pageChangeData.elementId ? "#" + pageChangeData.elementId : "")
+                        spineHref: href + (elementId ? "#" + elementId : "")
                     }
                 }, "*");
+                lastSpineHref = window.readium.reader.getLoadedSpineItems()[0].href;
             });
 
             // transfer updated settings
