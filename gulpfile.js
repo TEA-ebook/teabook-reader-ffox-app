@@ -186,7 +186,11 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
                 "jquery": "../vendor/jquery/dist/jquery",
                 "underscore": "../vendor/underscore/underscore",
                 "handlebars": "../vendor/handlebars/handlebars.amd",
+                "keymaster": "../vendor/keymaster/keymaster",
                 "indexeddb": "../vendor/indexeddb-backbonejs-adapter/backbone-indexeddb"
+            },
+            shim: {
+                "keymaster": { exports: "key" }
             }
         }))
         .pipe(addsrc('app/js/events.js'))

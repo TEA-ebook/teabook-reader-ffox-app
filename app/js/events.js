@@ -38,6 +38,8 @@ window.Teavents = {
         OPEN_CHAPTER: "open-chapter",
         OPEN_PAGE: "open-page",
         OPEN_POSITION: "open-position",
+        NEXT_PAGE: "next-page",
+        PREV_PAGE: "prev-page",
         SET_FONT_SIZE: "font-size",
         SET_THEME: "set-theme"
     },

@@ -14,7 +14,7 @@
  * Build readium first: `gulp readium`
  * Build app: `gulp build`
 
-# Gulp options
+# Gulp build options
 
  * tasks:
   * default: build app with local env, no debug and open default browser

@@ -122,6 +122,10 @@ handleMessage = function (event) {
         sendCurrentPageInfo(true);
     } else if (event.data.action === Teavents.Actions.GET_POSITION) {
         sendCurrentPageInfo();
+    } else if (event.data.action === Teavents.Actions.NEXT_PAGE) {
+        window.readium.reader.openPageRight();
+    } else if (event.data.action === Teavents.Actions.PREV_PAGE) {
+        window.readium.reader.openPageLeft();
     }
 };
 

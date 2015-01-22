@@ -5,6 +5,7 @@ define('view/book/index',
         'helper/blobber',
         'helper/device',
         'helper/logger',
+        'keymaster',
         'model/book-toc',
         'model/book-pagination',
         'view/book/bookmarks',
@@ -21,6 +22,7 @@ define('view/book/index',
               Blobber,
               Device,
               Logger,
+              key,
               BookTocModel,
               BookPaginationModel,
               BookmarksView,
@@ -74,7 +76,7 @@ define('view/book/index',
                 Backbone.on(Teavents.NOT_WORKING, this.hideBusyWheel.bind(this));
 
                 // Readium events
-                Backbone.on(Teavents.Readium.GESTURE_TAP, this.displayUi.bind(this));
+                Backbone.on(Teavents.Readium.GESTURE_TAP, this.analyzeTap.bind(this));
                 Backbone.on(Teavents.Readium.CONTENT_LOAD_START, this.spin.bind(this));
                 Backbone.on(Teavents.Readium.CONTENT_LOADED, this.stopSpin.bind(this));
                 Backbone.on(Teavents.Readium.GESTURE_PINCH, this.displayBusyWheel.bind(this));
@@ -88,6 +90,10 @@ define('view/book/index',
                 Backbone.on(Teavents.Actions.SET_FONT_SIZE, this.changeFontSize.bind(this));
                 Backbone.on(Teavents.Actions.SET_THEME, this.changeTheme.bind(this));
                 Backbone.on(Teavents.Actions.BOOKMARK_PAGE, this.bookmarkPage.bind(this));
+
+                // keyboard events
+                key('left', this.prevPage.bind(this));
+                key('right', this.nextPage.bind(this));
 
                 // getting the book -> render it
                 this.model.fetch({
@@ -158,6 +164,25 @@ define('view/book/index',
             readerReady: function () {
                 this.$el.find(".book-loading-cover").remove();
                 this.hideUi();
+            },
+
+            /**
+             *
+             * @param tap
+             */
+            analyzeTap: function (tap) {
+                var tapZone = {
+                    x: 100 * (tap.x / window.screen.availWidth)
+                    //y: 100 * (tap.y / window.screen.availHeight)
+                };
+
+                if (tapZone.x < 15) {
+                    this.prevPage();
+                } else if (tapZone.x > 85) {
+                    this.nextPage();
+                } else {
+                    this.displayUi();
+                }
             },
 
             /**
@@ -516,6 +541,18 @@ define('view/book/index',
                     content: percentage
                 });
                 this.hideToc();
+            },
+
+            nextPage: function () {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.NEXT_PAGE
+                });
+            },
+
+            prevPage: function () {
+                this.sendMessageToSandbox({
+                    action: Teavents.Actions.PREV_PAGE
+                });
             },
 
             openPosition: function (idref, cfi) {
