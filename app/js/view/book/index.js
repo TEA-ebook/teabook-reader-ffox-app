@@ -91,10 +91,6 @@ define('view/book/index',
                 Backbone.on(Teavents.Actions.SET_THEME, this.changeTheme.bind(this));
                 Backbone.on(Teavents.Actions.BOOKMARK_PAGE, this.bookmarkPage.bind(this));
 
-                // keyboard events
-                key('left', this.prevPage.bind(this));
-                key('right', this.nextPage.bind(this));
-
                 // getting the book -> render it
                 this.model.fetch({
                     success: this.render.bind(this)
@@ -152,6 +148,11 @@ define('view/book/index',
                 // spinning wheel : book is indeed long to load
                 this.$el.append(spinnerTemplate());
                 this.spinner = this.$el.find(".loader");
+
+                // keyboard events
+                key('left', this.prevPage.bind(this));
+                key('right', this.nextPage.bind(this));
+                key.filter = function(event) { console.debug(event); };
 
                 Logger.openBook(this.model.attributes);
 

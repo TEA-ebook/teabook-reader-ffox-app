@@ -1,4 +1,4 @@
-/*global describe, beforeEach, afterEach, should, it, curl, sinon, $, Backbone, Teavents, Logger*/
+/*global describe, beforeEach, afterEach, should, it, curl, sinon, $, Backbone, Teavents, Logger, window*/
 (function () {
     "use strict";
     describe('Book view', function () {
@@ -32,8 +32,8 @@
             sandbox.restore();
         });
 
-        var triggerTap = function () {
-            Backbone.trigger(Teavents.Readium.GESTURE_TAP);
+        var triggerTap = function (x, y) {
+            Backbone.trigger(Teavents.Readium.GESTURE_TAP, { x: x || Math.round(window.screen.availWidth / 2), y: y || Math.round(window.screen.availHeight / 2) });
         };
 
         describe('instance', function () {
@@ -312,6 +312,64 @@
 
                     // It should exit full screen
                     BookView.prototype.exitFullScreen.should.have.been.calledOnce;
+
+                    done();
+                });
+            });
+        });
+
+        describe('should navigate with left/right tap/keystroke :', function () {
+            it('tap on the left of the screen -> request previous page', function (done) {
+                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                    sandbox.stub(BookView.prototype, "prevPage");
+
+                    // Given a book view
+                    var bookView = new BookView({ model: new BookModel() });
+
+                    // When the user taps the left of the screen
+                    triggerTap(5, null);
+                    bookView.close();
+
+                    // It should request previous page
+                    BookView.prototype.prevPage.should.have.been.calledOnce;
+
+                    done();
+                });
+            });
+
+            it('tap on the right of the screen -> request next page', function (done) {
+                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                    sandbox.stub(BookView.prototype, "nextPage");
+
+                    // Given a book view
+                    var bookView = new BookView({ model: new BookModel() });
+
+                    // When the user taps the right of the screen
+                    triggerTap(window.screen.availWidth - 5, null);
+                    bookView.close();
+
+                    // It should request next page
+                    BookView.prototype.nextPage.should.have.been.calledOnce;
+
+                    done();
+                });
+            });
+
+            it('tap on the center of the screen -> no next/prev page requested', function (done) {
+                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                    sandbox.stub(BookView.prototype, "prevPage");
+                    sandbox.stub(BookView.prototype, "nextPage");
+
+                    // Given a book view
+                    var bookView = new BookView({ model: new BookModel() });
+
+                    // When the user taps the center of the screen
+                    triggerTap();
+                    bookView.close();
+
+                    // It should not request previous or next page
+                    BookView.prototype.nextPage.should.not.have.been.called;
+                    BookView.prototype.prevPage.should.not.have.been.called;
 
                     done();
                 });

@@ -28,8 +28,11 @@
                 'underscore': '../vendor/underscore/underscore.js',
                 'backbone': '../vendor/backbone/backbone.js',
                 'indexeddb': '../vendor/indexeddb-backbonejs-adapter/backbone-indexeddb.js',
+                'keymaster': {
+                    location: '../vendor/keymaster/keymaster.js',
+                    config: { loader: '../vendor/curl/src/curl/loader/legacy', exports: 'key' }
+                },
                 'handlebars': '../vendor/handlebars/handlebars.amd.js',
-                'spin': '../vendor/spin.js/spin.js',
                 'sinon-chai': '../../test/vendor/sinon-chai/lib/sinon-chai'
             },
             packages: [
