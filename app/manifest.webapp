@@ -1,7 +1,7 @@
 {
   "version": "0.1",
-  "name": "TeaBook Reader",
-  "description": "epub reader",
+  "name": "ePubReader",
+  "description": "ePub reader",
   "icons": {
     "60": "/images/app-icon-60.png",
     "128": "/images/app-icon-128.png"
@@ -15,8 +15,20 @@
   "launch_path": "/index.html",
   "installs_allowed_from": ["https://marketplace.firefox.com", "*"],
   "permissions": {
-      "device-storage:sdcard":{ "access": "readwrite" },
-      "storage": {}
+      "device-storage:sdcard":{
+          "access": "readwrite",
+          "description": "Required for reading the epub files on your SD card."
+      },
+      "storage": {
+          "description": "Required for storing your books into the application."
+      }
+  },
+  "default_locale": "en",
+  "locales": {
+    "fr": {
+      "name": "ePub Reader",
+      "description": "Pour lire tous vos livres électroniques !"
+    }
   },
   "precompile": [
     "js/readium.js",
