@@ -3,6 +3,7 @@ define('view/bookcase/index',
     [
         'backbone',
         'underscore',
+        'hammer',
         'helper/device',
         'helper/books-sort',
         'helper/logger',
@@ -18,6 +19,7 @@ define('view/bookcase/index',
 
     function (Backbone,
               underscore,
+              Hammer,
               DeviceHelper,
               BooksSort,
               Logger,
@@ -196,6 +198,10 @@ define('view/bookcase/index',
                 this.booksEl = this.$el.find(".books");
 
                 this.fetchBooks();
+
+                // bla
+                var hammertime = new Hammer(this.el, { prevent_mouseevents: true });
+                hammertime.on("press", this.showDelete.bind(this));
 
                 // need to invert event bubbling direction :
                 // capture click on the entire view if the drawer is dsplayed in order to close it
@@ -380,6 +386,7 @@ define('view/bookcase/index',
 
             hideSelection: function () {
                 if (this.booksEl.hasClass("selection")) {
+                    this.booksEl.find('input:checked + label').click();
                     this.booksEl.removeClass("selection");
                     this.collection.forEach(function (book) {
                         book.set({ "selection": false }, { "silent": true });

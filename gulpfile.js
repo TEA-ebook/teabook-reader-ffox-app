@@ -187,7 +187,8 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
                 "underscore": "../vendor/underscore/underscore",
                 "handlebars": "../vendor/handlebars/handlebars.amd",
                 "keymaster": "../vendor/keymaster/keymaster",
-                "indexeddb": "../vendor/indexeddb-backbonejs-adapter/backbone-indexeddb"
+                "indexeddb": "../vendor/indexeddb-backbonejs-adapter/backbone-indexeddb",
+                "hammer": "../vendor/hammerjs/hammer"
             },
             shim: {
                 "keymaster": { exports: "key" }
