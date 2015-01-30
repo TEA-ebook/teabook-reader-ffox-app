@@ -152,7 +152,6 @@ define('view/book/index',
                 // keyboard events
                 key('left', this.prevPage.bind(this));
                 key('right', this.nextPage.bind(this));
-                key.filter = function(event) { console.debug(event); };
 
                 Logger.openBook(this.model.attributes);
 

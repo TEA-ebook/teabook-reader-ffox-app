@@ -76,7 +76,7 @@ function getImagePath(element) {
 
     children = element.children;
     children.forEach(function (child) {
-        path = getImagePath(child);
+        path = getImagePath(child) || path;
     });
 
     return path;
@@ -99,37 +99,33 @@ function getCoverFilePath(opf, basePath) {
     if (manifestItems.length > 0) {
         manifestItems.forEach(function (item) {
             if (item.attr.properties && (item.attr.properties.indexOf("cover-image") !== -1)) {
-                coverPath = item.attr.href;
+                return item.attr.href;
             }
         });
     }
 
     // method 3 : search for a reference in the guide
-    if (!coverPath) {
-        guide = document.childNamed("guide");
-        if (guide) {
-            coverItem = guide.childWithAttribute("type", "cover");
-            if (coverItem) {
-                file = getFile(coverItem.attr.href);
-                coverPageDocument = new XmlDocument(file);
-                coverPath = getImagePath(coverPageDocument.childNamed("body"));
-            }
+    guide = document.childNamed("guide");
+    if (guide) {
+        coverItem = guide.childWithAttribute("type", "cover");
+        if (coverItem) {
+            file = getFile(basePath + coverItem.attr.href);
+            coverPageDocument = new XmlDocument(file);
+            return getImagePath(coverPageDocument.childNamed("body"));
         }
     }
 
     // method 4 : browse 3 first items of the spine
-    if (!coverPath) {
-        spineItems = document.childNamed("spine").children;
-        if (spineItems && spineItems.length > 0) {
-            for (i; i < Math.min(3, spineItems.length); i += 1) {
-                coverItem = document.childNamed("manifest").childWithAttribute("id", spineItems[i].attr.idref);
-                if (coverItem && coverItem.attr.href) {
-                    file = getFile(basePath + coverItem.attr.href);
-                    coverPageDocument = new XmlDocument(file);
-                    coverPath = getImagePath(coverPageDocument.childNamed("body"));
-                    if (coverPath) {
-                        break;
-                    }
+    spineItems = document.childNamed("spine").children;
+    if (spineItems && spineItems.length > 0) {
+        for (i; i < Math.min(3, spineItems.length); i += 1) {
+            coverItem = document.childNamed("manifest").childWithAttribute("id", spineItems[i].attr.idref);
+            if (coverItem && coverItem.attr.href) {
+                file = getFile(basePath + coverItem.attr.href);
+                coverPageDocument = new XmlDocument(file);
+                coverPath = getImagePath(coverPageDocument.childNamed("body"));
+                if (coverPath) {
+                    break;
                 }
             }
         }

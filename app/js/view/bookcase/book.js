@@ -29,7 +29,9 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
 
                 if (!this.model.has('coverUrl') && this.model.has('cover')) {
                     Device.readFile(this.model.get("cover"), function (file) {
-                        this.model.set('coverUrl', window.URL.createObjectURL(file));
+                        if (file) {
+                            this.model.set('coverUrl', window.URL.createObjectURL(file));
+                        }
                         this.$el.html(template(this.model.attributes));
                     }.bind(this));
                 } else {
@@ -51,13 +53,15 @@ define('view/bookcase/book', ['backbone', 'helper/device', 'template/bookcase/bo
             toggleSelection: function (event) {
                 event.preventDefault();
 
-                var checkbox = this.ell.querySelector("input[type=checkbox]"),
+                var checkbox = this.ell.querySelector("input[type=checkbox]"), selected;
+                if (checkbox) {
                     selected = !checkbox.getAttribute("checked");
 
-                if (selected) {
-                    checkbox.setAttribute("checked", "checked");
-                } else {
-                    checkbox.removeAttribute("checked");
+                    if (selected) {
+                        checkbox.setAttribute("checked", "checked");
+                    } else {
+                        checkbox.removeAttribute("checked");
+                    }
                 }
 
                 this.model.set({ "selected": selected }, { "silent": true });
