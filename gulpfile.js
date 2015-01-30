@@ -33,7 +33,7 @@ var paths = {
     manifest: ['./app/manifest.*'],
     locales: ['./app/locales/*'],
     l20n: ['./app/vendor/l20n/l20n.js'],
-    epubs: ['./epubs/*'],
+    epubs: ['./epubs/**/*'],
     templates: ['./app/template/**/*.hbs'],
     readium: './readium-js',
     readiumEmbedded: [

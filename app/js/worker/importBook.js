@@ -91,7 +91,10 @@ function getCoverFilePath(opf, basePath) {
     // method 1 : search for meta cover
     coverItem = document.childNamed("metadata").childWithAttribute("name", "cover");
     if (coverItem) {
-        return document.childNamed("manifest").childWithAttribute("id", coverItem.attr.content).attr.href;
+        coverItem = document.childNamed("manifest").childWithAttribute("id", coverItem.attr.content);
+        if (coverItem) {
+            return coverItem.attr.href;
+        }
     }
 
     // method 2 : search for mainfest item with property cover-image
