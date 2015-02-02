@@ -31,26 +31,45 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
                 }
             },
 
+            /**
+             * Store user's preference in localStorage
+             *
+             * @param event
+             */
             saveSendUsageReportsState: function (event) {
                 window.localStorage.setItem(Teavents.SEND_USAGE_REPORTS, event.target.checked);
                 Backbone.trigger(Teavents.SEND_USAGE_REPORTS);
             },
 
+            /**
+             * Informations about product licenses
+             */
             openLicenses: function () {
                 this.openBrowser("http://reader.tea-ebook.com/licenses");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_LICENSES);
             },
 
+            /**
+             * Informations on usage data collection
+             */
             openUsageReports: function () {
                 this.openBrowser("http://reader.tea-ebook.com/usage-reports");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_USAGE_REPORTS);
             },
 
+            /**
+             * Informations about us
+             */
             openTea: function () {
                 this.openBrowser("http://www.tea-ebook.com");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_TEA);
             },
 
+            /**
+             * In firefox OS, we call a web activity to open a URL
+             *
+             * @param url
+             */
             openBrowser: function (url) {
                 if (window.hasOwnProperty('MozActivity')) {
                     this.browserActivity = new window.MozActivity({
@@ -65,6 +84,12 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
                 }
             },
 
+            /**
+             * Prevent user from closing the drawer
+             * by simply sliding it after the CSS transform
+             *
+             * @param event
+             */
             noSlide: function (event) {
                 event.preventDefault();
             }

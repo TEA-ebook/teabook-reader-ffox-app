@@ -199,7 +199,7 @@ define('view/bookcase/index',
 
                 this.fetchBooks();
 
-                // bla
+                // Handle long press on books to activate delete mode
                 var hammertime = new Hammer(this.el, { prevent_mouseevents: true });
                 hammertime.on("press", this.showDelete.bind(this));
 
