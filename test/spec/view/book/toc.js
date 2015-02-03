@@ -1,7 +1,7 @@
 /*global describe, should, it, beforeEach, afterEach, curl, sinon, $, Backbone, EbookView*/
 (function() {
     "use strict";
-    describe('Ebook.Toc view', function () {
+    describe('Book.Toc view', function () {
         var sandbox;
 
         beforeEach(function() {
