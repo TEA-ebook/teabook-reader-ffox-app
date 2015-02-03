@@ -75,7 +75,7 @@ if (!navigator.getDeviceStorage) {
         xhr.responseType = 'arraybuffer';
 
         xhr.onload = function () {
-            if (xhr.status === 200) {
+            if (xhr.status === 200 || xhr.status === 0) { // status 0 is a bug in the implementation of XHR in PhantomJS
                 request.result = new File([xhr.response], fileName);
                 if (request.onsuccess) {
                     request.onsuccess();

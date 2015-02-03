@@ -4,7 +4,7 @@ define('helper/resizer', function () {
 
     var Resizer = {
         resize: function (imgData, minHeight, callback) {
-            var img, blob, ratio1, ratio2, offCanvas, offCanvasContext, finalCanvas, finalCanvasContext;
+            var img, blob, ratio1, ratio2, offCanvas, offCanvasContext, finalCanvas, finalCanvasContext, url, builder;
 
             // create off-screen canvas
             offCanvas = document.createElement('canvas');
@@ -14,10 +14,20 @@ define('helper/resizer', function () {
 
             minHeight = minHeight > 120 ? minHeight : 120;
 
-            img = new Image();
-            blob = new Blob([new Uint8Array(imgData)], { type: "image/png" });
-            img.src = window.URL.createObjectURL(blob);
+            // img blob data
+            if (typeof Blob === "function") {
+                blob = new Blob([new Uint8Array(imgData)], { type: "image/png" });
+            } else {
+                window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+                builder = new window.BlobBuilder();
+                builder.append([new Uint8Array(imgData)]);
+                blob = builder.getBlob("image/png");
+            }
 
+            // set up img
+            img = new Image();
+            url = window.URL || window.webkitURL;
+            img.src = url.createObjectURL(blob);
             img.addEventListener("load", function () {
                 // compute ratios
                 ratio1 = (img.height + minHeight) / (2 * img.height);

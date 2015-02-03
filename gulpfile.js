@@ -341,7 +341,12 @@ gulp.task('watch-tests', function () {
 gulp.task('mocha', function () {
     return gulp
         .src(paths.test.runner)
-        .pipe(mochaPhantomJS());
+        .pipe(mochaPhantomJS({
+            phantomjs: {
+                "webSecurityEnabled": false,
+                "localToRemoteUrlAccessEnabled": true
+            }
+        }));
 });
 
 gulp.task('copy-sinon-server', function () {
