@@ -1,3 +1,7 @@
+var organization = 'TEA - the ebook alternative';
+var project = 'TeaReader';
+var license = 'GPL3';
+
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
 var del = require('del');
@@ -156,6 +160,7 @@ gulp.task('compile-curl', function () {
     return gulp.src(paths.curl)
         .pipe(plugins.concat('curl.js'))
         .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.js))
         .pipe(plugins.connect.reload());
 });
@@ -197,6 +202,7 @@ gulp.task('compile-scripts', ['compile-templates'], function () {
         .pipe(addsrc('app/js/events.js'))
         .pipe(plugins.concat("app.js"))
         .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.js))
         .pipe(plugins.connect.reload());
 });
@@ -205,6 +211,7 @@ gulp.task('copy-readium', function () {
     return gulp.src(paths.readiumEmbedded)
         .pipe(plugins.concat("readium.js"))
         .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.js));
 });
 
@@ -212,6 +219,7 @@ gulp.task('copy-importWorker', function () {
     return gulp.src(paths.importWorker)
         .pipe(plugins.concat('importBook.js'))
         .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.html));
 });
 
@@ -219,6 +227,7 @@ gulp.task('copy-logsWorker', function () {
     return gulp.src(['./app/conf/' + env + '.js', './app/js/worker/sendLogs.js'])
         .pipe(plugins.concat('sendLogs.js'))
         .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.html));
 });
 
@@ -226,6 +235,7 @@ gulp.task('copy-picker', function () {
     return gulp.src(paths.picker)
         .pipe(plugins.concat('picker.js'))
         .pipe(gulpif(!debug, plugins.uglify()))
+        .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.js));
 });
 
@@ -243,6 +253,7 @@ gulp.task('copy-locales', function () {
 
 gulp.task('copy-l20n', function () {
     return gulp.src(paths.l20n)
+        .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.js));
 });
 
@@ -291,7 +302,6 @@ gulp.task('debug', function () {
     openBrowser = false;
     runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
 });
-
 
 
 /******************* *****************/
