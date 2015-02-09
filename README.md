@@ -60,3 +60,8 @@ EasyReader makes it very easy for everyone to read eBooks, online or offline. AN
   * Run the following gulp command: `gulp --debug`
   * Open the dev tools and toggle the device mode and select the Google Nexus 4 for example
   * Refresh the page to update the app screen rendering
+
+
+## How to contribute?
+
+Please read the [Contributing guide](https://github.com/TEA-ebook/teabook-reader-ffox-app/blob/master/CONTRIBUTING.md).
