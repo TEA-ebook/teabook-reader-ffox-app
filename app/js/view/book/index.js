@@ -91,10 +91,31 @@ define('view/book/index',
                 Backbone.on(Teavents.Actions.SET_THEME, this.changeTheme.bind(this));
                 Backbone.on(Teavents.Actions.BOOKMARK_PAGE, this.bookmarkPage.bind(this));
 
-                // getting the book -> render it
-                this.model.fetch({
-                    success: this.render.bind(this)
-                });
+                // check sd card access then render book
+                this.checkSdCardAvailability();
+            },
+
+            /**
+             *
+             */
+            checkSdCardAvailability: function () {
+                var sdcard = navigator.getDeviceStorage("sdcard"),
+                    availableRequest = sdcard.available(),
+                    indexView = this;
+
+                availableRequest.onsuccess = function () {
+                    if (this.result === "available") {
+                        // getting the book -> render it
+                        indexView.model.fetch({
+                            success: indexView.render.bind(indexView),
+                            error: indexView.displayStorageError
+                        });
+                    } else {
+                        indexView.displayStorageError();
+                    }
+                };
+
+                availableRequest.onerror = this.displayStorageError;
             },
 
             /**
@@ -502,12 +523,20 @@ define('view/book/index',
                     this.optionsView.theme = attributes.theme;
                 }
 
-                // we need to better handle that
+                // file has been removed from storage
                 request.onerror = function () {
-                    alert(this.model.get('title') + window.document.l10n.getSync('fileNotOnSdCardError'));
                     this.model.destroy();
-                    Backbone.history.navigate('/', true);
+                    this.displayStorageError();
                 }.bind(this);
+            },
+
+            /**
+             *
+             */
+            displayStorageError: function () {
+                alert(window.document.l10n.getSync('sdCardUnavailable'));
+                this.close();
+                Backbone.history.navigate('/', true);
             },
 
             /**

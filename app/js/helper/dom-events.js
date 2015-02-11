@@ -16,6 +16,8 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
         this.listenTo(Backbone, Teavents.SCROLL_TOP, this.scrollTop);
         this.listenTo(Backbone, Teavents.FREEZE_BODY, this.freezeBody);
         this.listenTo(Backbone, Teavents.UNFREEZE_BODY, this.unfreezeBody);
+
+        this.listenToSdCardChange();
     };
 
     DomEvents.handlePostMessage = function (event) {
@@ -71,6 +73,19 @@ define('helper/dom-events', ['backbone', 'underscore', 'jquery'], function (Back
     DomEvents.unfreezeBody = function () {
         $("body").removeClass("noscroll");
         DomEvents.scrollTop();
+    };
+
+    DomEvents.listenToSdCardChange = function () {
+        if (window.navigator.getDeviceStorage) {
+            var sdCard = window.navigator.getDeviceStorage('sdcard');
+            sdCard.addEventListener("change", function (event) {
+                if (event.reason === "available") {
+                    Backbone.trigger(Teavents.SDCARD_AVAILABLE);
+                } else {
+                    Backbone.trigger(Teavents.SDCARD_UNAVAILABLE);
+                }
+            });
+        }
     };
 
     return DomEvents;

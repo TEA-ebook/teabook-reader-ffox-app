@@ -127,6 +127,30 @@ if (!navigator.getDeviceStorage) {
         return request;
     };
 
+    DeviceStorage.prototype.available = function () {
+        "use strict";
+        var request = {
+            onsuccess: false,
+            onerror: function (err) {
+                console.error(err);
+            }
+        };
+
+        request.result = (Math.random() * 2 > 1) ? "unavailable" : "available";
+        setTimeout(function () {
+            if (request.onsuccess) {
+                request.onsuccess();
+            }
+        }, 100);
+
+        return request;
+    };
+
+    DeviceStorage.prototype.addEventListener = function () {
+        "use strict";
+        return;
+    };
+
     var getDeviceStorage = function (storageName) {
         "use strict";
 

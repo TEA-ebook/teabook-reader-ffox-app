@@ -13,41 +13,59 @@ var activityRequest, excludedFilesList = [];
 function listDir(callback, errorCb) {
     "use strict";
 
-    var sdCard, cursor, files = [];
+    var sdCard, available, cursor, files = [];
 
     if (navigator.getDeviceStorage) {
         sdCard = navigator.getDeviceStorage('sdcard');
-        cursor = sdCard.enumerate();
 
-        cursor.onsuccess = function () {
-            if (!this.done) {
-                var file = this.result;
-                if (file && !/\.Trashes/i.test(file.name)
-                        && /.*\/[^\.][\w\-_\., ']*\.epub$/i.test(file.name)
-                        && !excludedFilesList.includes(file.name)) {
-                    files.push(file.name);
-                }
-                this.continue();
+        available = sdCard.available();
+
+        available.onsuccess = function () {
+            if (this.result === 'available') {
+
+                cursor = sdCard.enumerate();
+
+                cursor.onsuccess = function () {
+                    if (!this.done) {
+                        var file = this.result;
+                        if (file && !/\.Trashes/i.test(file.name)
+                                && /.*\/[^\.][\w\-_\., ']*\.epub$/i.test(file.name)
+                                && !excludedFilesList.includes(file.name)) {
+                            files.push(file.name);
+                        }
+                        this.continue();
+                    } else {
+                        if (callback) {
+                            callback(files);
+                        }
+                    }
+                };
+
+                cursor.onerror = function () {
+                    if (this.error && this.error.name) {
+                        if (errorCb) {
+                            errorCb(this.error);
+                            return;
+                        }
+                        console.warn(this.error);
+                    } else {
+                        console.warn("No epub file found", this.error);
+                    }
+
+                    if (callback) {
+                        callback();
+                    }
+                };
             } else {
-                if (callback) {
-                    callback(files);
+                if (errorCb) {
+                    errorCb({ name: "SdCardUnavailable", message: "SD card is unavailable" });
                 }
             }
         };
 
-        cursor.onerror = function () {
-            if (this.error && this.error.name) {
-                if (errorCb) {
-                    errorCb(this.error);
-                    return;
-                }
-                console.warn(this.error);
-            } else {
-                console.warn("No epub file found", this.error);
-            }
-
-            if (callback) {
-                callback();
+        available.onerror = function () {
+            if (errorCb) {
+                errorCb(this.error);
             }
         };
     } else {
@@ -248,6 +266,8 @@ function displayError(error) {
     message = '<div class="file-title"><span class="picker-file-title">';
     if (error && error.name === "SecurityError") {
         message += window.document.l10n.getSync('permissionRefusedToSdCard');
+    } else if (error && error.name === "SdCardUnavailable") {
+        message += window.document.l10n.getSync('sdCardUnavailable');
     } else {
         message += window.document.l10n.getSync('unknownError');
     }

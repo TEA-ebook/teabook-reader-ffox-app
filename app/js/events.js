@@ -19,6 +19,8 @@ window.Teavents = {
     PAGE_BOOKMARKED: "page-bookmarked",
     CURRENT_POSITION: "current-position",
     SCAN_FINISHED: "scan-finished",
+    SDCARD_AVAILABLE: "sdcard-available",
+    SDCARD_UNAVAILABLE: "sdcard-unavailable",
 
     Readium: {
         PAGINATION_CHANGED: "PaginationChanged",
