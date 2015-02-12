@@ -1,4 +1,5 @@
 /*global define, window, navigator, Teavents, MozActivity*/
+/*jslint stupid: true*/
 define('view/bookcase/index',
     [
         'backbone',
@@ -13,6 +14,7 @@ define('view/bookcase/index',
         'view/bookcase/options',
         'view/bookcase/book',
         'view/bookcase/added-books',
+        'view/bookcase/notification',
         'template/bookcase/index',
         'template/bookcase/empty'
     ],
@@ -29,6 +31,7 @@ define('view/bookcase/index',
               OptionsView,
               BookView,
               AddedBooksView,
+              NotificationView,
               template,
               templateEmpty) {
         "use strict";
@@ -69,6 +72,11 @@ define('view/bookcase/index',
                 this.headerBar = new HeaderBarView();
                 this.footerBar = new FooterBarView();
                 this.optionsView = new OptionsView({ collection: this.settings });
+                this.notificationView = new NotificationView();
+
+                // SD card availability events
+                Backbone.on(Teavents.SDCARD_AVAILABLE, this.hideNotification.bind(this));
+                Backbone.on(Teavents.SDCARD_UNAVAILABLE, this.showNotification.bind(this));
 
                 this.collection.on('destroy', this.checkEmptiness, this);
             },
@@ -208,6 +216,9 @@ define('view/bookcase/index',
                 this.el.addEventListener("click", this.hideDrawer.bind(this), true);
 
                 window.document.l10n.localizeNode(this.el);
+
+                // display alert notification if sd card is unavailable
+                DeviceHelper.checkSdCardAvailability(this.hideNotification.bind(this), this.showNotification.bind(this));
             },
 
             /**
@@ -425,6 +436,19 @@ define('view/bookcase/index',
                 } else if ((text.length === 0) && this.searchText.length > 0) {
                     this.fetchBooks();
                 }
+            },
+
+            /**
+             * SD card unavailable notification
+             */
+            showNotification: function () {
+                this.notificationView.render(window.document.l10n.getSync('sdCardUnavailableNotif'));
+                this.$el.append(this.notificationView.el);
+            },
+
+            hideNotification: function () {
+                this.notificationView.remove();
+                this.fetchBooks();
             },
 
             noSlide: function (event) {

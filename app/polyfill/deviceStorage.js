@@ -130,13 +130,13 @@ if (!navigator.getDeviceStorage) {
     DeviceStorage.prototype.available = function () {
         "use strict";
         var request = {
+            result: "available",
             onsuccess: false,
             onerror: function (err) {
                 console.error(err);
             }
         };
 
-        request.result = (Math.random() * 2 > 1) ? "unavailable" : "available";
         setTimeout(function () {
             if (request.onsuccess) {
                 request.onsuccess();

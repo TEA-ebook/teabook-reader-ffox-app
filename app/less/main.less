@@ -156,7 +156,7 @@ input[type=range]:focus::-webkit-slider-thumb {
 /** Gerneric Firefox bar **/
 .bar {
   background-color: @toolbar-color;
-  box-shadow: 0px 1px 1px #aaaaaa;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.32);
   color: @font-secondary-color;
   display: flex;
   height: @toolbar-height;
@@ -181,6 +181,25 @@ input[type=range]:focus::-webkit-slider-thumb {
   margin-left: 0;
 }
 
+/**** Notification ****/
+.notification {
+  background-color: @ivory;
+  box-shadow: 1px 1px 1px #ccc;
+  display: block;
+  height: 2rem;
+  line-height: 2rem;
+  margin: 0;
+  padding-left: 1rem;
+  position: fixed;
+  top: @toolbar-height;
+  width: 100%;
+  z-index: 50;
+}
+
+.notification.alert {
+  background-color: @red;
+  color: @ivory;
+}
 
 /**** Generic panel ****/
 .panel {
@@ -195,7 +214,7 @@ input[type=range]:focus::-webkit-slider-thumb {
   z-index: 50;
 }
 
-.panel .panel-title {
+.panel-title {
   background-color: @ivory;
   box-shadow: 1px 1px 1px #ccc;
   display: block;

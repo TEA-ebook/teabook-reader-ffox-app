@@ -13,6 +13,7 @@
 <permissionRefusedToSdCard "You refused the permission to access your memory card. <br><br> The application needs this permission to work properly. <br><br> Please accept this permission in order to read you ebooks with this application.">
 <unknownError "The application can't access your memory card. You can try to reboot the phone and/or contact the maker of the application.">
 <sdCardUnavailable "The SD card is not available. Please unplug the usb cable from your phone and/or insert a valid SD card.">
+<sdCardUnavailableNotif "SD card unavailable!">
 <done "Done">
 
 <toc "Table of contents">

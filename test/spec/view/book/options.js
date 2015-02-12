@@ -15,7 +15,7 @@
         });
 
         describe('instance', function () {
-            it('should render 2 buttons', function (done) {
+            it('should render 1 range input', function (done) {
                 curl(['view/book/options'], function (BookOptionsView) {
                     // Given an bookOptions view
                     var bookOptionsView = new BookOptionsView();

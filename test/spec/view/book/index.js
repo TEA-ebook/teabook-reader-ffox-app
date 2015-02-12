@@ -37,10 +37,12 @@
         };
 
         describe('instance', function () {
-            it('call the render function when created', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+            it('should check the sd card avalaibility and render when created', function (done) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
                     sandbox.spy(BookView.prototype, "render");
-                    sandbox.stub(BookView.prototype, "spin");
 
                     // Given an book view
                     var bookView;
@@ -49,7 +51,10 @@
                     bookView = new BookView({ model: new BookModel() });
                     bookView.close();
 
-                    // It should call the render and spin functions
+                    // It should have checked the sd card availability
+                    Device.checkSdCardAvailability.should.have.been.calledOnce;
+
+                    // And it should have call the render function
                     BookView.prototype.render.should.have.been.calledOnce;
                     bookView.$el.find("iframe").should.have.length(1);
 
@@ -58,8 +63,11 @@
             });
 
             it('hides the toolbar after 5s', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
                     sandbox.useFakeTimers();
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
 
                     // Given a book view with a loaded epub
                     var bookView = new BookView({ model: new BookModel({ hash: "fsf56f4sd54fsdf4sd5" }) });
@@ -80,7 +88,11 @@
             });
 
             it('should render a toolbar', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
+
                     // Given a book view
                     var bookView;
 
@@ -97,7 +109,10 @@
             });
 
             it('should navigate to the bookcase when back button is pressed', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
                     sandbox.stub(Backbone.history, "navigate", checkRouterNav);
                     sandbox.stub(BookView.prototype, "backToBookcase", function() {
                         Backbone.trigger(Teavents.CURRENT_POSITION, {});
@@ -114,14 +129,18 @@
                         if (arguments[0] === '/') {
                             done();
                         }
-                    };
+                    }
                 });
             });
         });
 
         describe('should react to events :', function () {
             it('tap once -> display the toolbar', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
+
                     // Given a book view with a loaded epub
                     var bookView = new BookView({ model: new BookModel() });
                     Backbone.trigger(Teavents.READY_TO_READ);
@@ -138,7 +157,11 @@
             });
 
             it('tap twice -> hide the toolbar if it\'s visible', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
+
                     // Given a book view with a loaded epub
                     var bookView = new BookView({ model: new BookModel() });
                     Backbone.trigger(Teavents.READY_TO_READ);
@@ -156,7 +179,10 @@
             });
 
             it('sendResources -> transfer the files to the sandbox', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
                     sandbox.stub(BookView.prototype, "transferFile");
 
                     // Given a book view
@@ -174,7 +200,10 @@
             });
 
             it('sendEpub -> send the epub to the sandbox', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
                     sandbox.stub(BookView.prototype, "sendEpub");
 
                     // Given a book view
@@ -192,7 +221,11 @@
             });
 
             it('readyToRead -> book cover removed', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
+
                     // Given a book view
                     var bookView = new BookView({ model: new BookModel() });
 
@@ -262,7 +295,10 @@
             });
 
             it('toc received -> generate html toc', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
                     sandbox.spy(BookView.prototype, "generateToc");
 
                     // Given a book view
@@ -283,7 +319,10 @@
 
         describe('should request and exit full screen :', function () {
             it('screen is visible -> request full screen', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
                     sandbox.stub(BookView.prototype, "requestFullScreen");
 
                     // Given a book view
@@ -320,7 +359,10 @@
 
         describe('should navigate with left/right tap/keystroke :', function () {
             it('tap on the left of the screen -> request previous page', function (done) {
-                curl(['model/book', 'view/book/index'], function (BookModel, BookView) {
+                curl(['model/book', 'helper/device', 'view/book/index'], function (BookModel, Device, BookView) {
+                    sandbox.stub(Device, "checkSdCardAvailability", function (cb) {
+                        cb();
+                    });
                     sandbox.stub(BookView.prototype, "prevPage");
 
                     // Given a book view

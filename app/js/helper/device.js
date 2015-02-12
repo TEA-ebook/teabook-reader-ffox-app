@@ -162,6 +162,33 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
             keys.push(metadata.authors.join(" ").removeDiacritics().toLowerCase().tokenize(2));
             keys.push(metadata.publisher.removeDiacritics().toLowerCase().tokenize(2));
             return keys.join(",");
+        },
+
+        /**
+         *
+         */
+        checkSdCardAvailability: function (cb, errorCb) {
+            if (navigator.getDeviceStorage) {
+                var sdcard = navigator.getDeviceStorage("sdcard"),
+                    availableRequest = sdcard.available();
+
+                availableRequest.onsuccess = function () {
+                    if (this.result === "available") {
+                        if (cb) {
+                            cb();
+                        }
+                    } else {
+                        if (errorCb) {
+                            errorCb();
+                        }
+                    }
+                };
+
+                availableRequest.onerror = errorCb;
+            } else {
+                console.warn("You are not on a FirefoxOS phone or in a Firefox OS simulator.")
+                cb();
+            }
         }
     };
 

@@ -13,6 +13,7 @@
 <permissionRefusedToSdCard "Vous avez refusé la permission d'accéder à la carte mémoire de votre téléphone. <br><br> L'application a besoin de cette permission pour fonctionner correctement. Merci d'accepter cette permission pour pouvoir lire vos livres électroniques avec cette application.">
 <unknownError "L'application ne peut accéder à votre carte mémoire. Vous pouvez essayer de redémarrer le téléphone et/ou contacter le fournisseur de l'application.">
 <sdCardUnavailable "L'application ne peut accéder à votre carte mémoire. Merci de débrancher le câble USB du téléphone et/ou insérer une carte mémoire dans le téléphone.">
+<sdCardUnavailableNotif "Attention, carte mémoire indisponible !">
 <done "Ajouter">
 
 <toc "Table des matières">

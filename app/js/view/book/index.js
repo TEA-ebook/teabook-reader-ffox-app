@@ -92,30 +92,18 @@ define('view/book/index',
                 Backbone.on(Teavents.Actions.BOOKMARK_PAGE, this.bookmarkPage.bind(this));
 
                 // check sd card access then render book
-                this.checkSdCardAvailability();
+                Device.checkSdCardAvailability(this.fetchBook.bind(this), this.displayStorageError.bind(this));
             },
 
             /**
              *
              */
-            checkSdCardAvailability: function () {
-                var sdcard = navigator.getDeviceStorage("sdcard"),
-                    availableRequest = sdcard.available(),
-                    indexView = this;
-
-                availableRequest.onsuccess = function () {
-                    if (this.result === "available") {
-                        // getting the book -> render it
-                        indexView.model.fetch({
-                            success: indexView.render.bind(indexView),
-                            error: indexView.displayStorageError
-                        });
-                    } else {
-                        indexView.displayStorageError();
-                    }
-                };
-
-                availableRequest.onerror = this.displayStorageError;
+            fetchBook: function () {
+                // getting the book -> render it
+                this.model.fetch({
+                    success: this.render.bind(this),
+                    error: this.displayStorageError.bind(this)
+                });
             },
 
             /**
