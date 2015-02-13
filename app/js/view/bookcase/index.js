@@ -442,8 +442,10 @@ define('view/bookcase/index',
              * SD card unavailable notification
              */
             showNotification: function () {
-                this.notificationView.render(window.document.l10n.getSync('sdCardUnavailableNotif'));
-                this.$el.append(this.notificationView.el);
+                if (!this.importing) {
+                    this.notificationView.render(window.document.l10n.getSync('sdCardUnavailableNotif'));
+                    this.$el.append(this.notificationView.el);
+                }
             },
 
             hideNotification: function () {

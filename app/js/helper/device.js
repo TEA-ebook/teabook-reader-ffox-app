@@ -186,8 +186,10 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
 
                 availableRequest.onerror = errorCb;
             } else {
-                console.warn("You are not on a FirefoxOS phone or in a Firefox OS simulator.")
-                cb();
+                console.warn("You are not on a FirefoxOS phone or in a Firefox OS simulator.");
+                if (cb) {
+                    cb();
+                }
             }
         }
     };
