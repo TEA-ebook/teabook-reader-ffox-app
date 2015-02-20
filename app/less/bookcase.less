@@ -522,6 +522,10 @@
   width: 100%;
 }
 
+.bookcase-empty-download {
+  text-decoration: underline;
+}
+
 
 /*** Action bar ***/
 .bar.actionbar {
@@ -611,4 +615,53 @@
 
 .drawer li > a {
   line-height: 3rem;
+}
+
+/**** Downloading books ***/
+.downloading-books {
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 556;
+}
+
+.downloading-books-progresses {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  height: 85%;
+  justify-content: space-around;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.downloading-books-progress {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  width: 100%;
+}
+.downloading-books-progress progress {
+  background-color: @progress-bar-background;
+  border: none;
+  height: 1rem;
+  width: 90%;
+  -webkit-appearance: none;
+  transition: height 0.5s ease;
+}
+
+.downloading-books-progress progress::-moz-progress-bar {
+  background-color: @progress-bar-color;
+}
+
+.downloading-books-progress progress::-webkit-progress-bar {
+  background: @progress-bar-background;
+}
+
+.downloading-books-progress progress::-webkit-progress-value {
+  background: @progress-bar-color;
 }

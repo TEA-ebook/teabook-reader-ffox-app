@@ -95,18 +95,23 @@ if (!navigator.getDeviceStorage) {
         return request;
     };
 
-    DeviceStorage.prototype.addNamed = function (file, fileName) {
+    DeviceStorage.prototype.addNamed = function (file, name) {
         "use strict";
         var request = {
             onsuccess: false,
             onerror: function (err) {
-                console.error(err);
+                console.error(new Error(err));
             }
         };
+
         setTimeout(function () {
-            console.debug(fileName + " added on SD card", file);
-            request.onerror();
+            console.debug(name + " written on SD card");
+            if (request.onsuccess) {
+                request.result = name;
+                request.onsuccess();
+            }
         }, 100);
+
         return request;
     };
 

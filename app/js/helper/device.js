@@ -1,6 +1,6 @@
-/*global define, Blob, FileReader, Worker, window, navigator, Uint8Array, Teavents*/
+/*global define, Blob, FileReader, File, Worker, window, navigator, Uint8Array, Teavents, Conf, XMLHttpRequest*/
 /*jslint regexp: true, unparam: true*/
-define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/logger'], function (Backbone, BookModel, Resizer, Logger) {
+define('helper/device', ['jquery', 'backbone', 'model/book', 'helper/resizer', 'helper/logger'], function ($, Backbone, BookModel, Resizer, Logger) {
     "use strict";
 
     var device = {
@@ -37,7 +37,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
             device.addBookToBookcase(file, null, callback);
         },
 
-        addBookToBookcase: function (file, collection, callback) {
+        addBookToBookcase: function (file, collection, callback, errorCb) {
             var book = new BookModel(), path, title;
 
             path = window.decodeURIComponent(file.name);
@@ -45,9 +45,11 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
                 path = "books/" + path;
             }
 
+            // try to extract title from file path
             title = path.match(/\/([\w\-_\., ']*)\.epub$/);
             title = title ? title[1] : path;
 
+            // save it in indexedDB
             book.save({
                 'title': title,
                 'path': path,
@@ -59,9 +61,14 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
                     if (collection) {
                         collection.add(book);
                     }
+
+                    // scan epub for metadata and cover image
                     device.scanFile(file, book, function () {
                         callback(book);
-                    }.bind(this));
+                    }.bind(this), function (error) {
+                        book.destroy({ silent: true });
+                        errorCb(error);
+                    });
                 }.bind(this),
                 'error': function (model, error) {
                     console.warn("Can't import " + model.get('path') + " :", error.target.error.message);
@@ -70,7 +77,7 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
             });
         },
 
-        scanFile: function (file, book, callback) {
+        scanFile: function (file, book, callback, error) {
             var reader, importBookWorker, sdCard;
 
             sdCard = navigator.getDeviceStorage("sdcard");
@@ -80,34 +87,43 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
                 importBookWorker = new Worker("importBook.js");
                 importBookWorker.postMessage(e.target.result);
                 importBookWorker.onmessage = function (event) {
-                    // generate uuid
-                    event.data.uuid = Logger.generateUUID();
+                    if (!event.data.error) {
+                        // generate uuid
+                        event.data.uuid = Logger.generateUUID();
 
-                    // generate search string
-                    event.data.search = device.generateSearchString(event.data);
+                        // generate search string
+                        event.data.search = device.generateSearchString(event.data);
 
-                    // generate thumbnail
-                    if (event.data.cover) {
-                        Resizer.resize(event.data.cover, Math.round(window.screen.height / 2), function (thumbnail) {
-                            if (thumbnail instanceof Blob) {
-                                // create cover thumbnail
-                                device.generateThumbnail(sdCard, thumbnail, event.data.authors[0].hashCode() + event.data.title.hashCode() + ".png", function (result) {
-                                    // thumbnail available
-                                    if (result) {
-                                        event.data.cover = result;
-                                    }
+                        // generate thumbnail
+                        if (event.data.cover) {
+                            Resizer.resize(event.data.cover, Math.round(window.screen.height / 2), function (thumbnail) {
+                                if (thumbnail instanceof Blob) {
+                                    // create cover thumbnail
+                                    device.generateThumbnail(sdCard, thumbnail, event.data.authors[0].hashCode() + event.data.title.hashCode() + ".png", function (result) {
+                                        // thumbnail available
+                                        if (result) {
+                                            event.data.cover = result;
+                                        }
 
-                                    // set metadata extracted from epub in the model
+                                        // set metadata extracted from epub in the model
+                                        device.saveBook(book, event.data, callback);
+                                    });
+                                } else {
+                                    delete event.data.cover;
+                                    event.data.coverUrl = thumbnail;
                                     device.saveBook(book, event.data, callback);
-                                });
-                            } else {
-                                delete event.data.cover;
-                                event.data.coverUrl = thumbnail;
-                                device.saveBook(book, event.data, callback);
-                            }
-                        });
-                    } else {
-                        device.saveBook(book, event.data, callback);
+                                }
+                            });
+                        } else {
+                            device.saveBook(book, event.data, callback);
+                        }
+                    } else { // import worker failed
+                        if (error) {
+                            error(event.data.message);
+                        } else {
+                            console.warn("Can't scan the file " + file.name, event.data.error.message);
+                            callback(false);
+                        }
                     }
                 };
             };
@@ -191,6 +207,74 @@ define('helper/device', ['backbone', 'model/book', 'helper/resizer', 'helper/log
                     cb();
                 }
             }
+        },
+
+        getOfferedBookList: function (lang, callback) {
+            Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.DOWNLOAD_BOOKS, { language: navigator.language });
+
+            lang = lang.substring(0, 2);
+
+            if (lang !== 'fr' && lang !== 'en') {
+                lang = 'en';
+            }
+
+            $.ajax({
+                url: Conf.host + "/books/" + lang + "/list.json",
+                method: "GET",
+                dataType: "json"
+            }).done(function (list) {
+                callback(list);
+            }).fail(function (error) {
+                console.warn("Can't download book list for lang " + lang, error);
+                callback([]);
+            });
+        },
+
+        downloadBook: function (url, callback, errorCb) {
+            var fileName = url.substring(url.lastIndexOf("/") + 1),
+                xhr = new XMLHttpRequest();
+
+            xhr.open('GET', url, true);
+            xhr.responseType = 'arraybuffer';
+
+            xhr.onload = function () {
+                if (xhr.status === 200 || xhr.status === 0) { // status 0 is a bug in the implementation of XHR in PhantomJS
+                    var file = new File([xhr.response], fileName);
+                    device.writeFile(file, fileName, callback, errorCb);
+                }
+            };
+
+            xhr.onerror = function (error) {
+                if (errorCb) {
+                    errorCb(error);
+                } else {
+                    console.error("Can't download book at " + url, error);
+                }
+            };
+
+            xhr.send();
+        },
+
+        writeFile: function (file, name, callback, errorCb) {
+            name = "books/" + name;
+
+            var sdcard = navigator.getDeviceStorage("sdcard"),
+                request = sdcard.addNamed(file, name);
+
+            request.onsuccess = function () {
+                console.info('File "' + this.result + '" successfully written on the sdcard');
+                device.readFile(this.result, callback);
+            };
+
+            request.onerror = function () {
+                // file already exists
+                if (this.error.name === "NoModificationAllowedError") {
+                    device.readFile("/sdcard/" + name, callback);
+                } else {
+                    console.warn('Unable to write the file: ' + this.error);
+                    errorCb(this.error);
+                }
+            };
         }
     };
 

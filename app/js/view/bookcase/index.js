@@ -14,6 +14,7 @@ define('view/bookcase/index',
         'view/bookcase/options',
         'view/bookcase/book',
         'view/bookcase/added-books',
+        'view/bookcase/downloading-books',
         'view/bookcase/notification',
         'template/bookcase/index',
         'template/bookcase/empty'
@@ -31,6 +32,7 @@ define('view/bookcase/index',
               OptionsView,
               BookView,
               AddedBooksView,
+              DownloadingBooksView,
               NotificationView,
               template,
               templateEmpty) {
@@ -52,6 +54,7 @@ define('view/bookcase/index',
                 "click .confirm": "deleteSelectedBooks",
                 "click .sort": "showOptions",
                 "click .book": "openBookEffect",
+                "click .bookcase-empty-download": "downloadBooks",
                 "change input#book-upload": "handleFiles",
                 "keyup input[type=search]": "searchFor",
                 "touchmove": "noSlide"
@@ -279,23 +282,34 @@ define('view/bookcase/index',
             handleFile: function (files, addedBooks) {
                 var file = files.shift();
 
-                if (/\.epub$/.test(file.name)) {
-                    DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
-                        if (book.get('id') !== undefined) {
-                            addedBooks.push(book);
-                            console.info(book.get('title') + " was successfully uploaded");
-                        }
-                        if (files.length > 0) {
+                if (file) {
+                    if (/\.epub$/.test(file.name)) {
+                        DeviceHelper.addBookToBookcase(file, this.collection, function (book) {
+                            if (book) {
+                                if (book.get('id') !== undefined) {
+                                    addedBooks.push(book);
+                                    this.updateImportedBooks(addedBooks.length);
+                                    console.info(book.get('title') + " was successfully uploaded");
+                                }
+
+                                // pass to the next file
+                                this.handleFile(files, addedBooks);
+                            }
+                        }.bind(this), function (error) {
+                            console.warn(error);
+
+                            // current file failed, pass to the next file
                             this.handleFile(files, addedBooks);
-                        } else {
-                            this.collection.off('add');
-                            this.renderAddedBooks(addedBooks);
-                            this.importing = false;
-                            this.unfreezeUiButtons();
-                        }
-                    }.bind(this));
-                } else {
-                    this.handleFile(files, addedBooks);
+                        }.bind(this));
+                    } else { // current file is not an epub, pass to the next file
+                        this.handleFile(files, addedBooks);
+                    }
+                } else { // no more file, import ended
+                    this.collection.off('add');
+                    this.renderAddedBooks(addedBooks);
+                    this.removeDownloadingBooks();
+                    this.importing = false;
+                    this.unfreezeUiButtons();
                 }
             },
 
@@ -309,6 +323,39 @@ define('view/bookcase/index',
                     this.addedBooksView = new AddedBooksView();
                     this.addedBooksView.render(addedBooks);
                     this.$el.append(this.addedBooksView.el);
+                }
+            },
+
+            /**
+             * Display a popup with downlading books status
+             *
+             * @param books
+             */
+            renderDownloadingBooks: function (files) {
+                if (files.length > 0) {
+                    this.downloadingBooksView = new DownloadingBooksView();
+                    this.downloadingBooksView.render(files.length);
+                    this.$el.append(this.downloadingBooksView.el);
+                }
+            },
+
+            /**
+             *
+             */
+            removeDownloadingBooks: function () {
+                if (this.downloadingBooksView) {
+                    this.downloadingBooksView.remove();
+                    this.downloadingBooksView = null;
+                }
+            },
+
+            /**
+             *
+             * @param number
+             */
+            updateImportedBooks: function (number) {
+                if (this.downloadingBooksView) {
+                    this.downloadingBooksView.updateImported(number);
                 }
             },
 
@@ -341,6 +388,9 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             */
             openBookEffect: function () {
                 if (!this.booksEl.hasClass("selection")) {
                     this.$el.addClass("open");
@@ -349,6 +399,10 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             * @param event
+             */
             showDrawer: function (event) {
                 event.stopImmediatePropagation();
                 if (this.$el.hasClass("withDrawer")) {
@@ -359,6 +413,10 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             * @param event
+             */
             hideDrawer: function (event) {
                 if (this.$el.hasClass("withDrawer")) {
                     event.stopImmediatePropagation();
@@ -366,6 +424,9 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             */
             showOptions: function () {
                 if (this.optionsView.toggle()) {
                     this.hideSelection();
@@ -375,6 +436,9 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             */
             showDelete: function () {
                 if (this.footerBar.toggleDelete()) {
                     this.optionsView.hide();
@@ -385,6 +449,9 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             */
             showSelection: function () {
                 if (!this.booksEl.hasClass("selection")) {
                     this.booksEl.addClass("selection");
@@ -395,6 +462,9 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             */
             hideSelection: function () {
                 if (this.booksEl.hasClass("selection")) {
                     this.booksEl.find('input:checked + label').click();
@@ -406,10 +476,16 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             */
             updateHeaderbar: function () {
                 this.headerBar.selectionMode(this.booksEl.find("input[type='checkbox']:checked").length);
             },
 
+            /**
+             *
+             */
             deleteSelectedBooks: function () {
                 var toDelete = [], i;
                 this.collection.forEach(function (book) {
@@ -425,6 +501,10 @@ define('view/bookcase/index',
                 this.footerBar.hideDelete();
             },
 
+            /**
+             *
+             * @param event
+             */
             searchFor: function (event) {
                 this.optionsView.hide();
                 var text = event.target.value.trim().toLowerCase().removeDiacritics();
@@ -448,19 +528,79 @@ define('view/bookcase/index',
                 }
             },
 
+            /**
+             *
+             */
+            downloadBooks: function () {
+                DeviceHelper.getOfferedBookList(navigator.language, function (list) {
+                    if (list.length > 0) {
+                        this.importing = true;
+                        this.freezeUiButtons(true);
+                        this.collection.on('add', this.renderBooks.bind(this));
+                        this.renderDownloadingBooks(list);
+                        this.downloadBook(list, []);
+                    }
+                }.bind(this));
+            },
+
+            /**
+             *
+             * @param list
+             * @param files
+             */
+            downloadBook: function (list, files) {
+                if (list.length > 0) {
+                    // download books one by one
+                    DeviceHelper.downloadBook(list.shift(), function (file) {
+                        files.push(file);
+                        this.nextDownload(list, files);
+                    }.bind(this), function (error) {
+                        console.warn("Book download failed", error);
+                        this.nextDownload(list, files);
+                    }.bind(this));
+                } else {
+                    // import them
+                    this.handleFile(files, []);
+                }
+            },
+
+            /**
+             *
+             * @param list
+             * @param files
+             */
+            nextDownload: function (list, files) {
+                this.downloadingBooksView.updateDownloaded(files.length);
+                this.downloadBook(list, files);
+            },
+
+            /**
+             *
+             */
             hideNotification: function () {
                 this.notificationView.remove();
                 this.fetchBooks();
             },
 
+            /**
+             *
+             * @param event
+             */
             noSlide: function (event) {
                 if (this.$el.hasClass("withDrawer")) {
                     event.preventDefault();
                 }
             },
 
+            /**
+             *
+             */
             close: function () {
                 this.stopListening(this.collection);
+
+                Backbone.off(Teavents.SDCARD_AVAILABLE);
+                Backbone.off(Teavents.SDCARD_UNAVAILABLE);
+
                 this.remove();
             }
         });

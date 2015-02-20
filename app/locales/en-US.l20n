@@ -70,6 +70,7 @@
 
 <welcome "<strong>Welcome to your bookcase!</strong>">
 <noBookHere "... which is desperately empty.">
+<downloadBooks "Click here to fill your bookcase with some free books.">
 <useThePlusButton1 "Use the ">
 <useThePlusButton2 " button to add your own books right now!">
 
@@ -84,9 +85,27 @@
 
 <fileNotOnSdCardError " is not on your phone anymore, it will be removed from your bookcase.">
 
-<drawerTitle "About">
-<licenses "Licenses">
+<drawerTitle "OwlyReader">
 <sendUsageReports "Send usage reports">
 <whyUsageReports "Privacy policies">
+<feedback "Feedback">
+<licenses "Licenses">
+<website "About ReadIt">
 
 <loading "Book is loading...">
+
+<downloadingBooksTitle[plural($total)] {
+ zero: "Getting books:",
+ one: "Getting for you a free book:",
+ many: "Getting for you {{ $total }} books:"
+}>
+<downloadProgress[plural($total)] {
+ zero: "Download",
+ one: "We download it first",
+ many: "We download them first"
+}>
+<importProgress[plural($total)] {
+ zero: "Add to the bookcase",
+ one: "Then we add it to the bookcase",
+ many: "Then we add them to the bookcase"
+}>

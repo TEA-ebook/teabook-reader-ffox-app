@@ -76,7 +76,9 @@ window.Teavents = {
         PURGE: "purge-events",
         OPEN_LICENSES: "open-licenses",
         OPEN_USAGE_REPORTS: "open-usage-reports",
-        OPEN_TEA: "open-tea"
+        OPEN_CONTACT_US: "open-contact-us",
+        OPEN_ABOUT: "open-about",
+        DOWNLOAD_BOOKS: "download-books"
     },
 
     SEND_USAGE_REPORTS: "sendUsageReports"

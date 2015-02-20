@@ -514,7 +514,7 @@ define('view/book/index',
                 // file has been removed from storage
                 request.onerror = function () {
                     this.model.destroy();
-                    this.displayStorageError();
+                    this.displayFileNotFoundError();
                 }.bind(this);
             },
 
@@ -523,6 +523,15 @@ define('view/book/index',
              */
             displayStorageError: function () {
                 alert(window.document.l10n.getSync('sdCardUnavailable'));
+                this.close();
+                Backbone.history.navigate('/', true);
+            },
+
+            /**
+             *
+             */
+            displayFileNotFoundError: function () {
+                alert(this.model.get('title') + window.document.l10n.getSync('fileNotOnSdCardError'));
                 this.close();
                 Backbone.history.navigate('/', true);
             },

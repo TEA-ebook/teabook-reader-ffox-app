@@ -70,6 +70,7 @@
 
 <welcome "<strong>Bienvenue dans votre bibliothèque !</strong>">
 <noBookHere "... qui est désespérément vide.">
+<downloadBooks "Vous trouverez ici des livres à télécharger pour remplir votre bibliothèque.">
 <useThePlusButton1 "Utiliser le bouton ">
 <useThePlusButton2 " pour ajouter vos livres !">
 
@@ -84,9 +85,23 @@
 
 <fileNotOnSdCardError " n'est plus présent sur votre téléphone, le livre va être supprimé de votre bibliothèque.">
 
-<drawerTitle "À propos">
-<licenses "Licences">
+<drawerTitle "OwlyReader">
 <sendUsageReports "Envoyer des rapports d'utilisation">
 <whyUsageReports "Politique de confidentialité">
+<licenses "Licences">
+<feedback "Donner votre avis">
+<website "À propos de ReadIt">
 
 <loading "Chargement du livre...">
+
+<downloadingBooksTitle[plural($total)] {
+ zero: "Livres :",
+ one: "Cherchons un livre gratuit :",
+ many: "Allons chercher {{ $total }} livres :"
+}>
+<downloadProgress[plural($total)] {
+ zero: "Téléchargement",
+ one: "Téléchargement du livre",
+ many: "Téléchargement des livres"
+}>
+<importProgress "Ajout à la bibliothèque">

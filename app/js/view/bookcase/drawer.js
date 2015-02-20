@@ -1,4 +1,4 @@
-/*global define, window, Teavents*/
+/*global define, window, Teavents, Conf*/
 /*jslint unparam: true*/
 define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
     function (Backbone, template) {
@@ -13,7 +13,8 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
                 "click input": "saveSendUsageReportsState",
                 "click .whyUsageReports": "openUsageReports",
                 "click .licenses": "openLicenses",
-                "click .tea": "openTea",
+                "click .feedback": "openFeedback",
+                "click .website": "openAbout",
                 "touchmove": "noSlide"
             },
 
@@ -25,8 +26,11 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
             },
 
             toggleSendUsageReportsInput: function (event) {
-                if (event.target.tagName.toLowerCase() !== "label") {
-                    var input = this.$("input#sendUsageReports");
+                var target = event.target.tagName.toLowerCase(),
+                    input;
+
+                if (target !== "label" && target !== "input") {
+                    input = this.$("input#sendUsageReports");
                     input.click();
                 }
             },
@@ -45,7 +49,7 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
              * Informations about product licenses
              */
             openLicenses: function () {
-                this.openBrowser("http://reader.tea-ebook.com/licenses");
+                this.openBrowser(Conf.website + "/licenses");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_LICENSES);
             },
 
@@ -53,16 +57,24 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
              * Informations on usage data collection
              */
             openUsageReports: function () {
-                this.openBrowser("http://reader.tea-ebook.com/usage-reports");
+                this.openBrowser(Conf.website + "/privacy");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_USAGE_REPORTS);
+            },
+
+            /**
+             * Informations on usage data collection
+             */
+            openFeedback: function () {
+                this.openBrowser(Conf.website + "/contact");
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_CONTACT_US);
             },
 
             /**
              * Informations about us
              */
-            openTea: function () {
-                this.openBrowser("http://www.tea-ebook.com");
-                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_TEA);
+            openAbout: function () {
+                this.openBrowser(Conf.website);
+                Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_ABOUT);
             },
 
             /**

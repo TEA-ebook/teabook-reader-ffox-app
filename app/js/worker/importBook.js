@@ -140,27 +140,33 @@ function getCoverFilePath(opf, basePath) {
 self.onmessage = function (event) {
     var containerFile, opfFilePath, basePath, opfFile, coverFilePath, metadata;
 
-    zip = new JSZip(event.data);
+    try {
+        zip = new JSZip(event.data);
 
-    // first, get the container file
-    containerFile = getFile("META-INF/container.xml");
+        // first, get the container file
+        containerFile = getFile("META-INF/container.xml");
 
-    // then get the .opf file
-    opfFilePath = getOpfFilePath(containerFile);
-    opfFile = getFile(opfFilePath);
-    basePath = getBasePath(opfFilePath);
+        // then get the .opf file
+        opfFilePath = getOpfFilePath(containerFile);
+        opfFile = getFile(opfFilePath);
+        basePath = getBasePath(opfFilePath);
 
-    // extract metadata
-    metadata = getMetadata(opfFile);
+        // extract metadata
+        metadata = getMetadata(opfFile);
 
-    // extract the cover
-    coverFilePath = getCoverFilePath(opfFile, basePath);
-    if (coverFilePath) {
-        metadata.cover = getFile(basePath + coverFilePath, "blob");
+        // extract the cover
+        coverFilePath = getCoverFilePath(opfFile, basePath);
+        if (coverFilePath) {
+            metadata.cover = getFile(basePath + coverFilePath, "blob");
+        }
+
+        // send book metadata to the caller
+        self.postMessage(metadata);
+
+        self.close();
+    } catch (e) {
+        // send error
+        self.postMessage({ error: true, message: e.toString() });
+        self.close();
     }
-
-    // send book metadata to the caller
-    self.postMessage(metadata);
-
-    self.close();
 };
