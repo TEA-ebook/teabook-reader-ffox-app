@@ -1,6 +1,6 @@
-# EasyReader: an eBooks reader for Firefox OS
+# Tea Reader: an eBooks reader for Firefox OS
 
-EasyReader makes it very easy for everyone to read eBooks, online or offline. ANY ebook in epub format can be read (v2 & v3), and only DRM-free books are supported for now. Once you downloaded/imported an eBook, you can read it anywhere, anytime, on- or offline, with or without coffee.
+Tea Reader makes it very easy for everyone to read eBooks, online or offline. ANY ebook in epub format can be read (v2 & v3), and only DRM-free books are supported for now. Once you downloaded/imported an eBook, you can read it anywhere, anytime, on- or offline, with or without coffee.
 
 
 ## Install

@@ -1,5 +1,5 @@
 var organization = 'TEA - the ebook alternative';
-var project = 'TeaReader';
+var project = 'Tea Reader';
 var license = 'GPL3';
 
 var gulp = require('gulp');
