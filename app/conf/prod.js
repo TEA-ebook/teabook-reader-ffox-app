@@ -1,4 +1,4 @@
 var Conf = {};
-Conf.host = 'http://reader.tea-ebook.com';
-Conf.logsEndPoint = 'http://reader.tea-ebook.com';
-Conf.website = 'http://teareader.tea-ebook.com';
+Conf.host = 'http://www.tea-reader-engine.com';
+Conf.logsEndPoint = false;
+Conf.website = 'http://www.tea-reader-app.com';
