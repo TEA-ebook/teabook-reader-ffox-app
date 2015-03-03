@@ -46,7 +46,10 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
 
             events.fetch({ conditions: { sent: "nope" } }).done(function () {
                 eventsData = events.toJSON();
-
+                eventsData.forEach(function (event) {
+                    delete event.id;
+                    delete event.sent;
+                });
                 sendLogsWorker = new Worker("sendLogs.js");
                 sendLogsWorker.postMessage(eventsData);
 

@@ -14,7 +14,8 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
                 "click": "highlightItem"
             },
 
-            initialize: function () {
+            initialize: function (options) {
+                this.bookId = options.bookId;
                 this.model.on("change:current", this.setCurrent.bind(this));
             },
 
@@ -65,10 +66,13 @@ define('view/book/toc-item', ['backbone', 'template/book/toc-item'],
                 }
 
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.CLICK_TOC_ITEM, {
-                    href: this.model.get('href'),
-                    label: this.model.get('label'),
-                    position: this.model.get('position'),
-                    level: this.model.get('level')
+                    book: { identifier: this.bookId },
+                    tocItem: {
+                        href: this.model.get('href'),
+                        label: this.model.get('label'),
+                        position: this.model.get('position'),
+                        level: this.model.get('level')
+                    }
                 });
             },
 

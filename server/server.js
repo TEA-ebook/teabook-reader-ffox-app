@@ -28,7 +28,8 @@ var router = express.Router();
 router.route('/events')
     // create an event
     .post(function (req, res) {
-        //console.log(req.body);
+        console.log("----------------------------------------------------------");
+        console.log(req.body);
         res.status(200).end();
     }
 );

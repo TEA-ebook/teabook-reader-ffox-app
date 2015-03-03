@@ -10,6 +10,7 @@ define('view/book/toc', ['backbone', 'view/book/toc-item', 'template/book/toc'],
 
             initialize: function (options) {
                 this.hash = options.hash;
+                this.bookId = options.bookId;
 
                 // in order to clear toc item highlights,
                 // we need to capture event before bubbling it to toc items
@@ -25,7 +26,7 @@ define('view/book/toc', ['backbone', 'view/book/toc-item', 'template/book/toc'],
             },
 
             renderItem: function (item) {
-                var tocItemView = new TocItemView({ model: item });
+                var tocItemView = new TocItemView({ model: item, bookId: this.bookId });
                 tocItemView.render(this.hash);
                 this.itemsEl.append(tocItemView.el);
             },
