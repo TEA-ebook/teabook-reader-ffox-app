@@ -10,7 +10,7 @@ app.use(compression({
     threshold: 512
 }));
 
-app.use(express.static(__dirname + '/', {
+app.use(express.static(__dirname + '/frame.html', {
     maxAge: oneYear,
     maxStale: oneYear * 2
 }));

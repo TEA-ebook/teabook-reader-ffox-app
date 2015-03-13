@@ -41,7 +41,7 @@ define('helper/device', ['jquery', 'backbone', 'model/book', 'helper/resizer', '
             var book = new BookModel(), path, title;
 
             path = window.decodeURIComponent(file.name);
-            if (!navigator.mozSetMessageHandler) {
+            if (!navigator.mozSetMessageHandler && !/^books\//.test(path)) {
                 path = "books/" + path;
             }
 
