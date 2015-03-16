@@ -26,9 +26,9 @@ define("model/book-toc", ["backbone", "model/book-toc-item"], function (Backbone
                 items = this.parseNavItem(tocDom.querySelector("li"), "li", []);
             }
 
-            this.setPositions(items, 1, 0);
             this.set("items", items);
             if (items.length > 0) {
+                this.setPositions(items, 1, 0);
                 this.currentItem = items[0];
             }
         },
@@ -43,6 +43,10 @@ define("model/book-toc", ["backbone", "model/book-toc-item"], function (Backbone
 
         parseNavItem: function (item, tagName, items, parent) {
             var tocItem, childItem;
+
+            if (!item) {
+                return [];
+            }
 
             if (item.hasChildNodes()) {
                 tocItem = new TocItemModel(tagName === "li" ? this.extractNavLiInfos(item, parent) : this.extractNavPointInfos(item, parent));
@@ -144,6 +148,10 @@ define("model/book-toc", ["backbone", "model/book-toc-item"], function (Backbone
                 this.removeCurrent(item.get('items'), currentItem);
             }
             return;
+        },
+
+        hasItems: function () {
+            return this.get('items').length > 0;
         }
     });
 

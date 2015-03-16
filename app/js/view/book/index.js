@@ -17,7 +17,7 @@ define('view/book/index',
         'template/book/index',
         'template/waiting',
         'template/spinner'
-        ],
+    ],
     function (Backbone,
               Blobber,
               Device,
@@ -281,7 +281,11 @@ define('view/book/index',
                 var toc = new BookTocModel();
                 toc.load(tocXml);
 
-                this.tocView = new TocView({ model: toc, bookId: this.model.get('identifier'), hash: this.model.get("hash") });
+                this.tocView = new TocView({
+                    model: toc,
+                    bookId: this.model.get('identifier'),
+                    hash: this.model.get("hash")
+                });
                 this.tocView.render();
 
                 this.paginationView.setToc(toc);
@@ -289,7 +293,7 @@ define('view/book/index',
                 this.$el.append(this.tocView.el);
 
                 // first access to the book, we trust the first item of the toc
-                if (!this.model.has('position')) {
+                if (toc.hasItems() && !this.model.has('position')) {
                     this.openChapter(toc.getFirstItem().get('href'));
                 }
             },
