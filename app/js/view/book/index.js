@@ -17,7 +17,7 @@ define('view/book/index',
         'template/book/index',
         'template/waiting',
         'template/spinner'
-    ],
+        ],
     function (Backbone,
               Blobber,
               Device,
@@ -145,6 +145,7 @@ define('view/book/index',
                 this.$el.append(this.optionsView.el);
 
                 // render pagination
+                this.paginationView.model.set('title', this.model.get('title'));
                 this.$el.append(this.paginationView.el);
 
                 // render bookmarks
@@ -288,13 +289,17 @@ define('view/book/index',
                 });
                 this.tocView.render();
 
-                this.paginationView.setToc(toc);
-
                 this.$el.append(this.tocView.el);
 
-                // first access to the book, we trust the first item of the toc
-                if (toc.hasItems() && !this.model.has('position')) {
-                    this.openChapter(toc.getFirstItem().get('href'));
+                if (toc.hasItems()) {
+                    this.paginationView.setToc(toc);
+
+                    // first access to the book, we trust the first item of the toc
+                    if (!this.model.has('position')) {
+                        this.openChapter(toc.getFirstItem().get('href'));
+                    }
+                } else {
+                    this.disableTocButton();
                 }
             },
 
@@ -318,6 +323,15 @@ define('view/book/index',
                 this.clearUiTempo();
                 this.tocView.hide();
                 this.toolbarView.hide();
+            },
+
+            disableTocButton: function () {
+                var tocButton = this.toolbarView.$el.find(".table-of-contents");
+                if (tocButton.length > 0) {
+                    tocButton.attr("disabled", "disabled");
+                } else {
+                    setTimeout(this.disableTocButton.bind(this), 200);
+                }
             },
 
             /**
@@ -364,18 +378,24 @@ define('view/book/index',
              */
             saveBookmark: function (bookmarkInfo) {
                 var paginationInfo = this.paginationView.model.attributes,
-                    tocItem = this.tocView.model.getCurrentItem().attributes;
+                    tocItem = this.tocView.model.getCurrentItem(),
+                    chapter = false;
+
+                if (tocItem) {
+                    chapter = (tocItem.parent ? (tocItem.parent.label + ", ") : "") + tocItem.label;
+                }
+
                 window.document.l10n.updateData({
                     "pageCurrent": paginationInfo.pageCurrent,
                     "pageTotal": paginationInfo.pageTotal,
-                    "chapter": (tocItem.parent ? (tocItem.parent.label + ", ") : "") + tocItem.label
+                    "chapter": chapter
                 });
 
                 this.bookmarksView.saveBookmark({
                     hash: this.model.get('hash'),
                     cfi: bookmarkInfo.contentCFI,
                     idref: bookmarkInfo.idref,
-                    label: window.document.l10n.getSync('bookmarkLabel'),
+                    label: chapter ? window.document.l10n.getSync('bookmarkLabel') : window.document.l10n.getSync('bookmarkPage'),
                     rank: paginationInfo.chapterCurrent * 1000 + paginationInfo.pageCurrent
                 });
             },

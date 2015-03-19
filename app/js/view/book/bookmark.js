@@ -23,8 +23,6 @@ define('view/book/bookmark', ['backbone', 'template/book/bookmark'],
                 this.$el.attr('data-rank', this.model.get('rank'));
                 this.$el.html(template(attributes));
 
-                window.document.l10n.localizeNode(this.el);
-
                 return this;
             },
 

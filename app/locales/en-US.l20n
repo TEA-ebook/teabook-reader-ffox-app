@@ -37,6 +37,7 @@
 <addBookmark "bookmark page">
 
 <bookmarkLabel "{{ $chapter }} (page {{ $pageCurrent }})">
+<bookmarkPage "Page {{ $pageCurrent }}">
 
 <bookcase "Bookcase">
 

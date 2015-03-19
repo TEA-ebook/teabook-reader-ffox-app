@@ -37,6 +37,7 @@
 <addBookmark "ajouter un signet">
 
 <bookmarkLabel "{{ $chapter }} (page {{ $pageCurrent }})">
+<bookmarkPage "Page {{ $pageCurrent }}">
 
 <bookcase "Bibliothèque">
 
