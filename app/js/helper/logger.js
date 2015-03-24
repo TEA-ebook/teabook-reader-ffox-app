@@ -8,9 +8,9 @@ define("helper/logger", ["backbone", "collection/events", "model/event"], functi
         limit = Math.round(purgeTriggerLimit * 0.8),
         sendUsageReports = window.localStorage.getItem(Teavents.SEND_USAGE_REPORTS);
 
-    // send usage reports is activated by default
+    // send usage reports is deactivated by default
     if (sendUsageReports === null) {
-        sendUsageReports = true;
+        sendUsageReports = false;
         window.localStorage.setItem(Teavents.SEND_USAGE_REPORTS, sendUsageReports);
     }
 

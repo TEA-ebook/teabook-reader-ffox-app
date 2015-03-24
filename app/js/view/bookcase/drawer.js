@@ -49,7 +49,7 @@ define('view/bookcase/drawer', ['backbone', 'template/bookcase/drawer'],
              * Informations about product licenses
              */
             openLicenses: function () {
-                this.openBrowser(Conf.website + "/licenses");
+                this.openBrowser(Conf.website + "/license");
                 Backbone.trigger(Teavents.Actions.LOG, Teavents.Events.OPEN_LICENSES);
             },
 

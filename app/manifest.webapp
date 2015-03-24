@@ -31,12 +31,13 @@
     }
   },
   "precompile": [
-    "js/readium.js",
+    "js/app.js",
     "js/curl.js",
     "js/l20n.js",
-    "js/app.js",
+    "js/picker.js",
+    "js/readium.js",
     "importBook.js",
-    "sendlogs.js"
+    "sendLogs.js"
   ],
   "activities": {
     "pick": {

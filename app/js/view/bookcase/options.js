@@ -63,7 +63,7 @@ define('view/bookcase/options', ['backbone', 'model/setting', 'template/bookcase
 
                 sortSetting = new SettingModel({
                     name: "sort",
-                    value: "lastAdded"
+                    value: "lastRead"
                 });
                 sortSetting.save();
 
