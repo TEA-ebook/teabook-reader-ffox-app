@@ -27,7 +27,7 @@
   "locales": {
     "fr": {
       "name": "Tea Reader",
-      "description": "Tea Reader, l’application de lecture d’eBooks pour Firefox OS. Lisez tous vos books en format epub (v2 & v3) que vous soyez connectés ou pas. Pour l’instant, seuls les ebooks sans DRM sont supportés. Une fois vos livres importés et/ou téléchargés, vous pourrez les lire n’importe où, n’importe quand, avec ou sans thé !"
+      "description": "Tea Reader, l’application de lecture d’eBooks pour Firefox OS. Lisez tous vos livres en format epub (v2 & v3) que vous soyez connectés ou pas. Pour l’instant, seuls les ebooks sans DRM sont supportés. Une fois vos livres importés et/ou téléchargés, vous pourrez les lire n’importe où, n’importe quand, avec ou sans thé !"
     }
   },
   "precompile": [
