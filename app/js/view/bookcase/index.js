@@ -1,4 +1,4 @@
-/*global define, window, navigator, Teavents, MozActivity*/
+/*global define, window, navigator, Teavents, MozActivity, alert*/
 /*jslint stupid: true*/
 define('view/bookcase/index',
     [
