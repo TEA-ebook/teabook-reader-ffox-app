@@ -78,6 +78,9 @@
 <noValidConnection "Votre téléphone doit être connecté à Internet afin d'ouvrir votre premier livre.">
 <goSettings "Vous pouvez configurer une connexion Wifi dans les <strong>paramètres</strong>.">
 
+<noInternetConnection "Votre téléphone doit être connecté à Internet pour pouvoir télécharger les livres offerts.">
+<downloadError "Oups ! Les livres ne peuvent pas être téléchargés sur votre téléphone, nous allons corriger cela rapidement.">
+
 <yourNewBooks[maxThree($total)] {
  one: "Bravo ! Voilà votre livre :",
  some: "Bravo ! Voilà vos {{ $total }} nouveaux livres :",

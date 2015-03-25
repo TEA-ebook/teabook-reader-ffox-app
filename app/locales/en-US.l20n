@@ -78,6 +78,9 @@
 <noValidConnection "You must have a valid internet connection in order to open your first book.">
 <goSettings "Go to the <strong>settings</strong> to configure a Wifi connection.">
 
+<noInternetConnection "You must have a valid internet connection in order to download free books.">
+<downloadError "Hum, thoses books can't be downloaded on your phone, we will fix that soon.">
+
 <yourNewBooks[maxThree($total)] {
  one: "Yay! you just added this book :",
  some: "Your {{ $total }} new books !",

@@ -539,6 +539,8 @@ define('view/bookcase/index',
                         this.collection.on('add', this.renderBooks.bind(this));
                         this.renderDownloadingBooks(list);
                         this.downloadBook(list, []);
+                    } else {
+                        alert(window.navigator.onLine ? window.document.l10n.getSync('downloadError') : window.document.l10n.getSync('noInternetConnection'));
                     }
                 }.bind(this));
             },
