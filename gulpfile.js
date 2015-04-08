@@ -300,7 +300,27 @@ gulp.task('default', function () {
 gulp.task('debug', function () {
     debug = true;
     openBrowser = false;
-    runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
+    runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser', 'push');
+});
+
+
+/******************* *****************/
+/************** FIREFOX **************/
+/******************* *****************/
+
+gulp.task('push', function (cb) {
+    var installToADB = require('install-to-adb');
+    var launchApp = require('node-firefox-launch-app');
+
+    installToADB('./dist').then(function(result) {
+        cb();
+        result.map(function(res) {
+            return launchApp({
+                manifestURL: res.app.manifestURL,
+                client: res.client
+            });
+        });
+    });
 });
 
 

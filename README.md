@@ -34,7 +34,7 @@ Tea Reader makes it very easy for everyone to read eBooks, online or offline. AN
 ## Deploy and run the app
 
 
-### On a Firefox OS device
+### On a Firefox OS device with WebIDE
   * Run the server: `node server/server.js`
   * Plug your device to your computer
   * Open WebIDE in Firefox
@@ -42,6 +42,14 @@ Tea Reader makes it very easy for everyone to read eBooks, online or offline. AN
   * Select the `dist` directory in your local copy of the github project
   * Click on `Select Runtime` (in WebIDE, top right corner) and choose your device
   * Click on the Play button
+
+### On a Firefox OS device with gulp
+  * Activate the Developer menu on your phone (Settings > Device information > More information > Developer Menu checkbox)
+  * Set the Debugging via USB to ADB and DevTools (Settings > Developer)
+  * Run `gulp push` and voilà!
+  * If you want to get rid of the debugging prompt, you need to root your phone first:
+    * Go to WebIDE > Runtime > Runtime Info and click on the link to get higher DevTools privileges
+    * Then go to Runtime > Device Preferences and uncheck `devtools.debugger.prompt-connection` (you may need to root your phone)
 
 ### On the Firefox OS simulator
   * Run the server: `node server/server.js`
