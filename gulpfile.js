@@ -300,7 +300,7 @@ gulp.task('default', function () {
 gulp.task('debug', function () {
     debug = true;
     openBrowser = false;
-    runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser', 'push');
+    runSequence('clean', 'clean-templates', 'check-code', 'web-server', 'watch-codebase', 'open-browser');
 });
 
 

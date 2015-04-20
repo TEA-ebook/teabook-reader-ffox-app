@@ -183,8 +183,8 @@ define('view/book/index',
              */
             analyzeTap: function (tap) {
                 var tapZone = {
-                    x: 100 * (tap.x / window.screen.availWidth)
-                    //y: 100 * (tap.y / window.screen.availHeight)
+                    x: 100 * (tap.x / (window.screen.width || window.screen.availWidth))
+                    //y: 100 * (tap.y / window.screen.height || window.screen.availHeight)
                 };
 
                 if (tapZone.x < 15) {

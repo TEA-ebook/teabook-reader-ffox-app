@@ -269,7 +269,7 @@ define('helper/device', ['jquery', 'backbone', 'model/book', 'helper/resizer', '
             request.onerror = function () {
                 // file already exists
                 if (this.error.name === "NoModificationAllowedError") {
-                    device.readFile("/sdcard/" + name, callback);
+                    device.readFile(name, callback);
                 } else {
                     console.warn('Unable to write the file: ' + this.error);
                     errorCb(this.error);

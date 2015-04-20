@@ -19,9 +19,6 @@
       "device-storage:sdcard":{
           "access": "readwrite",
           "description": "Required for reading/writing epub files on your SD card."
-      },
-      "storage": {
-          "description": "Required for storing your books into the application."
       }
   },
   "default_locale": "en",

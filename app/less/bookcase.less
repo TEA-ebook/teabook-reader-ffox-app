@@ -239,7 +239,8 @@
 
   .bookcase-option ul {
     display: flex;
-    flex-flow: wrap row;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
   .bookcase-option ul li {
@@ -288,7 +289,7 @@
   border: 1px solid @ivory;
   border-radius: 3px;
   display: flex;
-  flex-flow: column wrap;
+  flex-direction: column;
   justify-content: space-between;
   height: 33%;
   margin-left: 4%;
@@ -309,7 +310,8 @@
 .added-books-covers {
   align-items: center;
   display: flex;
-  flex-flow: row wrap;
+  flex-direction: row;
+  flex-wrap: wrap;
   height: 85%;
   justify-content: space-around;
   width: 100%;
@@ -631,7 +633,8 @@
 .downloading-books-progresses {
   align-items: center;
   display: flex;
-  flex-flow: row wrap;
+  flex-direction: row;
+  flex-wrap: wrap;
   height: 85%;
   justify-content: space-around;
   padding: 1rem 0;
@@ -641,7 +644,8 @@
 .downloading-books-progress {
   align-items: center;
   display: flex;
-  flex-flow: row wrap;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-around;
   width: 100%;
 }
