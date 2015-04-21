@@ -1,7 +1,9 @@
 /*global define, navigator, FileReader, window, alert, Teavents*/
 /*jslint stupid: true*/
+/*jslint nomen: true*/
 define('view/book/index',
     ['backbone',
+        'underscore',
         'helper/blobber',
         'helper/device',
         'helper/logger',
@@ -19,6 +21,7 @@ define('view/book/index',
         'template/spinner'
         ],
     function (Backbone,
+              _,
               Blobber,
               Device,
               Logger,
@@ -76,7 +79,7 @@ define('view/book/index',
                 Backbone.on(Teavents.NOT_WORKING, this.hideBusyWheel.bind(this));
 
                 // Readium events
-                Backbone.on(Teavents.Readium.GESTURE_TAP, this.analyzeTap.bind(this));
+                Backbone.on(Teavents.Readium.GESTURE_TAP, _.throttle(this.analyzeTap.bind(this), 50, {trailing: false}));
                 Backbone.on(Teavents.Readium.CONTENT_LOAD_START, this.spin.bind(this));
                 Backbone.on(Teavents.Readium.CONTENT_LOADED, this.stopSpin.bind(this));
                 Backbone.on(Teavents.Readium.GESTURE_PINCH, this.displayBusyWheel.bind(this));
@@ -681,3 +684,4 @@ define('view/book/index',
         });
         return BookView;
     });
+/*jslint nomen: false*/

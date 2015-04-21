@@ -9,6 +9,7 @@
   position: relative;
   transition: transform 0.25s ease;
   z-index: 10;
+  .noTextSelect();
 }
 
 .bookcase.withDrawer {
@@ -52,6 +53,7 @@
 .books .book {
   cursor: pointer;
   position: relative;
+  .noTextSelect();
 }
 
 .books .book-select {
@@ -125,12 +127,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin: 0 1rem;
+  padding: 0 0.75rem;
   width: 82%;
 }
 
 .books.selection .book-details {
-  margin-right: 3rem;
+  padding-right: 2.5rem;
 }
 
 @media (orientation: landscape) {
@@ -536,7 +538,6 @@
   bottom: @footerbar-height;
   height: @actionbar-height;
   justify-content: space-around;
-  padding: 0 0.5rem;
 }
 
 .bar.actionbar button {

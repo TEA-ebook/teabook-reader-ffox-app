@@ -218,6 +218,12 @@ define('view/bookcase/index',
                 // capture click on the entire view if the drawer is dsplayed in order to close it
                 this.el.addEventListener("click", this.hideDrawer.bind(this), true);
 
+                // prevent Gaia from displaying an ugly context menu above the UI
+                this.el.addEventListener("contextmenu", function (e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                }, false);
+
                 window.document.l10n.localizeNode(this.el);
 
                 // display alert notification if sd card is unavailable
