@@ -385,7 +385,7 @@ define('view/book/index',
                     chapter = false;
 
                 if (tocItem) {
-                    chapter = (tocItem.parent ? (tocItem.parent.label + ", ") : "") + tocItem.label;
+                    chapter = (tocItem.get('parent') ? (tocItem.get('parent').label + ", ") : "") + tocItem.get('label');
                 }
 
                 window.document.l10n.updateData({

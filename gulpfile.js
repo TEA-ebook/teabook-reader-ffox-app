@@ -253,6 +253,7 @@ gulp.task('copy-locales', function () {
 
 gulp.task('copy-l20n', function () {
     return gulp.src(paths.l20n)
+        .pipe(gulpif(!debug, plugins.uglify()))
         .pipe(plugins.license(license, { 'organization': organization, 'project': project }))
         .pipe(gulp.dest(paths.dist.js));
 });
