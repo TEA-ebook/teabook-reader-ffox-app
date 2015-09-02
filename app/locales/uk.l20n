@@ -90,13 +90,13 @@
 <fileNotOnSdCardError " is not on your phone anymore, it will be removed from your bookcase.">
 
 <drawerTitle "Tea Reader">
-<sendUsageReports "Send usage reports">
-<whyUsageReports "Privacy policies">
-<feedback "Feedback">
-<licenses "Licenses">
-<website "About Tea Reader">
+<sendUsageReports "Звіт використання">
+<whyUsageReports "Політика приватності">
+<feedback "Зворотний зв'язок">
+<licenses "Ліцензії">
+<website "Про Tea Reader">
 
-<loading "Book is loading...">
+<loading "Завантаження книги...">
 
 <downloadingBooksTitle[plural($total)] {
  zero: "Getting books:",
