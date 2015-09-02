@@ -1,7 +1,8 @@
 {
   "locales": [
     "en-US",
-    "fr"
+    "fr",
+    "uk"
   ],
   "default_locale": "en-US",
   "resources": [

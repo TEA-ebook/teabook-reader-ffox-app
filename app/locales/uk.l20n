@@ -1,0 +1,115 @@
+<plural($n) { $n == 0 ? "zero" : $n == 1 ? "one" : "many" }>
+<rand($n) { $n == 0 ? "zero" : $n == 1 ? "one" : $n == 2 ? "two" : $n == 3 ? "three" : "four" }>
+<maxThree($n) { $n == 1 ? "one" : $n <= 3 ? "some" : "many" }>
+
+<selectEpub[plural($number)] {
+  zero: "Select",
+  one: "1 selected",
+  many: "{{ $number }} selected"
+}>
+<selectAll "All">
+<noEpubOnPhone "There is no epub on the phone...">
+<thatsSad "That's sad.">
+<permissionRefusedToSdCard "You refused the permission to access your memory card. <br><br> The application needs this permission to work properly. <br><br> Please accept this permission in order to read you ebooks with this application.">
+<unknownError "The application can't access your memory card. You can try to reboot the phone and/or contact the maker of the application.">
+<sdCardUnavailable "The memory card is not available. Please unplug the USB cable from your phone and/or insert a valid memory card.">
+<sdCardUnavailableNotif "Memory card is unavailable!">
+<done "Done">
+
+<toc "Table of contents">
+<chapter "Chapter">
+<pagesLeft[plural($pageLeft)] {
+  zero: "last page",
+  one: "1 page left",
+  many: "{{ $pageLeft }} pages left"
+}>
+
+<pageNofTotal "Page {{ $pageCurrent }} of {{ $pageTotal }}">
+
+<textSize "Font size">
+<textAndBackgroundColor "Font and background color">
+
+<bookTheme "Book theme">
+<nightTheme "Night">
+<grayTheme "Gray">
+
+<bookmarks "Bookmarks">
+<addBookmark "bookmark page">
+
+<bookmarkLabel "{{ $chapter }} (page {{ $pageCurrent }})">
+<bookmarkPage "Page {{ $pageCurrent }}">
+
+<bookcase "Bookcase">
+
+<display "Display">
+
+<displayMode "View">
+<gallery "Cover">
+<list "Detail">
+
+<sort "Sort">
+<authorAsc "Author A->Z">
+<authorDesc "Author Z->A">
+<lastRead "Last read">
+<lastAdded "Last added">
+<titleAsc "Title A->Z">
+<titleDesc "Title Z->A">
+
+<selectToDelete[plural($number)] {
+  zero: "Select book(s)",
+  one: "1 selected",
+  many: "{{ $number }} selected"
+}>
+
+<cancel "Cancel">
+<searchTip[rand($random)] {
+ zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"looking for a book?\" />",
+ one: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"searching?\" />",
+ two: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"a title? an author?\" />",
+ three: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"may I help you?\" />"
+}>
+
+<welcome "<strong>Welcome to your bookcase!</strong>">
+<noBookHere "... which is desperately empty.">
+<downloadBooks "Click here to fill your bookcase with some free books.">
+<useThePlusButton1 "Use the ">
+<useThePlusButton2 " button to add your own books right now!">
+
+<noValidConnection "You must have a valid internet connection in order to open your first book.">
+<goSettings "Go to the <strong>settings</strong> to configure a Wifi connection.">
+
+<noInternetConnection "You must have a valid internet connection in order to download free books.">
+<downloadError "Hum, thoses books can't be downloaded on your phone, we will fix that soon.">
+
+<yourNewBooks[maxThree($total)] {
+ one: "Yay! you just added this book :",
+ some: "Your {{ $total }} new books !",
+ many: "You just added {{ $total }} books, there are 3:"
+}>
+
+<fileNotOnSdCardError " is not on your phone anymore, it will be removed from your bookcase.">
+
+<drawerTitle "Tea Reader">
+<sendUsageReports "Send usage reports">
+<whyUsageReports "Privacy policies">
+<feedback "Feedback">
+<licenses "Licenses">
+<website "About Tea Reader">
+
+<loading "Book is loading...">
+
+<downloadingBooksTitle[plural($total)] {
+ zero: "Getting books:",
+ one: "Getting for you a free book:",
+ many: "Getting for you {{ $total }} books:"
+}>
+<downloadProgress[plural($total)] {
+ zero: "Download",
+ one: "We download it first",
+ many: "We download them first"
+}>
+<importProgress[plural($total)] {
+ zero: "Add to the bookcase",
+ one: "Then we add it to the bookcase",
+ many: "Then we add them to the bookcase"
+}>
