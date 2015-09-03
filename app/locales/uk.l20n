@@ -87,7 +87,7 @@
  many: "You just added {{ $total }} books, there are 3:"
 }>
 
-<fileNotOnSdCardError " is not on your phone anymore, it will be removed from your bookcase.">
+<fileNotOnSdCardError " більше немає на вашому телефоні, її буде вилучено з полиці.">
 
 <drawerTitle "Tea Reader">
 <sendUsageReports "Звіт використання">
@@ -99,17 +99,17 @@
 <loading "Завантаження книги...">
 
 <downloadingBooksTitle[plural($total)] {
- zero: "Getting books:",
- one: "Getting for you a free book:",
- many: "Getting for you {{ $total }} books:"
+ zero: "Отримання книг:",
+ one: "Отримання для вас безплатної книги:",
+ many: "Отримання для вас {{ $total }} книг:"
 }>
 <downloadProgress[plural($total)] {
- zero: "Download",
- one: "We download it first",
- many: "We download them first"
+ zero: "Завантажити",
+ one: "Спочатку ми її завантажимо",
+ many: "Спочатку ми їх завантажимо"
 }>
 <importProgress[plural($total)] {
- zero: "Add to the bookcase",
- one: "Then we add it to the bookcase",
- many: "Then we add them to the bookcase"
+ zero: "Додати на полицю",
+ one: "Потім ми додамо її на полицю",
+ many: "Потім ми додамо їх на полицю"
 }>
