@@ -82,9 +82,9 @@
 <downloadError "Hum, thoses books can't be downloaded on your phone, we will fix that soon.">
 
 <yourNewBooks[maxThree($total)] {
- one: "Yay! you just added this book :",
- some: "Your {{ $total }} new books !",
- many: "You just added {{ $total }} books, there are 3:"
+ one: "Супер! Ви щойно додали цю книгу:",
+ some: "Ваші {{ $total }} нові книги!",
+ many: "Ви щойно додали {{ $total }} книг, з них 3:"
 }>
 
 <fileNotOnSdCardError " більше немає на вашому телефоні, її буде вилучено з полиці.">
