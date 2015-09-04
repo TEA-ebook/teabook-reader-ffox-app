@@ -12,56 +12,56 @@
 <thatsSad "Це сумно.">
 <permissionRefusedToSdCard "Відмовлено в доступі до карти пам'яті. <br><br> Для належної роботи, програмі необхідний цей дозвіл. <br><br> Для можливості читання книг за допомогою цієї програми, підтвердіть будь ласка цей дозвіл.">
 <unknownError "Програма не може отримати доступ до карти пам'яті. Ви можете спробувати перезавантажити телефон і/або зв'язатися з розробником програми.">
-<sdCardUnavailable "The memory card is not available. Please unplug the USB cable from your phone and/or insert a valid memory card.">
-<sdCardUnavailableNotif "Memory card is unavailable!">
-<done "Done">
+<sdCardUnavailable "Карта пам'яті недоступна. Від'єднайте кабель USB від свого телефона і/або вставте іншу карту пам'яті.">
+<sdCardUnavailableNotif "Карта пам'яті недоступна!">
+<done "Готово">
 
-<toc "Table of contents">
-<chapter "Chapter">
+<toc "Зміст">
+<chapter "Розділ">
 <pagesLeft[plural($pageLeft)] {
-  zero: "last page",
-  one: "1 page left",
-  many: "{{ $pageLeft }} pages left"
+  zero: "остання сторінка",
+  one: "залишилась 1 сторінка",
+  many: "залишилось {{ $pageLeft }} сторінок"
 }>
 
-<pageNofTotal "Page {{ $pageCurrent }} of {{ $pageTotal }}">
+<pageNofTotal "Сторінка {{ $pageCurrent }} із {{ $pageTotal }}">
 
-<textSize "Font size">
-<textAndBackgroundColor "Font and background color">
+<textSize "Розмір шрифту">
+<textAndBackgroundColor "Шрифт і колір тла">
 
-<bookTheme "Book theme">
-<nightTheme "Night">
-<grayTheme "Gray">
+<bookTheme "Книжкова тема">
+<nightTheme "Ніч">
+<grayTheme "Сіра">
 
-<bookmarks "Bookmarks">
-<addBookmark "bookmark page">
+<bookmarks "Закладки">
+<addBookmark "закласти сторінку">
 
 <bookmarkLabel "{{ $chapter }} (page {{ $pageCurrent }})">
-<bookmarkPage "Page {{ $pageCurrent }}">
+<bookmarkPage "Сторінка {{ $pageCurrent }}">
 
-<bookcase "Bookcase">
+<bookcase "Книжкова полиця">
 
-<display "Display">
+<display "Відобразити">
 
-<displayMode "View">
-<gallery "Cover">
-<list "Detail">
+<displayMode "Вигляд">
+<gallery "Обкладинка">
+<list "Деталі">
 
-<sort "Sort">
-<authorAsc "Author A->Z">
-<authorDesc "Author Z->A">
-<lastRead "Last read">
-<lastAdded "Last added">
-<titleAsc "Title A->Z">
-<titleDesc "Title Z->A">
+<sort "Сортувати">
+<authorAsc "За автором А->Я">
+<authorDesc "За автором Я->А">
+<lastRead "Останні прочитані">
+<lastAdded "Останні додані">
+<titleAsc "Заголовок А->Я">
+<titleDesc "Заголовок Я->А">
 
 <selectToDelete[plural($number)] {
-  zero: "Select book(s)",
-  one: "1 selected",
-  many: "{{ $number }} selected"
+  zero: "Вибрати книгу(и)",
+  one: "вибрано 1",
+  many: "вибрано {{ $number }}"
 }>
 
-<cancel "Cancel">
+<cancel "Скасувати">
 <searchTip[rand($random)] {
  zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"looking for a book?\" />",
  one: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"searching?\" />",
@@ -69,17 +69,17 @@
  three: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"may I help you?\" />"
 }>
 
-<welcome "<strong>Welcome to your bookcase!</strong>">
-<noBookHere "... which is desperately empty.">
-<downloadBooks "Click here to fill your bookcase with some free books.">
-<useThePlusButton1 "Use the ">
-<useThePlusButton2 " button to add your own books right now!">
+<welcome "<strong>Вітаємо на вашій книжковій полиці!</strong>">
+<noBookHere "... яка поки що пуста.">
+<downloadBooks "Натисніть тут, щоб додати деякі книги безплатно.">
+<useThePlusButton1 "Скористайтеся ">
+<useThePlusButton2 " кнопкою, щоб додати власні книги!">
 
-<noValidConnection "You must have a valid internet connection in order to open your first book.">
-<goSettings "Go to the <strong>settings</strong> to configure a Wifi connection.">
+<noValidConnection "Для відкриття своєї першої книги у вас повинно бути наявне з'єднання з Інтернетом.">
+<goSettings "Перейдіть до <strong>налаштувань</strong> для встановлення з'єднання Wifi.">
 
-<noInternetConnection "You must have a valid internet connection in order to download free books.">
-<downloadError "Hum, thoses books can't be downloaded on your phone, we will fix that soon.">
+<noInternetConnection "Для завантаження безплатних книг у вас повинно бути наявне з'єднання з Інтернетом.">
+<downloadError "Ой, ці книги не можуть бути завантажені на ваш телефон, ми невдовзі це виправимо.">
 
 <yourNewBooks[maxThree($total)] {
  one: "Супер! Ви щойно додали цю книгу:",
