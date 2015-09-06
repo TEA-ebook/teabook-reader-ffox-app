@@ -63,10 +63,10 @@
 
 <cancel "Скасувати">
 <searchTip[rand($random)] {
- zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"looking for a book?\" />",
- one: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"searching?\" />",
- two: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"a title? an author?\" />",
- three: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"may I help you?\" />"
+ zero: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"пошук книги?\" />",
+ one: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"пошук?\" />",
+ two: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"назва? автор?\" />",
+ three: "<input type=\"search\" name=\"bookcase-search-input\" autosave autofocus placeholder=\"чи можу я вам допомогти?\" />"
 }>
 
 <welcome "<strong>Вітаємо на вашій книжковій полиці!</strong>">
