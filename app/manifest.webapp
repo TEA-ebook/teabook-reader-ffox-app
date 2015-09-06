@@ -29,7 +29,7 @@
     },
     "uk": {
       "name": "Tea Reader",
-      "description": "Tea Reader makes it very easy for everyone to read eBooks, online or offline. ANY ebook in epub format can be read (v2 & v3), and only DRM-free books are supported for now. Once you downloaded/imported an eBook, you can read it anywhere, anytime, on- or offline, with or without coffee. The application is compatible with Firefox 1.3 and above."
+      "description": "Tea Reader робить читання електронних книг легким для кожного, онлайн чи офлайн. Можна читати будь-яку книгу в форматі epub (v2 і v3). В даний момент підтримуються лише книги без DRM. Як тільки ви завантажили чи імпортували електронну книгу, ви можете читати її де завгодно, будь-коли, в мережі чи поза нею, з кавою чи без неї. Програма сумісна з Firefox 1.3 та вище."
     }
   },
   "precompile": [
